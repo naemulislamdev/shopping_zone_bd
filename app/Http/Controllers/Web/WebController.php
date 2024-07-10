@@ -118,11 +118,18 @@ class WebController extends Controller
     public function category(){
         return view('frontend.category_wise_product');
     }
-    //Category function
+    //product details function
     public function productDeails(){
         return view('frontend.product_details');
     }
-    //
+    //shop function
+    public function shop(){
+        return view('frontend.shop');
+    }
+    //outlets function
+    public function outlets(){
+        return view('frontend.outlets');
+    }
 
     public function flash_deals($id)
     {

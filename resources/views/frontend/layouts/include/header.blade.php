@@ -71,7 +71,7 @@
                                 </div>
 
                             </li>
-                            <li><a href="#!">Shop</i></a>
+                            <li><a href="{{ route('shop')}}">Shop</i></a>
                             </li>
                             <li><a href="#!">video Shopping</i></a>
                             </li>
@@ -79,7 +79,7 @@
                             </li>
                             <li><a href="#!">Selling product</i></a>
                             </li>
-                            <li><a href="#!">Our outlets</i></a></li>
+                            <li><a href="{{ route('outlets')}}">Our outlets</i></a></li>
                         </ul>
                     </div>
 
