@@ -62,6 +62,63 @@
             });
         });
     </script>
+    <script>
+        function addToCart(form_id = 'add-to-cart-form', redirect_to_checkout=false) {
+            console.log("Ok");
+        if (checkAddToCartValidity()) {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                }
+            });
+            $.post({
+                url: '{{ route('cart.add') }}',
+                data: $('#' + form_id).serializeArray(),
+                beforeSend: function () {
+                    $('#loading').show();
+                },
+                success: function (response) {
+                    console.log(response);
+                    if (response.status == 1) {
+                        updateNavCart();
+                        toastr.success(response.message, {
+                            CloseButton: true,
+                            ProgressBar: true
+                        });
+                        $('.call-when-done').click();
+                        if(redirect_to_checkout)
+                        {
+                            location.href = "{{route('checkout-details')}}";
+                        }
+                        return false;
+                    } else if (response.status == 0) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Cart',
+                            text: response.message
+                        });
+                        return false;
+                    }
+                },
+                complete: function () {
+                    $('#loading').hide();
+
+                }
+            });
+        } else {
+            Swal.fire({
+                type: 'info',
+                title: 'Cart',
+                text: '{{\App\CPU\translate('please_choose_all_the_options')}}'
+            });
+        }
+    }
+
+    function buy_now() {
+        addToCart('add-to-cart-form',true);
+        /* location.href = "{{route('checkout-details')}}"; */
+    }
+    </script>
 </body>
 
 </html>

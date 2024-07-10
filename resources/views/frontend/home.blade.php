@@ -148,241 +148,57 @@
                 </div>
             </div>
         </div>
+        @php($decimal_point_settings = \App\CPU\Helpers::get_business_settings('decimal_point_settings'))
+        @if ($featured_products->count() > 0 )
         <div class="row product-grid">
             <!-- Your product columns go here -->
+            @foreach ($featured_products as $product)
             <div class="col-md-3 col-sm-6 product-column" data-category="category1">
                 <div class="product-box">
                     <div class="product-image2">
+                        @if($product->discount > 0)
                         <div class="discount-box float-end">
-                            <span>50%</span>
+                            <span>
+                                @if ($product->discount_type == 'percent')
+                            {{round($product->discount,$decimal_point_settings)}}%
+                        @elseif($product->discount_type =='flat')
+                            {{\App\CPU\Helpers::currency_converter($product->discount)}}
+                        @endif
+                            </span>
                         </div>
-                        <a href="{{ route('product.details')}}">
+                        @endif
+                        <a href="{{route('product',$product->slug)}}">
                             <img class="pic-1"
-                                src="{{ asset('public/frontend') }}/assets/images/product-img/1.jpg">
+                                src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$product['thumbnail']}}">
                             <img class="pic-2"
-                                src="{{ asset('public/frontend') }}/assets/images/product-img/img2.jpg">
+                                src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$product['thumbnail']}}">
                         </a>
+                        <form id="add-to-cart-form" class="mb-2">
+                            @csrf
+                            <input type="hidden" name="id" value="{{ $product->id }}">
                         <ul class="social">
-                            <li><a href="{{ route('product.details')}}" data-tip="Quick View"><i
+                            <li><a href="{{route('product',$product->slug)}}" data-tip="Quick View"><i
                                         class="fa fa-eye"></i></a></li>
-                            <li><a href="#" data-tip="Add to Cart"><i class="fa fa-shopping-cart"></i></a>
+                            <li><a href="#" onclick="addToCart()" data-tip="Add to Cart"><i class="fa fa-shopping-cart"></i></a>
                             </li>
                         </ul>
-                        <a class="add-to-cart" href="">Buy Now</a>
+                        <a class="buy-now" href="">Buy Now</a>
+                        </form>
                     </div>
                     <div class="product-content">
-                        <h3 class="title"><a href="{{ route('product.details')}}">Women's Designer Top</a></h3>
+                        <h3 class="title"><a href="{{route('product',$product->slug)}}">{{ Str::limit($product['name'], 23) }}</a></h3>
                         <div class="price d-flex justify-content-center align-content-center">
-                            <span class="mr-2">৳ 599.99</span>
-                            <del>৳ 699.99</del>
+                            <span class="mr-2">{{\App\CPU\Helpers::currency_converter(
+                                $product->unit_price-(\App\CPU\Helpers::get_product_discount($product,$product->unit_price))
+                            )}}</span>
+                            <del>{{\App\CPU\Helpers::currency_converter($product->unit_price)}}</del>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3 col-sm-6 product-column" data-category="category1">
-                <div class="product-box">
-                    <div class="product-image2">
-                        <div class="discount-box float-end">
-                            <span>50%</span>
-                        </div>
-                        <a href="{{ route('product.details')}}">
-                            <img class="pic-1"
-                                src="{{ asset('public/frontend') }}/assets/images/product-img/2.jpg">
-                            <img class="pic-2"
-                                src="{{ asset('public/frontend') }}/assets/images/product-img/img2.jpg">
-                        </a>
-                        <ul class="social">
-                            <li><a href="{{ route('product.details')}}" data-tip="Quick View"><i
-                                        class="fa fa-eye"></i></a></li>
-                            <li><a href="#" data-tip="Add to Cart"><i class="fa fa-shopping-cart"></i></a>
-                            </li>
-                        </ul>
-                        <a class="add-to-cart" href="">Buy Now</a>
-                    </div>
-                    <div class="product-content">
-                        <h3 class="title"><a href="{{ route('product.details')}}">Women's Designer Top</a></h3>
-                        <div class="price d-flex justify-content-center align-content-center">
-                            <span class="mr-2">৳ 599.99</span>
-                            <del>৳ 699.99</del>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-6 product-column" data-category="category1">
-                <div class="product-box">
-                    <div class="product-image2">
-                        <div class="discount-box float-end">
-                            <span>50%</span>
-                        </div>
-                        <a href="{{ route('product.details')}}">
-                            <img class="pic-1"
-                                src="{{ asset('public/frontend') }}/assets/images/product-img/3.jpg">
-                            <img class="pic-2"
-                                src="{{ asset('public/frontend') }}/assets/images/product-img/img2.jpg">
-                        </a>
-                        <ul class="social">
-                            <li><a href="{{ route('product.details')}}" data-tip="Quick View"><i
-                                        class="fa fa-eye"></i></a></li>
-                            <li><a href="#" data-tip="Add to Cart"><i class="fa fa-shopping-cart"></i></a>
-                            </li>
-                        </ul>
-                        <a class="add-to-cart" href="">Buy Now</a>
-                    </div>
-                    <div class="product-content">
-                        <h3 class="title"><a href="{{ route('product.details')}}">Women's Designer Top</a></h3>
-                        <div class="price d-flex justify-content-center align-content-center">
-                            <span class="mr-2">৳ 599.99</span>
-                            <del>৳ 699.99</del>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-6 product-column" data-category="category1">
-                <div class="product-box">
-                    <div class="product-image2">
-                        <div class="discount-box float-end">
-                            <span>50%</span>
-                        </div>
-                        <a href="{{ route('product.details')}}">
-                            <img class="pic-1"
-                                src="{{ asset('public/frontend') }}/assets/images/product-img/4.jpg">
-                            <img class="pic-2"
-                                src="{{ asset('public/frontend') }}/assets/images/product-img/img2.jpg">
-                        </a>
-                        <ul class="social">
-                            <li><a href="{{ route('product.details')}}" data-tip="Quick View"><i
-                                        class="fa fa-eye"></i></a></li>
-                            <li><a href="#" data-tip="Add to Cart"><i class="fa fa-shopping-cart"></i></a>
-                            </li>
-                        </ul>
-                        <a class="add-to-cart" href="">Buy Now</a>
-                    </div>
-                    <div class="product-content">
-                        <h3 class="title"><a href="{{ route('product.details')}}">Women's Designer Top</a></h3>
-                        <div class="price d-flex justify-content-center align-content-center">
-                            <span class="mr-2">৳ 599.99</span>
-                            <del>৳ 699.99</del>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-6 product-column" data-category="category1">
-                <div class="product-box">
-                    <div class="product-image2">
-                        <div class="discount-box float-end">
-                            <span>50%</span>
-                        </div>
-                        <a href="{{ route('product.details')}}">
-                            <img class="pic-1"
-                                src="{{ asset('public/frontend') }}/assets/images/product-img/5.jpg">
-                            <img class="pic-2"
-                                src="{{ asset('public/frontend') }}/assets/images/product-img/img2.jpg">
-                        </a>
-                        <ul class="social">
-                            <li><a href="{{ route('product.details')}}" data-tip="Quick View"><i
-                                        class="fa fa-eye"></i></a></li>
-                            <li><a href="#" data-tip="Add to Cart"><i class="fa fa-shopping-cart"></i></a>
-                            </li>
-                        </ul>
-                        <a class="add-to-cart" href="">Buy Now</a>
-                    </div>
-                    <div class="product-content">
-                        <h3 class="title"><a href="{{ route('product.details')}}">Women's Designer Top</a></h3>
-                        <div class="price d-flex justify-content-center align-content-center">
-                            <span class="mr-2">৳ 599.99</span>
-                            <del>৳ 699.99</del>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-6 product-column" data-category="category1">
-                <div class="product-box">
-                    <div class="product-image2">
-                        <div class="discount-box float-end">
-                            <span>50%</span>
-                        </div>
-                        <a href="{{ route('product.details')}}">
-                            <img class="pic-1"
-                                src="{{ asset('public/frontend') }}/assets/images/product-img/6.jpg">
-                            <img class="pic-2"
-                                src="{{ asset('public/frontend') }}/assets/images/product-img/img2.jpg">
-                        </a>
-                        <ul class="social">
-                            <li><a href="{{ route('product.details')}}" data-tip="Quick View"><i
-                                        class="fa fa-eye"></i></a></li>
-                            <li><a href="#" data-tip="Add to Cart"><i class="fa fa-shopping-cart"></i></a>
-                            </li>
-                        </ul>
-                        <a class="add-to-cart" href="">Buy Now</a>
-                    </div>
-                    <div class="product-content">
-                        <h3 class="title"><a href="{{ route('product.details')}}">Women's Designer Top</a></h3>
-                        <div class="price d-flex justify-content-center align-content-center">
-                            <span class="mr-2">৳ 599.99</span>
-                            <del>৳ 699.99</del>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-6 product-column" data-category="category1">
-                <div class="product-box">
-                    <div class="product-image2">
-                        <div class="discount-box float-end">
-                            <span>50%</span>
-                        </div>
-                        <a href="{{ route('product.details')}}">
-                            <img class="pic-1"
-                                src="{{ asset('public/frontend') }}/assets/images/product-img/7.jpg">
-                            <img class="pic-2"
-                                src="{{ asset('public/frontend') }}/assets/images/product-img/img2.jpg">
-                        </a>
-                        <ul class="social">
-                            <li><a href="{{ route('product.details')}}" data-tip="Quick View"><i
-                                        class="fa fa-eye"></i></a></li>
-                            <li><a href="#" data-tip="Add to Cart"><i class="fa fa-shopping-cart"></i></a>
-                            </li>
-                        </ul>
-                        <a class="add-to-cart" href="">Buy Now</a>
-                    </div>
-                    <div class="product-content">
-                        <h3 class="title"><a href="{{ route('product.details')}}">Women's Designer Top</a></h3>
-                        <div class="price d-flex justify-content-center align-content-center">
-                            <span class="mr-2">৳ 599.99</span>
-                            <del>৳ 699.99</del>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-6 product-column" data-category="category1">
-                <div class="product-box">
-                    <div class="product-image2">
-                        <div class="discount-box float-end">
-                            <span>50%</span>
-                        </div>
-                        <a href="{{ route('product.details')}}">
-                            <img class="pic-1"
-                                src="{{ asset('public/frontend') }}/assets/images/product-img/8.jpg">
-                            <img class="pic-2"
-                                src="{{ asset('public/frontend') }}/assets/images/product-img/img2.jpg">
-                        </a>
-                        <ul class="social">
-                            <li><a href="{{ route('product.details')}}" data-tip="Quick View"><i
-                                        class="fa fa-eye"></i></a></li>
-                            <li><a href="#" data-tip="Add to Cart"><i class="fa fa-shopping-cart"></i></a>
-                            </li>
-                        </ul>
-                        <a class="add-to-cart" href="">Buy Now</a>
-                    </div>
-                    <div class="product-content">
-                        <h3 class="title"><a href="{{ route('product.details')}}">Women's Designer Top</a></h3>
-                        <div class="price d-flex justify-content-center align-content-center">
-                            <span class="mr-2">৳ 599.99</span>
-                            <del>৳ 699.99</del>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @endforeach
         </div>
+        @endif
         <div class="row my-3">
             <div class="col-md-12">
                 <div class="big-banner">
@@ -391,29 +207,30 @@
                 </div>
             </div>
         </div>
+        @foreach($home_categories as $category)
         <div class="row mb-3">
             <div class="col text-center">
                 <div class="section-heading-title">
-                    <h3>Hot Sales</h3>
+                    <h3>{{Str::limit($category['name'],18)}}</h3>
                     <div class="heading-border"></div>
                 </div>
                 <div class="grid-controls">
-                    <button class="grid-btn" data-columns="6" data-category="category2">
+                    <button class="grid-btn" data-columns="6" data-category="category_{{$category->id}}">
                         <div class="grid-icon"></div>
                         <div class="grid-icon"></div>
                     </button>
-                    <button class="grid-btn" data-columns="4" data-category="category2">
-                        <div class="grid-icon"></div>
-                        <div class="grid-icon"></div>
-                        <div class="grid-icon"></div>
-                    </button>
-                    <button class="grid-btn" data-columns="3" data-category="category2">
-                        <div class="grid-icon"></div>
+                    <button class="grid-btn" data-columns="4" data-category="category_{{$category->id}}">
                         <div class="grid-icon"></div>
                         <div class="grid-icon"></div>
                         <div class="grid-icon"></div>
                     </button>
-                    <button class="grid-btn" data-columns="2" data-category="category2">
+                    <button class="grid-btn" data-columns="3" data-category="category_{{$category->id}}">
+                        <div class="grid-icon"></div>
+                        <div class="grid-icon"></div>
+                        <div class="grid-icon"></div>
+                        <div class="grid-icon"></div>
+                    </button>
+                    <button class="grid-btn" data-columns="2" data-category="category_{{$category->id}}">
                         <div class="grid-icon"></div>
                         <div class="grid-icon"></div>
                         <div class="grid-icon"></div>
@@ -435,239 +252,55 @@
         </div>
         <div class="row product-grid">
             <!-- Your product columns go here -->
-            <div class="col-md-3 col-sm-6 product-column" data-category="category2">
+            @foreach($category['products'] as $key=>$product)
+                            @if ($key<4)
+            <div class="col-md-3 col-sm-6 product-column" data-category="category_{{$category->id}}">
                 <div class="product-box">
                     <div class="product-image2">
+                        @if($product->discount > 0)
                         <div class="discount-box float-end">
-                            <span>50%</span>
+                            <span>
+                                @if ($product->discount_type == 'percent')
+                            {{round($product->discount,$decimal_point_settings)}}%
+                        @elseif($product->discount_type =='flat')
+                            {{\App\CPU\Helpers::currency_converter($product->discount)}}
+                        @endif
+                            </span>
                         </div>
-                        <a href="{{ route('product.details')}}">
+                        @endif
+                        <a href="{{route('product',$product->slug)}}">
                             <img class="pic-1"
-                                src="{{ asset('public/frontend') }}/assets/images/product-img/1.jpg">
+                                src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$product['thumbnail']}}">
                             <img class="pic-2"
-                                src="{{ asset('public/frontend') }}/assets/images/product-img/img2.jpg">
+                                src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$product['thumbnail']}}">
                         </a>
+                        <form id="add-to-cart-form" class="mb-2">
+                            @csrf
+                            <input type="hidden" name="id" value="{{ $product->id }}">
                         <ul class="social">
-                            <li><a href="{{ route('product.details')}}" data-tip="Quick View"><i
+                            <li><a href="{{route('product',$product->slug)}}" data-tip="Quick View"><i
                                         class="fa fa-eye"></i></a></li>
-                            <li><a href="#" data-tip="Add to Cart"><i class="fa fa-shopping-cart"></i></a>
+                            <li><a href="#" onclick="addToCart()" data-tip="Add to Cart"><i class="fa fa-shopping-cart"></i></a>
                             </li>
                         </ul>
-                        <a class="add-to-cart" href="">Buy Now</a>
+                        <a class="buy-now" href="">Buy Now</a>
+                        </form>
                     </div>
                     <div class="product-content">
-                        <h3 class="title"><a href="{{ route('product.details')}}">Women's Designer Top</a></h3>
+                        <h3 class="title"><a href="{{route('product',$product->slug)}}">{{ Str::limit($product['name'], 23) }}</a></h3>
                         <div class="price d-flex justify-content-center align-content-center">
-                            <span class="mr-2">৳ 599.99</span>
-                            <del>৳ 699.99</del>
+                            <span class="mr-2">{{\App\CPU\Helpers::currency_converter(
+                                $product->unit_price-(\App\CPU\Helpers::get_product_discount($product,$product->unit_price))
+                            )}}</span>
+                            <del>{{\App\CPU\Helpers::currency_converter($product->unit_price)}}</del>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3 col-sm-6 product-column" data-category="category2">
-                <div class="product-box">
-                    <div class="product-image2">
-                        <div class="discount-box float-end">
-                            <span>50%</span>
-                        </div>
-                        <a href="{{ route('product.details')}}">
-                            <img class="pic-1"
-                                src="{{ asset('public/frontend') }}/assets/images/product-img/2.jpg">
-                            <img class="pic-2"
-                                src="{{ asset('public/frontend') }}/assets/images/product-img/img2.jpg">
-                        </a>
-                        <ul class="social">
-                            <li><a href="{{ route('product.details')}}" data-tip="Quick View"><i
-                                        class="fa fa-eye"></i></a></li>
-                            <li><a href="#" data-tip="Add to Cart"><i class="fa fa-shopping-cart"></i></a>
-                            </li>
-                        </ul>
-                        <a class="add-to-cart" href="">Buy Now</a>
-                    </div>
-                    <div class="product-content">
-                        <h3 class="title"><a href="{{ route('product.details')}}">Women's Designer Top</a></h3>
-                        <div class="price d-flex justify-content-center align-content-center">
-                            <span class="mr-2">৳ 599.99</span>
-                            <del>৳ 699.99</del>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-6 product-column" data-category="category2">
-                <div class="product-box">
-                    <div class="product-image2">
-                        <div class="discount-box float-end">
-                            <span>50%</span>
-                        </div>
-                        <a href="{{ route('product.details')}}">
-                            <img class="pic-1"
-                                src="{{ asset('public/frontend') }}/assets/images/product-img/3.jpg">
-                            <img class="pic-2"
-                                src="{{ asset('public/frontend') }}/assets/images/product-img/img2.jpg">
-                        </a>
-                        <ul class="social">
-                            <li><a href="{{ route('product.details')}}" data-tip="Quick View"><i
-                                        class="fa fa-eye"></i></a></li>
-                            <li><a href="#" data-tip="Add to Cart"><i class="fa fa-shopping-cart"></i></a>
-                            </li>
-                        </ul>
-                        <a class="add-to-cart" href="">Buy Now</a>
-                    </div>
-                    <div class="product-content">
-                        <h3 class="title"><a href="{{ route('product.details')}}">Women's Designer Top</a></h3>
-                        <div class="price d-flex justify-content-center align-content-center">
-                            <span class="mr-2">৳ 599.99</span>
-                            <del>৳ 699.99</del>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-6 product-column" data-category="category2">
-                <div class="product-box">
-                    <div class="product-image2">
-                        <div class="discount-box float-end">
-                            <span>50%</span>
-                        </div>
-                        <a href="{{ route('product.details')}}">
-                            <img class="pic-1"
-                                src="{{ asset('public/frontend') }}/assets/images/product-img/4.jpg">
-                            <img class="pic-2"
-                                src="{{ asset('public/frontend') }}/assets/images/product-img/img2.jpg">
-                        </a>
-                        <ul class="social">
-                            <li><a href="{{ route('product.details')}}" data-tip="Quick View"><i
-                                        class="fa fa-eye"></i></a></li>
-                            <li><a href="#" data-tip="Add to Cart"><i class="fa fa-shopping-cart"></i></a>
-                            </li>
-                        </ul>
-                        <a class="add-to-cart" href="">Buy Now</a>
-                    </div>
-                    <div class="product-content">
-                        <h3 class="title"><a href="{{ route('product.details')}}">Women's Designer Top</a></h3>
-                        <div class="price d-flex justify-content-center align-content-center">
-                            <span class="mr-2">৳ 599.99</span>
-                            <del>৳ 699.99</del>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-6 product-column" data-category="category2">
-                <div class="product-box">
-                    <div class="product-image2">
-                        <div class="discount-box float-end">
-                            <span>50%</span>
-                        </div>
-                        <a href="{{ route('product.details')}}">
-                            <img class="pic-1"
-                                src="{{ asset('public/frontend') }}/assets/images/product-img/5.jpg">
-                            <img class="pic-2"
-                                src="{{ asset('public/frontend') }}/assets/images/product-img/img2.jpg">
-                        </a>
-                        <ul class="social">
-                            <li><a href="{{ route('product.details')}}" data-tip="Quick View"><i
-                                        class="fa fa-eye"></i></a></li>
-                            <li><a href="#" data-tip="Add to Cart"><i class="fa fa-shopping-cart"></i></a>
-                            </li>
-                        </ul>
-                        <a class="add-to-cart" href="">Buy Now</a>
-                    </div>
-                    <div class="product-content">
-                        <h3 class="title"><a href="{{ route('product.details')}}">Women's Designer Top</a></h3>
-                        <div class="price d-flex justify-content-center align-content-center">
-                            <span class="mr-2">৳ 599.99</span>
-                            <del>৳ 699.99</del>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-6 product-column" data-category="category2">
-                <div class="product-box">
-                    <div class="product-image2">
-                        <div class="discount-box float-end">
-                            <span>50%</span>
-                        </div>
-                        <a href="{{ route('product.details')}}">
-                            <img class="pic-1"
-                                src="{{ asset('public/frontend') }}/assets/images/product-img/6.jpg">
-                            <img class="pic-2"
-                                src="{{ asset('public/frontend') }}/assets/images/product-img/img2.jpg">
-                        </a>
-                        <ul class="social">
-                            <li><a href="{{ route('product.details')}}" data-tip="Quick View"><i
-                                        class="fa fa-eye"></i></a></li>
-                            <li><a href="#" data-tip="Add to Cart"><i class="fa fa-shopping-cart"></i></a>
-                            </li>
-                        </ul>
-                        <a class="add-to-cart" href="">Buy Now</a>
-                    </div>
-                    <div class="product-content">
-                        <h3 class="title"><a href="{{ route('product.details')}}">Women's Designer Top</a></h3>
-                        <div class="price d-flex justify-content-center align-content-center">
-                            <span class="mr-2">৳ 599.99</span>
-                            <del>৳ 699.99</del>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-6 product-column" data-category="category2">
-                <div class="product-box">
-                    <div class="product-image2">
-                        <div class="discount-box float-end">
-                            <span>50%</span>
-                        </div>
-                        <a href="{{ route('product.details')}}">
-                            <img class="pic-1"
-                                src="{{ asset('public/frontend') }}/assets/images/product-img/7.jpg">
-                            <img class="pic-2"
-                                src="{{ asset('public/frontend') }}/assets/images/product-img/img2.jpg">
-                        </a>
-                        <ul class="social">
-                            <li><a href="{{ route('product.details')}}" data-tip="Quick View"><i
-                                        class="fa fa-eye"></i></a></li>
-                            <li><a href="#" data-tip="Add to Cart"><i
-                                        class="fa fa-shopping-cart"></i></a></li>
-                        </ul>
-                        <a class="add-to-cart" href="">Buy Now</a>
-                    </div>
-                    <div class="product-content">
-                        <h3 class="title"><a href="{{ route('product.details')}}">Women's Designer Top</a></h3>
-                        <div class="price d-flex justify-content-center align-content-center">
-                            <span class="mr-2">৳ 599.99</span>
-                            <del>৳ 699.99</del>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-6 product-column" data-category="category2">
-                <div class="product-box">
-                    <div class="product-image2">
-                        <div class="discount-box float-end">
-                            <span>50%</span>
-                        </div>
-                        <a href="{{ route('product.details')}}">
-                            <img class="pic-1"
-                                src="{{ asset('public/frontend') }}/assets/images/product-img/8.jpg">
-                            <img class="pic-2"
-                                src="{{ asset('public/frontend') }}/assets/images/product-img/img2.jpg">
-                        </a>
-                        <ul class="social">
-                            <li><a href="{{ route('product.details')}}" data-tip="Quick View"><i
-                                        class="fa fa-eye"></i></a></li>
-                            <li><a href="#" data-tip="Add to Cart"><i
-                                        class="fa fa-shopping-cart"></i></a></li>
-                        </ul>
-                        <a class="add-to-cart" href="">Buy Now</a>
-                    </div>
-                    <div class="product-content">
-                        <h3 class="title"><a href="{{ route('product.details')}}">Women's Designer Top</a></h3>
-                        <div class="price d-flex justify-content-center align-content-center">
-                            <span class="mr-2">৳ 599.99</span>
-                            <del>৳ 699.99</del>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @endif
+            @endforeach
         </div>
+        @endforeach
         <div class="row my-3">
             <div class="col-md-12">
                 <div class="big-banner">
@@ -676,7 +309,7 @@
                 </div>
             </div>
         </div>
-        <div class="row mb-3">
+        {{-- <div class="row mb-3">
             <div class="col text-center">
                 <div class="section-heading-title">
                     <h3>Accessory</h3>
@@ -952,7 +585,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
         <div class="row my-3">
             <div class="col-md-12">
                 <div class="big-banner">

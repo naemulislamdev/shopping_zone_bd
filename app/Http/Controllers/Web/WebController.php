@@ -111,6 +111,7 @@ class WebController extends Controller
         }
 
         $deal_of_the_day = DealOfTheDay::join('products', 'products.id', '=', 'deal_of_the_days.product_id')->select('deal_of_the_days.*', 'products.unit_price')->where('products.status', 1)->where('deal_of_the_days.status', 1)->first();
+        // dd($featured_products);
 
         return view('frontend.home', compact('featured_products', 'topRated', 'bestSellProduct', 'latest_products', 'categories', 'brands', 'deal_of_the_day', 'top_sellers', 'home_categories'));
     }
@@ -543,7 +544,7 @@ class WebController extends Controller
             $relatedProducts = Product::with(['reviews'])->active()->where('category_ids', $product->category_ids)->where('id', '!=', $product->id)->limit(12)->get();
             $deal_of_the_day = DealOfTheDay::where('product_id', $product->id)->where('status', 1)->first();
 
-            return view('web-views.products.details', compact('product', 'countWishlist', 'countOrder', 'relatedProducts', 'deal_of_the_day'));
+            return view('frontend.product_details', compact('product', 'countWishlist', 'countOrder', 'relatedProducts', 'deal_of_the_day'));
         }
 
         Toastr::error(translate('not_found'));

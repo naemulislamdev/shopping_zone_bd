@@ -3,6 +3,7 @@
 <link rel="stylesheet" href="{{ asset('public/frontend') }}/assets/css/animate.min.css" />
 <link rel="stylesheet" href="{{ asset('public/frontend') }}/assets/css/xzoom.min.css" />
 <!-- Owl-carosul css cdn link -->
+<link rel="stylesheet" href="{{asset('public/assets/back-end')}}/css/toastr.css"/>
 <link rel="stylesheet" href="{{ asset('public/frontend') }}/assets/css/owl.carousel.min.css" />
 
 <link rel="stylesheet" href="{{ asset('public/frontend') }}/assets/css/owl.theme.default.min.css" />
