@@ -1026,7 +1026,7 @@ input[type="range"]::-moz-range-thumb {
 
 .color-filter .form-check-input:checked + .form-check-label .color-box,
 .brand-filter .form-check-input:checked + .form-check-label .brand-logo {
-  border: 2px solid #000;
+  border: 2px solid #f26d21;
 }
 
 /*--------------------- Start customer review Section-----------------------*/
@@ -1285,4 +1285,35 @@ footer{
 .pay-method > img{
   width: 260px;
 }
-
+/*------------Product shop page----custom css*/
+.shop-filter-box{
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    padding: 10px 20px;
+}
+.shop-filter-title {
+    font-size: 18px;
+    font-family: var(--jost);
+    color: var(--text-black);
+    text-align: center;
+    text-transform: uppercase;
+}
+/*------------outlets page----custom css*/
+.outlets-heading{text-align: center;border-bottom: 2px solid #ddd;}
+.outlets-heading > h2{
+    font-size: 30px;
+    font-family: var(--Charm);
+}
+.outlets-box {
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    padding: 14px 20px;
+}
+.outlets-box > .sup-icon{
+    color: var(--primary-color);
+    font-size: 30px;
+}
+.outlets-text > h2{
+    font-size: 22px;
+    font-family: var(--jost);
+    margin: 0;
+}
+.outlets-text > p{}
