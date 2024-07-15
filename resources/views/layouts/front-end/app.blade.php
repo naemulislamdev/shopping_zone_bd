@@ -635,7 +635,7 @@
     <style>
         .dropdown-menu {
             min-width: 304px !important;
-            margin-{{Session::get('direction') === "rtl" ? 'right' : 'left'}}: -8px !important;
+            /* margin-{{Session::get('direction') === "rtl" ? 'right' : 'left'}}: -8px !important; */
             border-top-left-radius: 0px;
             border-top-right-radius: 0px;
         }

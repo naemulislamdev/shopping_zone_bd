@@ -43,6 +43,9 @@
 }
 
 @media (max-width: 768px) {
+    .navbar {
+        float: left;
+    }
     .topbar-section{display: none;}
     .menu-icon {
         color: #232323;

@@ -68,7 +68,7 @@ class CartController extends Controller
 
     public function updateNavCart()
     {
-        return response()->json(['data' => view('layouts.front-end.partials.cart')->render()]);
+        return response()->json(['data' => view('frontend.layouts.include.header_cart')->render()]);
     }
 
     //removes from Cart

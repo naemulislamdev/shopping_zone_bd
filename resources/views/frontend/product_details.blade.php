@@ -183,6 +183,9 @@
                                         <option>Large</option>
                                     </select>
                                 </div>
+                                <form id="add-to-cart-form" class="mb-2">
+                                    @csrf
+                                    <input type="hidden" name="id" value="{{ $product->id }}">
 
                                 <div class="row mb-3">
                                     <div class="col-md-5 mb-2">
@@ -214,6 +217,7 @@
                                         <button class="btn btn-dark btn-block" onclick="addToCart()">Add to Cart</button>
                                     </div>
                                 </div>
+                                </form>
                                 <div class="row">
                                     <div class="col-md-12 mb-3">
                                         <div class="accordion mb-3" id="accordionExample">

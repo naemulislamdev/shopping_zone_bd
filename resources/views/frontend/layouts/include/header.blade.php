@@ -86,6 +86,7 @@
                     <i class="fa fa-bars menu-icon"></i>
                 </nav>
             </div>
+
             <div class="col-md-2">
                 <div class="header-icon">
                     <a data-bs-toggle="offcanvas" href="#searchOffcanvas" role="button"
@@ -93,9 +94,7 @@
                     <a href=""><i class="fa fa-heart-o" aria-hidden="true"></i><span
                             class="badge badge-danger">0</span></a>
 
-                    <a data-bs-toggle="offcanvas" href="#shoppingCartOffcanvas" role="button"
-                        aria-controls="shoppingCartOffcanvas"><i class="fa fa-shopping-cart"
-                            aria-hidden="true"></i><span class="badge badge-danger">0</span></a>
+                    @include('frontend.layouts.include.header_cart')
                 </div>
             </div>
         </div>

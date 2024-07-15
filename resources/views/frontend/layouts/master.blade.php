@@ -10,6 +10,17 @@
     @yield('customcss')
 </head>
 <body>
+    <div class="row">
+        <div class="col-12" style="margin-top:10rem;position: fixed;z-index: 9999;">
+            <div id="loading" style="display: none;">
+               <center>
+                <img width="200"
+                     src="{{asset('storage/app/public/company')}}/{{\App\CPU\Helpers::get_business_settings('loader_gif')}}"
+                     onerror="this.src='{{asset('public/assets/front-end/img/loader.gif')}}'">
+               </center>
+            </div>
+        </div>
+    </div>
     <section class="topbar-section">
         <div class="container">
             <div class="row">
@@ -63,7 +74,7 @@
         });
     </script>
     <script>
-        function addToCart(form_id = 'add-to-cart-form', redirect_to_checkout=false) {
+        function addToCart(productId = 'add-to-cart-form') {
             console.log("Ok");
         if (checkAddToCartValidity()) {
             $.ajaxSetup({
@@ -73,7 +84,7 @@
             });
             $.post({
                 url: '{{ route('cart.add') }}',
-                data: $('#' + form_id).serializeArray(),
+                data: $('#' + productId).serializeArray(),
                 beforeSend: function () {
                     $('#loading').show();
                 },

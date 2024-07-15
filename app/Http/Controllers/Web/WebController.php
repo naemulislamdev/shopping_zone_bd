@@ -131,6 +131,10 @@ class WebController extends Controller
     public function outlets(){
         return view('frontend.outlets');
     }
+    //checkout function
+    public function checkout(){
+        return view('frontend.checkout');
+    }
 
     public function flash_deals($id)
     {

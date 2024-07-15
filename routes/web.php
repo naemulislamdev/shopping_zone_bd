@@ -24,6 +24,7 @@ Route::group(['namespace' => 'Web','middleware'=>['maintenance_mode']], function
         Route::get('/product-details', 'productDeails')->name('product.details');
         Route::get('/shop', 'shop')->name('shop');
         Route::get('/outlets', 'outlets')->name('outlets');
+        Route::get('/checkout', 'checkout')->name('checkout');
     });
 
     Route::get('quick-view', 'WebController@quick_view')->name('quick-view');
@@ -159,6 +160,9 @@ Route::group(['prefix' => 'cart', 'as' => 'cart.', 'namespace' => 'Web'], functi
     Route::post('remove', 'CartController@removeFromCart')->name('remove');
     Route::post('nav-cart-items', 'CartController@updateNavCart')->name('nav-cart');
     Route::post('updateQuantity', 'CartController@updateQuantity')->name('updateQuantity');
+    // In web.php
+// Route::post('/add-to-cart', 'CartController@addToCart')->name('add.to.cart');
+
 });
 
 //Seller shop apply
