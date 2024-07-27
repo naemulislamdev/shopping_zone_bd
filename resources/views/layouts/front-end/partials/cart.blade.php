@@ -1,94 +1,67 @@
-{{--code improved Md. Al imrun Khandakar--}}
-<div class="navbar-tool dropdown {{Session::get('direction') === "rtl" ? 'mr-3' : 'ml-3'}}"
-     style="margin-{{Session::get('direction') === "rtl" ? 'left' : 'right'}}: 6px">
-    <a class="d-none d-sm-block navbar-tool-icon-box bg-secondary dropdown-toggle" href="{{route('shop-cart')}}">
-        <span class="navbar-tool-label">
-            @php($cart=\App\CPU\CartManager::get_cart())
-            {{$cart->count()}}
-        </span>
-        <i class="navbar-tool-icon czi-basket"></i>
-    </a>
-        <a class="d-sm-none navbar-tool-icon-box-mbl dropdown-toggle" href="{{route('shop-cart')}}">
-        <span class="navbar-tool-label">
-            @php($cart=\App\CPU\CartManager::get_cart())
-            {{$cart->count()}}
-        </span>
-        <i class="navbar-tool-icon czi-basket"></i>
-    </a>
-    <a class="navbar-tool-text {{Session::get('direction') === "rtl" ? 'mr-2' : 'ml-2'}}" href="{{route('shop-cart')}}"><small>{{\App\CPU\translate('my_cart')}}</small>
-        {{\App\CPU\Helpers::currency_converter(\App\CPU\CartManager::cart_total_applied_discount(\App\CPU\CartManager::get_cart()))}}
-    </a>
-    <!-- Cart dropdown-->
-    <div class="dropdown-menu dropdown-menu-{{Session::get('direction') === "rtl" ? 'left' : 'right'}}"
-         style="width: 20rem;">
-        <div class="widget widget-cart px-3 pt-2 pb-3">
-            @if($cart->count() > 0)
-                <div style="height: 15rem;" data-simplebar data-simplebar-auto-hide="false">
-                    @php($sub_total=0)
-                    @php($total_tax=0)
-                    @foreach($cart as  $cartItem)
-                        <div class="widget-cart-item pb-2">
-                            <button class="close text-danger " type="button" onclick="removeFromCart({{ $cartItem['id'] }})"
-                                    aria-label="Remove"><span
-                                    aria-hidden="true">&times;</span>
-                            </button>
-                            <div class="media">
-                                <a class="d-block {{Session::get('direction') === "rtl" ? 'ml-2' : 'mr-2'}}"
-                                   href="{{route('product',$cartItem['slug'])}}">
-                                    <img width="64"
-                                         onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
-                                         src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$cartItem['thumbnail']}}"
-                                         alt="Product"/>
-                                </a>
-                                <div class="media-body">
-                                    <h6 class="widget-product-title">
-                                        <a href="{{route('product',$cartItem['slug'])}}">{{Str::limit($cartItem['name'],30)}}</a></h6>
-                                    @foreach(json_decode($cartItem['variations'],true) as $key =>$variation)
-                                        <span style="font-size: 14px">{{$key}} : {{$variation}}</span><br>
-                                    @endforeach
-                                    <div class="widget-product-meta">
-                                        <span
-                                            class="text-muted {{Session::get('direction') === "rtl" ? 'ml-2' : 'mr-2'}}">x {{$cartItem['quantity']}}</span>
-                                        <span
-                                            class="text-accent {{Session::get('direction') === "rtl" ? 'ml-2' : 'mr-2'}}">
-                                                {{\App\CPU\Helpers::currency_converter(($cartItem['price']-$cartItem['discount'])*$cartItem['quantity'])}}
-                                        </span>
-                                    </div>
-                                </div>
+<!------shopping cart canva-->
+<a data-bs-toggle="offcanvas" href="#shoppingCartOffcanvas" role="button" aria-controls="shoppingCartOffcanvas"><i
+    class="fa fa-shopping-cart" aria-hidden="true"></i><span class="badge badge-danger">
+    @php $cart=\App\CPU\CartManager::getCart(); @endphp
+    {{session()->has('cart')?count(session()->get('cart')):0}}
+    {{-- @dd($cart) --}}
+</span></a>
+<div class="offcanvas offcanvas-end" tabindex="-1" id="shoppingCartOffcanvas" aria-labelledby="offcanvaShoppingCard">
+<div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="offcanvaShoppingCard">SHOPPING CART</h5>
+    <i class="fa fa-close offcanvasClose" data-bs-dismiss="offcanvas" aria-label="Close"></i>
+</div>
+<div class="offcanvas-body">
+    <div class="row mb-3">
+        <div class="col">
+            <div class="offcanva-search-title">
+                @if(session()->has('cart') && count( session()->get('cart')) > 0)
+                    @php($sub_total = 0)
+                    @php($total_tax = 0)
+                    @foreach(session('cart') as $key => $cartItem)
+                        <div class="header-cart-product d-flex mb-3">
+                            <div class="img">
+                                <img src="{{ \App\CPU\ProductManager::product_image_path('thumbnail') }}/{{ $cartItem['thumbnail'] }}"
+                                    alt="">
+                            </div>
+                            <div class="header-cart-p-details">
+                                <h5>{{ Str::limit($cartItem['name'], 30) }}</h5>
+                                @if(!empty($cartItem['variations']))
+                                @foreach (json_decode($cartItem['variations'], true) as $key => $variation)
+                                    <span>{{ $key }} : {{ $variation }}</span>
+                                @endforeach
+                                @endif
+                                <p>{{ \App\CPU\Helpers::currency_converter(($cartItem['price'] - $cartItem['discount']) * $cartItem['quantity']) }}
+                                </p>
+                                <a href="#" onclick="removeFromCart({{ $key }})"><i
+                                        class="fa fa-trash"></i></a>
                             </div>
                         </div>
                         @php($sub_total+=($cartItem['price']-$cartItem['discount'])*$cartItem['quantity'])
                         @php($total_tax+=$cartItem['tax']*$cartItem['quantity'])
                     @endforeach
-                </div>
-                <hr>
-                <div class="d-flex flex-wrap justify-content-between align-items-center py-3">
-                    <div
-                        class="font-size-sm {{Session::get('direction') === "rtl" ? 'ml-2 float-left' : 'mr-2 float-right'}} py-2 ">
-                        <span class="">{{\App\CPU\translate('Subtotal')}} :</span>
-                        <span
-                            class="text-accent font-size-base {{Session::get('direction') === "rtl" ? 'mr-1' : 'ml-1'}}">
-                             {{\App\CPU\Helpers::currency_converter($sub_total)}}
-                        </span>
+                    <div class="cart-header-bottom-box">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="cart-header-subtotal d-flex justify-content-between">
+                                    <h4>Subtotal</h4>
+                                    <h4>{{ \App\CPU\Helpers::currency_converter($sub_total) }}</h4>
+                                </div>
+                                <div class="button-section d-flex">
+                                    <a href="#">View Cart</a>
+                                    <a href="{{ route('checkout-details')}}">Check Out</a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-
-                    <a class="btn btn-outline-secondary btn-sm" href="{{route('shop-cart')}}">
-                        {{\App\CPU\translate('Expand cart')}}<i
-                            class="czi-arrow-{{Session::get('direction') === "rtl" ? 'left mr-1 ml-n1' : 'right ml-1 mr-n1'}}"></i>
-                    </a>
-                </div>
-                <a class="btn btn-primary btn-sm btn-block" href="{{route('checkout-details')}}">
-                    <i class="czi-card {{Session::get('direction') === "rtl" ? 'ml-2' : 'mr-2'}} font-size-base align-middle"></i>{{\App\CPU\translate('Checkout')}}
-                </a>
-            @else
-                <div class="widget-cart-item">
-                    <h6 class="text-danger text-center"><i
-                            class="fa fa-cart-arrow-down"></i> {{\App\CPU\translate('Empty')}} {{\App\CPU\translate('Cart')}}
-                    </h6>
-                </div>
-            @endif
+                @else
+                    <div class="empty-cart-box">
+                        <i class="fa fa-shopping-bag"></i>
+                        <h4>Your cart is empty.</h4>
+                        <a href="#" class="btn btn-dark">Return to shop</a>
+                    </div>
+                @endif
+            </div>
         </div>
     </div>
 </div>
-{{--code improved Md. Al imrun Khandakar--}}
-{{--to do discount--}}
+</div>

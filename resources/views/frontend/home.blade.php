@@ -1,5 +1,18 @@
 @extends('frontend.layouts.master')
-@section('title', 'Shopping Zone BD')
+@section('title',\App\CPU\translate('Welcome To').' '.$web_config['name']->value)
+
+@push('css_or_js')
+    <meta property="og:image" content="{{asset('storage/app/public/company')}}/{{$web_config['web_logo']->value}}"/>
+    <meta property="og:title" content="Best Online Marketplace In Bangladesh {{$web_config['name']->value}} Home"/>
+    <meta property="og:url" content="{{env('APP_URL')}}">
+    <meta property="og:description" content="{!! substr($web_config['about']->value,0,100) !!}">
+
+    <meta property="twitter:card" content="{{asset('storage/app/public/company')}}/{{$web_config['web_logo']->value}}"/>
+    <meta property="twitter:title" content="Welcome To {{$web_config['name']->value}} Home"/>
+    <meta property="twitter:url" content="{{env('APP_URL')}}">
+    <meta property="twitter:description" content="{!! substr($web_config['about']->value,0,100) !!}">
+
+@endpush
 @section('content')
     {{-- <div class="overlay"></div>
 <div class="popup">
@@ -155,7 +168,7 @@
                     @foreach ($featured_products as $product)
                         <div class="col-md-3 col-sm-6 product-column" data-category="category1">
                             <div class="product-box">
-                                <form id="add-to-cart-form-{{ $product->id }}" class="mb-2">
+                                <form id="add-to-cart-form" class="mb-2">
                                     @csrf
                                     <input type="hidden" name="id" value="{{ $product->id }}">
                                     <input type="hidden" name="quantity" value="{{ $product->minimum_order_qty ?? 1 }}" min="{{ $product->minimum_order_qty ?? 1 }}" max="100">
@@ -181,7 +194,7 @@
                                         <ul class="social">
                                             <li><a href="{{ route('product', $product->slug) }}" data-tip="Quick View"><i
                                                         class="fa fa-eye"></i></a></li>
-                                            <li><a style="cursor: pointer" onclick="addToCart({{ $product->id }})" data-tip="Add to Cart"><i
+                                            <li><a style="cursor: pointer" onclick="addToCart()" data-tip="Add to Cart"><i
                                                         class="fa fa-shopping-cart"></i></a>
                                             </li>
                                         </ul>

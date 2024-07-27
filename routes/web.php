@@ -24,14 +24,14 @@ Route::group(['namespace' => 'Web','middleware'=>['maintenance_mode']], function
         Route::get('/product-details', 'productDeails')->name('product.details');
         Route::get('/shop', 'shop')->name('shop');
         Route::get('/outlets', 'outlets')->name('outlets');
-        Route::get('/checkout', 'checkout')->name('checkout');
+        Route::get('/checkout-details', 'checkout_details')->name('checkout-details');
     });
 
     Route::get('quick-view', 'WebController@quick_view')->name('quick-view');
     Route::get('searched-products', 'WebController@searched_products')->name('searched-products');
 
     Route::group(['middleware'=>['customer']], function () {
-        Route::get('checkout-details', 'WebController@checkout_details')->name('checkout-details');
+        // Route::get('checkout-details', 'WebController@checkout_details')->name('checkout-details');
         Route::get('checkout-shipping', 'WebController@checkout_shipping')->name('checkout-shipping')->middleware('customer');
         Route::get('checkout-payment', 'WebController@checkout_payment')->name('checkout-payment')->middleware('customer');
         Route::get('checkout-review', 'WebController@checkout_review')->name('checkout-review')->middleware('customer');
@@ -154,12 +154,12 @@ Route::group(['prefix' => 'shop', 'as' => 'shop.', 'namespace' => 'Seller\Auth']
 });
 
 //check done
-Route::group(['prefix' => 'cart', 'as' => 'cart.', 'namespace' => 'Web'], function () {
+Route::group(['prefix' => '/cart', 'as' => 'cart.', 'namespace' => 'Web'], function () {
     Route::post('variant_price', 'CartController@variant_price')->name('variant_price');
-    Route::post('add', 'CartController@addToCart')->name('add');
-    Route::post('remove', 'CartController@removeFromCart')->name('remove');
-    Route::post('nav-cart-items', 'CartController@updateNavCart')->name('nav-cart');
-    Route::post('updateQuantity', 'CartController@updateQuantity')->name('updateQuantity');
+    Route::post('/add-product', 'CartController@addToCartOnSession')->name('product_add');
+    Route::post('/remove', 'CartController@removeFromCart')->name('remove');
+    Route::post('/nav-cart-items', 'CartController@updateNavCart')->name('nav_cart');
+    Route::post('/updateQuantity', 'CartController@updateQuantity')->name('updateQuantity');
     // In web.php
 // Route::post('/add-to-cart', 'CartController@addToCart')->name('add.to.cart');
 

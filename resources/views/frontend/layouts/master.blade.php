@@ -4,6 +4,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="_token" content="{{csrf_token()}}">
     <title>@yield('title')</title>
     <link rel="shortcut icon" href="assets/images/logo/favicon-32x32.png" type="image/x-icon">
     @include('frontend.layouts.include.head')
@@ -12,12 +13,10 @@
 <body>
     <div class="row">
         <div class="col-12" style="margin-top:10rem;position: fixed;z-index: 9999;">
-            <div id="loading" style="display: none;">
-               <center>
+            <div id="loading" style="display: none; text-align:center">
                 <img width="200"
                      src="{{asset('storage/app/public/company')}}/{{\App\CPU\Helpers::get_business_settings('loader_gif')}}"
                      onerror="this.src='{{asset('public/assets/front-end/img/loader.gif')}}'">
-               </center>
             </div>
         </div>
     </div>
@@ -72,63 +71,6 @@
                 $('.popup, .overlay').fadeOut('slow');
             });
         });
-    </script>
-    <script>
-        function addToCart(productId = 'add-to-cart-form') {
-            console.log("Ok");
-        if (checkAddToCartValidity()) {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-                }
-            });
-            $.post({
-                url: '{{ route('cart.add') }}',
-                data: $('#' + productId).serializeArray(),
-                beforeSend: function () {
-                    $('#loading').show();
-                },
-                success: function (response) {
-                    console.log(response);
-                    if (response.status == 1) {
-                        updateNavCart();
-                        toastr.success(response.message, {
-                            CloseButton: true,
-                            ProgressBar: true
-                        });
-                        $('.call-when-done').click();
-                        if(redirect_to_checkout)
-                        {
-                            location.href = "{{route('checkout-details')}}";
-                        }
-                        return false;
-                    } else if (response.status == 0) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Cart',
-                            text: response.message
-                        });
-                        return false;
-                    }
-                },
-                complete: function () {
-                    $('#loading').hide();
-
-                }
-            });
-        } else {
-            Swal.fire({
-                type: 'info',
-                title: 'Cart',
-                text: '{{\App\CPU\translate('please_choose_all_the_options')}}'
-            });
-        }
-    }
-
-    function buy_now() {
-        addToCart('add-to-cart-form',true);
-        /* location.href = "{{route('checkout-details')}}"; */
-    }
     </script>
 </body>
 

@@ -28,17 +28,25 @@ class SystemController extends Controller
 
     public function set_shipping_method(Request $request)
     {
-        if ($request['cart_group_id'] == 'all_cart_group') {
-            foreach (CartManager::get_cart_group_ids() as $group_id) {
-                $request['cart_group_id'] = $group_id;
-                self::insert_into_cart_shipping($request);
-            }
-        } else {
-            self::insert_into_cart_shipping($request);
-        }
+        if ($request['id'] != 0) {
+            session()->put('shipping_method_id', $request['id']);
 
+            $cart = $request->session()->get('cart', collect([]));
+            $cart = $cart->map(function ($object, $key) use ($request) {
+                if ($key == $request['key']) {
+                    $object['shipping_method_id'] = $request['id'];
+                    $object['shipping_cost'] = ShippingMethod::find($request['id'])->cost;
+                }
+                return $object;
+            });
+            $request->session()->put('cart', $cart);
+
+            return response()->json([
+                'status' => 1
+            ]);
+        }
         return response()->json([
-            'status' => 1
+            'status' => 0
         ]);
     }
 

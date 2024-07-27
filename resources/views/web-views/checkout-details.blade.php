@@ -1,329 +1,288 @@
 @extends('layouts.front-end.app')
-
-@section('title',\App\CPU\translate('Checkout Process Start'))
-
-@push('css_or_js')
-    <link rel="stylesheet" href="{{asset('public/assets/front-end')}}/css/checkout-details.css"/>
+@section('title', 'Checkout')
+@section('content')
     <style>
-        .nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
-            background: {{$web_config['primary_color']}};
-            border-radius: 6px;
-            color: white !important;
-            border-color: {{$web_config['primary_color']}};
+        .card-header {
+            padding: 6px 0px;
+            margin-bottom: 0;
+            border-bottom: 0px solid rgba(0, 0, 0, .125);
+            background: #f26d21;
+            color: #fff;
+            text-align: center;
         }
 
-        .nav-tabs .nav-link {
-            background: {{$web_config['secondary_color']}};
-            border: 1px solid{{$web_config['secondary_color']}};
-            border-radius: 6px;
-            color: #f2f3ff !important;
-            font-weight: 600 !important;
-            font-size: 18px !important;
+        header {
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 9999;
+            border-bottom: 1px solid hsla(0, 0%, 100%, .14);
+            background: #fff;
+            transition: 0.5s;
+        }
+
+        .menu-area>ul>li>a {
+            text-decoration: none;
+            color: #343a40;
+        }
+
+        .menu-icon {
+            color: #504f4f;
+        }
+
+        .header-icon>a>.fa {
+            color: #464545;
         }
     </style>
-@endpush
-
-@section('content')
-
-    <div class="container pb-5 mb-2 mb-md-4 rtl" style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};">
-        <div class="row">
-            <div class="col-md-12 mb-5 pt-5">
-                <div class="feature_header" style="background: #dcdcdc;line-height: 1px">
-                    <span>{{ \App\CPU\translate('sign_in')}}</span>
-                </div>
-            </div>
-            <section class="col-lg-8">
-                <hr>
-                <div class="checkout_details mt-3">
-                @include('web-views.partials._checkout-steps',['step'=>1])
-                <!-- Shipping methods table-->
-                    <h2 class="h4 pb-3 mb-2 mt-5">{{\App\CPU\translate('Authentication')}}</h2>
-                    <!-- Autor info-->
-                    @if(auth('customer')->check())
-                        <div class="card">
-                            <div class="card-body">
-                                <h4>{{auth('customer')->user()->f_name}}, {{\App\CPU\translate('HI')}}!</h4>
-                                <small>{{\App\CPU\translate('you_are_already_login_proceed')}}.</small>
-                            </div>
-                        </div>
-                    @else
+    <div class="page-content m-5">
+        <div class="cart">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-10 mx-auto">
                         <div class="row">
-                            <div class="col-12">
-                                <ul class="nav nav-tabs mt-2 d-flex justify-content-between" role="tablist">
-                                    <li class="nav-item d-inline-block">
-                                        <a class="nav-link active" href="#signin" data-toggle="tab" role="tab">
-                                            {{\App\CPU\translate('Sign In')}}
-                                        </a>
-                                    </li>
-                                    <li class="nav-item d-inline-block">
-                                        <a class="nav-link" href="#signup" data-toggle="tab" role="tab">
-                                            {{\App\CPU\translate('Sign Up')}}
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="col-12">
-                                <div class="tab-content">
-                                    <!-- Tech specs tab-->
-                                    <div class="tab-pane fade show active" id="signin" role="tabpanel">
-                                        <form class="needs-validation" autocomplete="off" id="login-form"
-                                              action="{{route('customer.auth.login')}}" method="post" novalidate>
-                                            @csrf
-                                            <div class="form-row">
-                                                <div class="col-sm-6">
-                                                    <div class="form-group">
-                                                        <label
-                                                            for="si-email">{{\App\CPU\translate('email_address')}}</label>
-                                                        <input class="form-control" type="email" name="email"
-                                                               id="si-email" value="{{old('email')}}"
-                                                               placeholder="johndoe@example.com"
-                                                               required>
-                                                        <div class="invalid-feedback">{{\App\CPU\translate('Please provide a valid email address')}}.
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <div class="form-group">
-                                                        <label for="si-password">{{\App\CPU\translate('Password')}}</label>
-                                                        <div class="password-toggle">
-                                                            <input class="form-control" name="password" type="password"
-                                                                   id="si-password" required>
-                                                            <label class="password-toggle-btn">
-                                                                <input class="custom-control-input" type="checkbox"><i
-                                                                    class="czi-eye password-toggle-indicator"></i><span
-                                                                    class="sr-only">{{\App\CPU\translate('Show password')}}</span>
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-row">
-                                                <div class="col-sm-6">
-                                                    <div class="form-group d-flex flex-wrap justify-content-between">
-                                                        <div class="mb-2">
-                                                            <input type="checkbox" name="remember"
-                                                                   {{ old('remember') ? 'checked' : '' }}
-                                                                   id="remember_me">
-                                                            <label for="remember_me" style="cursor: pointer">
-                                                                {{\App\CPU\translate('remember_me')}}
-                                                            </label>
+                            <div class="col-lg-8">
+                                <table class="table table-cart table-mobile">
+                                    <thead>
+                                        <tr>
+                                            <th>Image</th>
+                                            <th>Product Name</th>
+                                            <th>Price</th>
+                                            <th>Quantity</th>
+                                            <th>Total</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
 
-                                                            <a class="font-size-sm {{Session::get('direction') === "rtl" ? 'mr-5' : 'ml-5'}}"
-                                                               href="{{route('customer.auth.recover-password')}}">
-                                                                {{\App\CPU\translate('forgot_password')}}?
+                                    <tbody>
+                                        @if (session()->has('cart') && count(session()->get('cart')) > 0)
+                                            @foreach (session()->get('cart') as $key => $cartItem)
+                                                <tr>
+                                                    <td class="product-col">
+                                                        <div class="checkout-product">
+                                                            <a href="{{ route('product', $cartItem['slug']) }}">
+                                                                <img src="{{ \App\CPU\ProductManager::product_image_path('thumbnail') }}/{{ $cartItem['thumbnail'] }}"
+                                                                    alt="Product image">
                                                             </a>
                                                         </div>
-                                                    </div>
-                                                </div>
+                                                    </td>
+                                                    <td><a
+                                                            href="{{ route('product', $cartItem['slug']) }}">{{ Str::limit($cartItem['name'], 30) }}</a>
+                                                    </td>
+                                                    <td class="price-col">
+                                                        {{ \App\CPU\Helpers::currency_converter($cartItem['price'] - $cartItem['discount']) }}
+                                                    </td>
+                                                    <td class="quantity-col">
+                                                        <div class="product-quantity d-flex align-items-center">
+                                                            <div class="input-group input-group--style-2 pr-3"
+                                                                style="width: 160px;">
+                                                                <span class="input-group-btn">
+                                                                    <button class="btn btn-number" type="button"
+                                                                        data-type="minus" data-field="quantity"
+                                                                        disabled="disabled" style="padding: 10px">
+                                                                        -
+                                                                    </button>
+                                                                </span>
+                                                                <input type="text" name="quantity"
+                                                                    class="form-control input-number text-center cart-qty-field"
+                                                                    placeholder="1" value="1" min="1"
+                                                                    max="100">
+                                                                <span class="input-group-btn">
+                                                                    <button class="btn btn-number" type="button"
+                                                                        data-type="plus" data-field="quantity"
+                                                                        style="padding: 10px">
+                                                                        +
+                                                                    </button>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="total-col">
+                                                        <div class="product-description-label" id="chosen_price_div">
+                                                            <strong id="chosen_price"></strong>
+                                                        </div>
+                                                    </td>
+                                                    <td class="remove-col"><a href="javascript:voide(0);"
+                                                            onclick="removeFromCart({{ $key }})"
+                                                            class="btn-remove"><i class="fa fa-trash-o"></i></a></td>
+                                                </tr>
+                                            @endforeach
+                                        @else
+                                            <div class="empty-cart-box">
+                                                <i class="fa fa-shopping-bag"></i>
+                                                <h4>Your cart is empty.</h4>
+                                                <a href="/" class="btn btn-dark">Return to shop</a>
                                             </div>
-                                            <div class="form-row">
-                                                <div class="col">
-                                                    <button class="btn btn-primary btn-block"
-                                                            type="submit">{{\App\CPU\translate('sing_in')}}</button>
-                                                </div>
-                                            </div>
-                                        </form>
+                                        @endif
+                                    </tbody>
+                                </table><!-- End .table table-wishlist -->
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4>Shipping Address</h4>
                                     </div>
-
-                                    <div class="tab-pane fade" id="signup" role="tabpanel">
-                                        <form class="needs-validation_" autocomplete="off" novalidate id="sign-up-form"
-                                              action="{{route('customer.auth.register')}}" method="post">
-                                            @csrf
-                                            <div class="form-row">
-                                                <div class="col-sm-6">
+                                    <div class="card-body">
+                                        <form>
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
                                                     <div class="form-group">
-                                                        <label for="su-name">{{\App\CPU\translate('first_name')}}</label>
-                                                        <input class="form-control" type="text" name="f_name"
-                                                               placeholder="John" required>
-                                                        <div class="invalid-feedback">{{\App\CPU\translate('Please fill in your name')}}.</div>
+                                                        <label>Name:</label>
+                                                        <input type="text" class="form-control"
+                                                            placeholder="Enter your name">
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-6">
+                                                <div class="col-md-6 mb-3">
                                                     <div class="form-group">
-                                                        <label for="su-name">{{\App\CPU\translate('last_name')}} </label>
-                                                        <input class="form-control" type="text" name="l_name"
-                                                               placeholder="Doe" required>
-                                                        <div class="invalid-feedback">{{\App\CPU\translate('Please fill in your name')}}.</div>
+                                                        <label>Phone:</label>
+                                                        <input type="text" class="form-control"
+                                                            placeholder="Enter your phone">
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="form-row">
-                                                <div class="col-sm-6">
+                                                <div class="col-md-6">
+                                                    <label class="text-danger">Choose Shipping Method</label>
+                                                    <select class="form-control" id="shipping_method_id"
+                                                        onchange="set_shipping_id(this.value)">
+                                                        <option selected disabled>Select Shipping Method</option>
+                                                        @foreach (\App\Model\ShippingMethod::where(['status' => 1])->get() as $shipping)
+                                                            <option value="{{ $shipping['id'] }}"
+                                                                {{ session()->has('shipping_method_id') ? (session('shipping_method_id') == $shipping['id'] ? 'selected' : '') : '' }}>
+                                                                {{ $shipping['title'] . ' ( ' . $shipping['duration'] . ' ) ' . \App\CPU\Helpers::currency_converter($shipping['cost']) }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <label
-                                                            for="su-email">{{\App\CPU\translate('email_address')}}</label>
-                                                        <input class="form-control" name="email" type="email"
-                                                               id="su-email"
-                                                               placeholder="johndoe@example.com"
-                                                               required>
-                                                        <div class="invalid-feedback">{{\App\CPU\translate('Please provide a valid email address')}}.
-                                                        </div>
+                                                        <label>Choose Payment Method</label>
+                                                        <select class="form-control" name="payment_method">
+                                                            <option value="cach on delevery">Cach on delevery</option>
+                                                            <option>online payment</option>
+                                                        </select>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-6">
+                                                <div class="col-md-12 mb-3">
                                                     <div class="form-group">
-                                                        <label for="su-email">{{\App\CPU\translate('Phone')}}</label>
-                                                        <input class="form-control" name="phone" type="number"
-                                                               id="su-phone" placeholder="{{\App\CPU\translate('01700000000')}}"
-                                                               required>
-                                                        <div class="invalid-feedback">{{\App\CPU\translate('Please provide a valid phone number')}}.
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-row">
-                                                <div class="col-sm-6">
-                                                    <div class="form-group">
-                                                        <label for="su-password">{{\App\CPU\translate('Password')}}</label>
-                                                        <div class="password-toggle">
-                                                            <input class="form-control" name="password" type="password"
-                                                                   id="su-password" required>
-                                                            <label class="password-toggle-btn">
-                                                                <input class="custom-control-input" type="checkbox"><i
-                                                                    class="czi-eye password-toggle-indicator"></i><span
-                                                                    class="sr-only">{{\App\CPU\translate('Show password')}}</span>
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <div class="form-group">
-                                                        <label
-                                                            for="su-password-confirm">{{\App\CPU\translate('confirm_password')}}</label>
-                                                        <div class="password-toggle">
-                                                            <input class="form-control" name="con_password"
-                                                                   type="password" id="su-password-confirm"
-                                                                   required>
-                                                            <label class="password-toggle-btn">
-                                                                <input class="custom-control-input" type="checkbox"><i
-                                                                    class="czi-eye password-toggle-indicator"></i><span
-                                                                    class="sr-only">{{\App\CPU\translate('Show password')}}</span>
-                                                            </label>
-                                                        </div>
+                                                        <label>Shipping Address:</label>
+                                                        <textarea class="form-control" placeholder="Enter your shipping address"></textarea>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-row">
-                                                <div class="col">
-                                                    <button class="btn btn-primary btn-block" type="submit">
-                                                        {{\App\CPU\translate('sign-up')}}
-                                                    </button>
-                                                </div>
-                                            </div>
+                                            <button type="submit" class="btn btn-primary float-right">Submit</button>
                                         </form>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    @endif
-                </div>
 
-                <br>
-                <div class="row">
-                    <div class="col-6">
-                        <a class="btn btn-secondary btn-block" href="{{route('shop-cart')}}">
-                            <i class="czi-arrow-{{Session::get('direction') === "rtl" ? 'right' : 'left'}} mt-sm-0 mx-1"></i>
-                            <span
-                                class="d-none d-sm-inline">{{\App\CPU\translate('Back')}} {{\App\CPU\translate('to')}}  {{\App\CPU\translate('Cart')}} </span>
-                            <span class="d-inline d-sm-none">{{\App\CPU\translate('Back')}}</span>
-                        </a>
-                    </div>
-                    <div class="col-6">
-                        @if(auth('customer')->check())
-                            <a class="btn btn-primary btn-block" href="{{route('shop-cart')}}">
-                                <span class="d-none d-sm-inline">{{\App\CPU\translate('shop_cart')}}</span>
-                                <span class="d-inline d-sm-none">{{\App\CPU\translate('Next')}}</span>
-                                <i class="czi-arrow-{{Session::get('direction') === "rtl" ? 'left' : 'right'}} mt-sm-0 mx-1"></i>
-                            </a>
-                        @endif
+                            </div><!-- End .col-lg-9 -->
+                            <aside class="col-lg-4">
+                                <div class="summary summary-cart">
+                                    <h3 class="summary-title">Cart Total</h3><!-- End .summary-title -->
+                                    <table class="table table-summary">
+
+                                        <tbody>
+                                            @php($sub_total = 0)
+                                            @php($total_tax = 0)
+                                            @php($total_shipping_cost = 0)
+                                            @php($total_discount_on_product = 0)
+                                            @if (session()->has('cart') && count(session()->get('cart')) > 0)
+                                                @foreach (session('cart') as $key => $cartItem)
+
+                                                    @php($sub_total += $cartItem['price'] * $cartItem['quantity'])
+                                                    @php($total_tax += $cartItem['tax'] * $cartItem['quantity'])
+                                                    @php($total_shipping_cost += $cartItem['shipping_cost'])
+                                                    @php($total_discount_on_product += $cartItem['discount'] * $cartItem['quantity'])
+                                                @endforeach
+                                            @else
+                                                <span>Empty Cart</span>
+                                            @endif
+                                            <tr class="summary-subtotal">
+                                                <td>Subtotal:</td>
+                                                <td>{{ \App\CPU\Helpers::currency_converter($sub_total) }}</td>
+                                            </tr><!-- End .summary-subtotal -->
+                                            <tr class="summary-shipping">
+                                                <td>Shipping:</td>
+                                                <td>{{ \App\CPU\Helpers::currency_converter($total_shipping_cost) }}</td>
+                                            </tr>
+                                            @if (session()->has('coupon_discount'))
+                                                <div class="d-flex justify-content-between">
+                                                    <span class="cart_title">Coupon Discount</span>
+                                                    <span class="cart_value" id="coupon-discount-amount">
+                                                        -
+                                                        {{ session()->has('coupon_discount') ? \App\CPU\Helpers::currency_converter(session('coupon_discount')) : 0 }}
+                                                    </span>
+                                                </div>
+                                                @php($coupon_dis = session('coupon_discount'))
+                                            @else
+                                                <div class="mt-2">
+                                                    <form class="needs-validation" method="post" novalidate
+                                                        id="coupon-code-ajax">
+                                                        <div class="form-group">
+                                                            <input class="form-control input_code" type="text"
+                                                                name="code" id="couponcod"
+                                                                placeholder="Coupon code (Optional)" required>
+                                                            <div class="invalid-feedback">Please provide coupon code.</div>
+                                                        </div>
+                                                        <button class="btn btn-primary btn-block" type="button"
+                                                            onclick="couponCode()">Apply Code
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                                @php($coupon_dis = 0)
+                                            @endif
+
+                                            <tr class="summary-total">
+                                                <td>Total:</td>
+                                                <td>{{ \App\CPU\Helpers::currency_converter($sub_total + $total_tax + $total_shipping_cost - $coupon_dis - $total_discount_on_product) }}
+                                                </td>
+                                            </tr><!-- End .summary-total -->
+                                        </tbody>
+                                    </table><!-- End .table table-summary -->
+                            </aside><!-- End .col-lg-3 -->
+                        </div><!-- End .row -->
                     </div>
                 </div>
-            </section>
-            <!-- Sidebar-->
-            @include('web-views.partials._order-summary')
-        </div>
-    </div>
+            </div><!-- End .container -->
+        </div><!-- End .cart -->
+    </div><!-- End .page-content -->
 @endsection
-
-@push('script')
+@push('scripts')
 
     <script>
-        $('#login-form').submit(function (e) {
-            e.preventDefault();
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.post({
-                url: '{{route('customer.auth.login')}}',
-                dataType: 'json',
-                data: $('#login-form').serialize(),
-                beforeSend: function () {
-                    $('#loading').show();
-                },
-                success: function (data) {
-                    toastr.success(data.message, {
-                        CloseButton: true,
-                        ProgressBar: true
-                    });
-                    location.reload();
-                },
-                complete: function () {
-                    $('#loading').hide();
-                },
-                error: function () {
-                    toastr.error('{{\App\CPU\translate('Credential not matched')}}!', {
-                        CloseButton: true,
-                        ProgressBar: true
-                    });
-                }
-            });
-        });
+        cartQuantityInitialize();
 
-        $('#sign-up-form').submit(function (e) {
-            e.preventDefault();
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.post({
-                url: '{{route('customer.auth.register')}}',
+        function set_shipping_id(id) {
+            @foreach(session()->get('cart') as $key => $item)
+                let key = '{{ $key }}';
+                @break
+            @endforeach
+            $.get({
+                url: '{{ url('/') }}/customer/set-shipping-method',
                 dataType: 'json',
-                data: $('#sign-up-form').serialize(),
-                beforeSend: function () {
+                data: {
+                    id: id,
+                    key: key
+                },
+                beforeSend: function() {
                     $('#loading').show();
                 },
-                success: function (data) {
-                    if (data.errors) {
-                        for (var i = 0; i < data.errors.length; i++) {
-                            toastr.error(data.errors[i].message, {
-                                CloseButton: true,
-                                ProgressBar: true
-                            });
-                        }
-                    } else {
-                        toastr.success(data.message, {
+                success: function(data) {
+                    if (data.status == 1) {
+                        toastr.success('Shipping method selected', {
                             CloseButton: true,
                             ProgressBar: true
                         });
-                        setInterval(function () {
-                            location.href = data.url;
+                        setInterval(function() {
+                            location.reload();
                         }, 2000);
+                    } else {
+                        toastr.error('Choose proper shipping method.', {
+                            CloseButton: true,
+                            ProgressBar: true
+                        });
                     }
                 },
-                complete: function () {
+                complete: function() {
                     $('#loading').hide();
                 },
-                error: function () {
-                    toastr.error('{{\App\CPU\translate('something went wrong')}}!', {
-                        CloseButton: true,
-                        ProgressBar: true
-                    });
-                }
             });
-        });
+        }
     </script>
-
 @endpush
