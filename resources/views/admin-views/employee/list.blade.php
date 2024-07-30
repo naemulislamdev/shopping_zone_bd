@@ -20,7 +20,7 @@
             <div class="card">
                 <div class="card-header">
                     <div>
-                        <h5>{{\App\CPU\translate('employee_table')}} 
+                        <h5>{{\App\CPU\translate('employee_table')}}
                             <span style="color: red; padding: 0 .4375rem;">
                             ({{$em->total()}})</span>
                         </h5>
@@ -60,6 +60,7 @@
                                 <th>{{\App\CPU\translate('Name')}}</th>
                                 <th>{{\App\CPU\translate('Email')}}</th>
                                 <th>{{\App\CPU\translate('Phone')}}</th>
+                                <th>Branch</th>
                                 <th>{{\App\CPU\translate('Role')}}</th>
                                 <th>{{\App\CPU\translate('Status')}}</th>
                                 <th style="width: 50px">{{\App\CPU\translate('action')}}</th>
@@ -75,6 +76,7 @@
                                       {{$e['email']}}
                                     </td>
                                     <td>{{$e['phone']}}</td>
+                                    <td>{{$e->branch['name']}}</td>
                                     <td>{{$e->role['name']}}</td>
                                     <td>
                                         <label class="toggle-switch toggle-switch-sm">

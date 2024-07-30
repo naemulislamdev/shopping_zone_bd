@@ -43,12 +43,12 @@
 
                         <div class="form-group">
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <label for="name">{{\App\CPU\translate('Email')}}</label>
                                     <input type="email" value="{{$e['email']}}" name="email" class="form-control" id="email"
                                            placeholder="{{\App\CPU\translate('Ex')}} : ex@gmail.com" required>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <label for="name">{{\App\CPU\translate('Role')}}</label>
                                     <select class="form-control" name="role_id"
                                             style="width: 100%" >
@@ -57,6 +57,15 @@
                                                 <option
                                                     value="{{$r->id}}" {{$r['id']==$e['admin_role_id']?'selected':''}}>{{$r->name}}</option>
                                             @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="name">Branch</label>
+                                    <select class="form-control js-example-responsive demo-select2" name="branch_id">
+                                        <option value="0" selected disabled>---{{\App\CPU\translate('select')}}---</option>
+                                        @foreach($branches as $value)
+                                            <option value="{{$value->id}}" {{$value['id']==$e['branch_id']?'selected':''}}>{{$value->name}}</option>
+                                        @endforeach
                                     </select>
                                 </div>
 
@@ -88,9 +97,9 @@
                             </div>
                         </div>
 
-                        
+
                         <button type="submit" class="btn btn-primary float-right">{{\App\CPU\translate('Update')}}</button>
-                        
+
                     </form>
                 </div>
             </div>

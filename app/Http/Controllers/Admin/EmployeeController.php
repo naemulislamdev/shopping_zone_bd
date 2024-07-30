@@ -7,6 +7,7 @@ use App\CPU\ImageManager;
 use App\Http\Controllers\Controller;
 use App\Model\Admin;
 use App\Model\AdminRole;
+use App\Model\Branch;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -17,7 +18,8 @@ class EmployeeController extends Controller
     public function add_new()
     {
         $rls = AdminRole::whereNotIn('id', [1])->get();
-        return view('admin-views.employee.add-new', compact('rls'));
+        $branches = Branch::wherestatus(1)->get();
+        return view('admin-views.employee.add-new', compact('rls','branches'));
     }
 
     public function store(Request $request)
@@ -48,6 +50,7 @@ class EmployeeController extends Controller
             'phone' => $request->phone,
             'email' => $request->email,
             'admin_role_id' => $request->role_id,
+            'branch_id' => $request->branch_id,
             'password' => bcrypt($request->password),
             'status'=>1,
             'image' => ImageManager::upload('admin/', 'png', $request->file('image')),
@@ -79,7 +82,9 @@ class EmployeeController extends Controller
     {
         $e = Admin::where(['id' => $id])->first();
         $rls = AdminRole::whereNotIn('id', [1])->get();
-        return view('admin-views.employee.edit', compact('rls', 'e'));
+        $branches = Branch::wherestatus(1)->get();
+        // dd($branches);
+        return view('admin-views.employee.edit', compact('rls', 'e','branches'));
     }
 
     public function update(Request $request, $id)
@@ -117,6 +122,7 @@ class EmployeeController extends Controller
             'phone' => $request->phone,
             'email' => $request->email,
             'admin_role_id' => $request->role_id,
+            'branch_id' => $request->branch_id,
             'password' => $pass,
             'image' => $e['image'],
             'updated_at' => now(),
@@ -130,7 +136,7 @@ class EmployeeController extends Controller
         $employee = Admin::find($request->id);
         $employee->status = $request->status;
         $employee->save();
-    
+
         Toastr::success('Employee status updated!');
         return back();
     }
