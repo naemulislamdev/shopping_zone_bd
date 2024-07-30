@@ -115,11 +115,12 @@
                     <div class="p-image">
                         <div class="row mb-2">
                             <div class="col-md-7 mx-auto">
-                                        <div class="main-image mb-3 float-right" id="img-zoom">
-                                            <img id="main-image" src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$product['thumbnail']}}"
-                                                xoriginal="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$product['thumbnail']}}"
-                                                class="img-fluid xzoom" alt="Product Image">
-                                        </div>
+                                <div class="main-image mb-3 float-right" id="img-zoom">
+                                    <img id="main-image"
+                                        src="{{ \App\CPU\ProductManager::product_image_path('thumbnail') }}/{{ $product['thumbnail'] }}"
+                                        xoriginal="{{ \App\CPU\ProductManager::product_image_path('thumbnail') }}/{{ $product['thumbnail'] }}"
+                                        class="img-fluid xzoom" alt="Product Image">
+                                </div>
                             </div>
                         </div>
                         <div class="row">
@@ -160,18 +161,18 @@
                                     <label for="color">Color:</label>
                                     <div class="d-flex">
                                         @foreach (json_decode($product->colors) as $key => $color)
-                                                        <div>
-                                                            <li>
-                                                                <input type="radio"
-                                                                    id="{{ $product->id }}-color-{{ $key }}"
-                                                                    name="color" value="{{ $color }}"
-                                                                    @if($key == 0) checked @endif>
-                                                                <label style="background: {{ $color }};"
-                                                                    for="{{ $product->id }}-color-{{ $key }}"
-                                                                    data-toggle="tooltip"></label>
-                                                            </li>
-                                                        </div>
-                                                    @endforeach
+                                            <div>
+                                                <li>
+                                                    <input type="radio"
+                                                        id="{{ $product->id }}-color-{{ $key }}" name="color"
+                                                        value="{{ $color }}"
+                                                        @if ($key == 0) checked @endif>
+                                                    <label style="background: {{ $color }};"
+                                                        for="{{ $product->id }}-color-{{ $key }}"
+                                                        data-toggle="tooltip"></label>
+                                                </li>
+                                            </div>
+                                        @endforeach
                                     </div>
                                 </div>
 
@@ -187,36 +188,38 @@
                                     @csrf
                                     <input type="hidden" name="id" value="{{ $product->id }}">
 
-                                <div class="row mb-3">
-                                    <div class="col-md-5 mb-2">
-                                        <div class="input-group mt-1">
-                                            <div class="input-group-prepend">
-                                                <button class="btn btn-outline-secondary" type="button"
-                                                    onclick="decrementValue()">-</button>
+                                    <div class="row mb-3">
+                                        <div class="col-md-5 mb-2">
+                                            <div class="input-group mt-1">
+                                                <div class="input-group-prepend">
+                                                    <button class="btn btn-outline-secondary" type="button"
+                                                        onclick="decrementValue()">-</button>
+                                                </div>
+                                                <input type="text" id="quantity" class="form-control text-center"
+                                                    value="{{ $product->minimum_order_qty ?? 1 }}" readonly
+                                                    min="{{ $product->minimum_order_qty ?? 1 }}" max="100">
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-outline-secondary" type="button"
+                                                        onclick="incrementValue()">+</button>
+                                                </div>
                                             </div>
-                                            <input type="text" id="quantity" class="form-control text-center"
-                                                value="{{ $product->minimum_order_qty ?? 1 }}" readonly min="{{ $product->minimum_order_qty ?? 1 }}" max="100">
-                                            <div class="input-group-append">
-                                                <button class="btn btn-outline-secondary" type="button"
-                                                    onclick="incrementValue()">+</button>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <div class="d-flex justify-content-center align-content-center mt-2">
+                                                <span class="instock">Instock: 5</span>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-7">
-                                        <div class="d-flex justify-content-center align-content-center mt-2">
-                                            <span class="instock">Instock: 5</span>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <div class="row mb-3">
-                                    <div class="col-md-6 mb-3">
-                                        <a href="#" class="w-100 common-btn">Order Now</a>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6 mb-3">
+                                            <a href="#" class="w-100 common-btn">Order Now</a>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <button class="btn btn-dark btn-block" onclick="addToCart()">Add to
+                                                Cart</button>
+                                        </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <button class="btn btn-dark btn-block" onclick="addToCart()">Add to Cart</button>
-                                    </div>
-                                </div>
                                 </form>
                                 <div class="row">
                                     <div class="col-md-12 mb-3">
@@ -251,9 +254,9 @@
                                                 <div class="card-header d-flex justify-content-between align-items-center"
                                                     id="review">
                                                     <h5 class="mb-0">
-                                                        <button class="btn btn-link" type="button" data-toggle="collapse"
-                                                            data-target="#reviewCollapse" aria-expanded="true"
-                                                            aria-controls="reviewCollapse">
+                                                        <button class="btn btn-link" type="button"
+                                                            data-toggle="collapse" data-target="#reviewCollapse"
+                                                            aria-expanded="true" aria-controls="reviewCollapse">
                                                             Review
                                                         </button>
                                                     </h5>

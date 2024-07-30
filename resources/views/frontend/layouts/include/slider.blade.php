@@ -9,7 +9,7 @@
             <div class="carousel-item active">
                 <div class="main-slider">
                     <img class="d-block w-100"
-                        src="{{ asset('public/frontend') }}/assets/images/slider/swep-slider-1.jpg"
+                        src="{{ asset('public/assets/front-end') }}/images/slider/swep-slider-1.jpg"
                         alt="First slide">
                 </div>
                 <div class="slider-content-box wow animate__animated animate__fadeInUp">
@@ -23,7 +23,7 @@
             <div class="carousel-item">
                 <div class="main-slider">
                     <img class="d-block w-100"
-                        src="{{ asset('public/frontend') }}/assets/images/slider/swep-slider-2.jpg"
+                        src="{{ asset('public/assets/front-end') }}/images/slider/swep-slider-2.jpg"
                         alt="Second slide">
                 </div>
                 <div class="slider-content-box wow animate__animated animate__fadeInUp">
@@ -37,7 +37,7 @@
             <div class="carousel-item">
                 <div class="main-slider">
                     <img class="d-block w-100"
-                        src="{{ asset('public/frontend') }}/assets/images/slider/swep-slider-3.jpg"
+                        src="{{ asset('public/assets/front-end') }}/images/slider/swep-slider-3.jpg"
                         alt="Third slide">
                 </div>
                 <div class="slider-content-box wow animate__animated animate__fadeInUp">

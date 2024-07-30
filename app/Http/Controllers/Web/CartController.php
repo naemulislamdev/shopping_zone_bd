@@ -58,48 +58,119 @@ class CartController extends Controller
         ];
     }
 
-    public function addToCart(Request $request)
+    public function addToCartOnSession(Request $request)
     {
-        $cart = CartManager::add_to_cart($request);
+        $product = Product::find($request->id);
+        $data = array();
+        $data['id'] = $product->id;
+        $str = '';
+        $variations = [];
+        $price = 0;
+        //chek if out of stock
+        if ($product['current_stock'] < $request['quantity']) {
+            return response()->json([
+                'data' => 0
+            ]);
+        }
+        //check the color enabled or disabled for the product
+        if ($request->has('color')) {
+            $data['color'] = $request['color'];
+            $str = Color::where('code', $request['color'])->first()->name;
+            $variations['color'] = $str;
+        }
+        //Gets all the choice values of customer choice option and generate a string like Black-S-Cotton
+        foreach (json_decode(Product::find($request->id)->choice_options) as $key => $choice) {
+            $data[$choice->name] = $request[$choice->name];
+            $variations[$choice->title] = $request[$choice->name];
+            if ($str != null) {
+                $str .= '-' . str_replace(' ', '', $request[$choice->name]);
+            } else {
+                $str .= str_replace(' ', '', $request[$choice->name]);
+            }
+        }
+        $data['variations'] = $variations;
+        $data['variant'] = $str;
+        if ($request->session()->has('cart')) {
+            if (count($request->session()->get('cart')) > 0) {
+                foreach ($request->session()->get('cart') as $key => $cartItem) {
+                    if ($cartItem['id'] == $request['id'] && $cartItem['variant'] == $str) {
+                        return response()->json([
+                            'data' => 1
+                        ]);
+                    }
+                }
+
+            }
+        }
+        //Check the string and decreases quantity for the stock
+        if ($str != null) {
+            $count = count(json_decode($product->variation));
+            for ($i = 0; $i < $count; $i++) {
+                if (json_decode($product->variation)[$i]->type == $str) {
+                    $price = json_decode($product->variation)[$i]->price;
+                    if (json_decode($product->variation)[$i]->qty < $request['quantity']) {
+                        return response()->json([
+                            'data' => 0
+                        ]);
+                    }
+                }
+            }
+        } else {
+            $price = $product->unit_price;
+        }
+
+        $tax = ($price * $product->tax) / 100;
+        $shipping_id = 1;
+        $shipping_cost = 0;
+
+        $data['quantity'] = $request['quantity'];
+        $data['shipping_method_id'] = $shipping_id;
+        $data['price'] = $price;
+        $data['tax'] = $tax;
+        $data['slug'] = $product->slug;
+        $data['name'] = $product->name;
+        $data['discount'] = Helpers::get_product_discount($product, $price);
+        $data['shipping_cost'] = $shipping_cost;
+        $data['thumbnail'] = $product->thumbnail;
+
+        if ($request->session()->has('cart')) {
+            $cart = $request->session()->get('cart', collect([]));
+            $cart->push($data);
+        } else {
+            $cart = collect([$data]);
+            $request->session()->put('cart', $cart);
+        }
+
         session()->forget('coupon_code');
         session()->forget('coupon_discount');
-        return response()->json($cart);
+
+        return response()->json([
+            'data' => $data,
+            'status' => 'success'
+        ]);
     }
 
     public function updateNavCart()
     {
-        return response()->json(['data' => view('frontend.layouts.include.header_cart')->render()]);
+        return view('layouts.front-end.partials.cart');
+        // return response()->json(['data' => view('layouts.front-end.partials.cart')->render()]);
     }
 
     //removes from Cart
+
     public function removeFromCart(Request $request)
     {
-        $user = Helpers::get_customer();
-        if ($user == 'offline') {
-            if (session()->has('offline_cart') == false) {
-                session()->put('offline_cart', collect([]));
-            }
-            $cart = session('offline_cart');
-
-            $new_collection = collect([]);
-            foreach ($cart as $item) {
-                if ($item['id'] !=  $request->key) {
-                    $new_collection->push($item);
-                }
-            }
-
-            session()->put('offline_cart', $new_collection);
-            return response()->json($new_collection);
-        } else {
-            Cart::where(['id' => $request->key, 'customer_id' => auth('customer')->id()])->delete();
+        if ($request->session()->has('cart')) {
+            $cart = $request->session()->get('cart', collect([]));
+            $cart->forget($request->key);
+            $request->session()->put('cart', $cart);
         }
 
         session()->forget('coupon_code');
         session()->forget('coupon_discount');
         session()->forget('shipping_method_id');
-        session()->forget('order_note');
 
-        return response()->json(['data' => view('layouts.front-end.partials.cart_details')->render()]);
+        return view('layouts.front-end.partials.cart');
     }
 
     //updated the quantity for a cart item

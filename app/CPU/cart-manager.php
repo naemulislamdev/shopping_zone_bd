@@ -52,6 +52,11 @@ class CartManager
         }
     }
 
+    public static function getCart()
+    {
+        $cart = Cart::get();
+        return $cart;
+    }
     public static function get_cart($group_id = null)
     {
         $user = Helpers::get_customer();
@@ -173,7 +178,7 @@ class CartManager
         session()->forget('order_note');
     }
 
-    public static function add_to_cart($request, $from_api = false)
+    public static function add_to_cart($request)
     {
         $str = '';
         $variations = [];
@@ -231,8 +236,8 @@ class CartManager
 
         $cart['color'] = $request->has('color') ? $request['color'] : null;
         $cart['product_id'] = $product->id;
-        $cart['variations'] = $request['variations'];
-        $cart['variant'] = $request['variant'];
+        $cart['variations'] = $request['variations'] ?? null;
+        $cart['variant'] = $request['variant'] ?? null;
         $cart['choices'] = json_encode($choices);
 
         //chek if out of stock
@@ -310,7 +315,7 @@ class CartManager
         {
             $admin_shipping = ShippingType::where('seller_id',0)->first();
             $shipping_type = isset($admin_shipping)==true?$admin_shipping->shipping_type:'order_wise';
-            
+
         }else{
             if($product->added_by == 'admin'){
                 $admin_shipping = ShippingType::where('seller_id',0)->first();
@@ -335,20 +340,20 @@ class CartManager
             'message' => translate('successfully_added!')
         ];
     }
-    
-    
+
+
      public static function cart_to_db_api($request, $from_api = false)
-    {        
+    {
         $user = Helpers::get_customer($request);
         if ($request->all()) {
             $cart = $request->all();
              foreach ($cart as $item) {
                   var_dump ( $item);
              }
-            
+
             // $product = Product::find($request->id);
             // $storage = [];
-           
+
                 $db_cart = Cart::where(['customer_id' => $user->id, 'seller_id' => $request['seller_id'], 'seller_is' => $request['seller_is']])->first();
               $data= ([
                     'customer_id' => $user->id,
@@ -373,7 +378,7 @@ class CartManager
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
-           
+
           $data = Cart::insert($data);
             return [
                 'status' => 1,
@@ -382,7 +387,7 @@ class CartManager
             ];
         }
     }
-    
+
 
     public static function update_cart_qty($request)
     {
@@ -412,7 +417,7 @@ class CartManager
             $cart['quantity'] = $request->quantity;
             $cart['shipping_cost'] =  CartManager::get_shipping_cost_for_product_category_wise($product,$request->quantity);
         }
-        
+
         $cart->save();
 
         return [
@@ -431,7 +436,7 @@ class CartManager
         {
             $admin_shipping = ShippingType::where('seller_id',0)->first();
             $shipping_type = isset($admin_shipping)==true?$admin_shipping->shipping_type:'order_wise';
-            
+
         }else{
             if($product->added_by == 'admin'){
                 $admin_shipping = ShippingType::where('seller_id',0)->first();
@@ -462,8 +467,8 @@ class CartManager
                     $category_shipping_cost = CategoryShippingCost::where('seller_id',$product->user_id)->where('category_id',$categoryID)->first();
                 }
             }
-            
-            
+
+
 
             if($category_shipping_cost->multiply_qty == 1)
             {
@@ -472,15 +477,15 @@ class CartManager
                 $cost = $category_shipping_cost->cost;
             }
 
-            
+
         }else if($shipping_type == 'product_wise'){
-            
+
             if($product->multiply_qty == 1)
             {
                 $cost = $qty * $product->shipping_cost;
             }else{
                 $cost = $product->shipping_cost;
-            } 
+            }
         }else{
             $cost = 0;
         }

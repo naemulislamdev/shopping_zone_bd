@@ -113,28 +113,21 @@ class WebController extends Controller
         $deal_of_the_day = DealOfTheDay::join('products', 'products.id', '=', 'deal_of_the_days.product_id')->select('deal_of_the_days.*', 'products.unit_price')->where('products.status', 1)->where('deal_of_the_days.status', 1)->first();
         // dd($featured_products);
 
-        return view('frontend.home', compact('featured_products', 'topRated', 'bestSellProduct', 'latest_products', 'categories', 'brands', 'deal_of_the_day', 'top_sellers', 'home_categories'));
-    }
-    //Category function
-    public function category(){
-        return view('frontend.category_wise_product');
-    }
-    //product details function
-    public function productDeails(){
-        return view('frontend.product_details');
+        return view('web-views.home', compact('featured_products', 'topRated', 'bestSellProduct', 'latest_products', 'categories', 'brands', 'deal_of_the_day', 'top_sellers', 'home_categories'));
     }
     //shop function
     public function shop(){
-        return view('frontend.shop');
+        $shop_products = Product::with(['reviews'])->active()->orderBy('id', 'desc')->get();
+        return view('web-views.products.all_products',compact('shop_products'));
     }
     //outlets function
     public function outlets(){
-        return view('frontend.outlets');
+        return view('web-views.outlets');
     }
     //checkout function
-    public function checkout(){
-        return view('frontend.checkout');
-    }
+    // public function checkout(){
+    //     return view('frontend.checkout');
+    // }
 
     public function flash_deals($id)
     {
@@ -241,37 +234,10 @@ class WebController extends Controller
 
     public function checkout_details(Request $request)
     {
-        $cart_group_ids = CartManager::get_cart_group_ids();
-        // return count($ cart_group_ids);
-        $shippingMethod = Helpers::get_business_settings('shipping_method');
-        $carts = Cart::whereIn('cart_group_id', $cart_group_ids)->get();
-        foreach($carts as $cart)
-        {
-            if ($shippingMethod == 'inhouse_shipping') {
-                $admin_shipping = ShippingType::where('seller_id',0)->first();
-                $shipping_type = isset($admin_shipping)==true?$admin_shipping->shipping_type:'order_wise';
-            } else {
-                if($cart->seller_is == 'admin'){
-                    $admin_shipping = ShippingType::where('seller_id',0)->first();
-                    $shipping_type = isset($admin_shipping)==true?$admin_shipping->shipping_type:'order_wise';
-                }else{
-                    $seller_shipping = ShippingType::where('seller_id',$cart->seller_id)->first();
-                    $shipping_type = isset($seller_shipping)==true?$seller_shipping->shipping_type:'order_wise';
-                }
-            }
+        $carts = Cart::get();
 
-            if($shipping_type == 'order_wise'){
-                $cart_shipping = CartShipping::where('cart_group_id', $cart->cart_group_id)->first();
-                if (!isset($cart_shipping)) {
-                    Toastr::info(translate('select_shipping_method_first'));
-                    return redirect('shop-cart');
-                }
-            }
-        }
-
-
-        if (count($cart_group_ids) > 0) {
-            return view('web-views.checkout-shipping');
+        if (count($carts) > 0) {
+            return view('web-views.checkout-details',compact('carts'));
 
         }
 
@@ -548,7 +514,7 @@ class WebController extends Controller
             $relatedProducts = Product::with(['reviews'])->active()->where('category_ids', $product->category_ids)->where('id', '!=', $product->id)->limit(12)->get();
             $deal_of_the_day = DealOfTheDay::where('product_id', $product->id)->where('status', 1)->first();
 
-            return view('frontend.product_details', compact('product', 'countWishlist', 'countOrder', 'relatedProducts', 'deal_of_the_day'));
+            return view('web-views.products.details', compact('product', 'countWishlist', 'countOrder', 'relatedProducts', 'deal_of_the_day'));
         }
 
         Toastr::error(translate('not_found'));
@@ -709,7 +675,7 @@ class WebController extends Controller
             }
         }
 
-        return view('web-views.products.view', compact('products', 'data'), $data);
+        return view('web-views.category_wise_product', compact('products', 'data'), $data);
     }
 
     public function discounted_products(Request $request)
