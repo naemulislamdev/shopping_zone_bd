@@ -24,11 +24,11 @@
             <ul class="social">
                 <li><a href="{{ route('product', $product->slug) }}"
                         data-tip="Quick View"><i class="fa fa-eye"></i></a></li>
-                <li><a href="#" onclick="addToCart()" data-tip="Add to Cart"><i
+                <li><a href="javascript:void(0);" data-toggle="modal" data-target="#addToCartModal_{{$product->id}}" data-tip="Add to Cart"><i
                             class="fa fa-shopping-cart"></i></a>
                 </li>
             </ul>
-            <a class="buy-now" href="">Buy Now</a>
+            <a class="buy-now" href="javascript:void(0);" data-toggle="modal" data-target="#addToCartModal_{{$product->id}}">Buy Now</a>
         </form>
     </div>
     <div class="product-content">

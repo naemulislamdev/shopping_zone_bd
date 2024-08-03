@@ -96,7 +96,7 @@
                                             </label>
                                         </div>
                                     </div>
-                                    
+
                                 </div>
                             </div>
                             <div class="form-group d-flex flex-wrap justify-content-between">
@@ -152,7 +152,7 @@
     </div>
 @endsection
 
-@push('script')
+@push('scripts')
     <script>
         $('#inputCheckd').change(function () {
             // console.log('jell');
@@ -163,6 +163,6 @@
             }
 
         });
-        
+
     </script>
 @endpush

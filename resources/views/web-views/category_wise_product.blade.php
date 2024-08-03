@@ -183,4 +183,7 @@
             }).hide();
         });
     </script>
+    <script>
+        cartQuantityInitialize();
+    </script>
 @endpush

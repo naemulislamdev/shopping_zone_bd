@@ -509,7 +509,7 @@ header.scrolled .header-icon > a > .fa {
 
 /*--------------------- Category section style-----------------------*/
 .category-section{
-  height: 730px;
+  /* height: 730px; */
 }
 .category-title-box{
   display: flex;
@@ -548,11 +548,12 @@ header.scrolled .header-icon > a > .fa {
 }
 
 .tp-category-thumb-3 {
-  height: 100%;
+  height: 540px;
   position: relative;
-    background-size: cover;
-    background-position: center;
   transition: all .3s ease-out 0s;
+}
+.tp-category-thumb-3 > img{
+    height: 100%;
 }
 .tp-category-thumb-3::before {
   content: '';

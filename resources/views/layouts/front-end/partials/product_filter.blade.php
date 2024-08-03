@@ -44,57 +44,29 @@
                     <h4 class="color-heading">Categories:</h4>
                     <!--start Filter Category-->
                     <div class="category-filter">
+                        @foreach(\App\CPU\CategoryManager::parents() as $category)
                         <div class="category">
                             <div class="category-header">
-                                <a href="#">Electronics</a>
-                                <span class="toggle-icon" data-toggle="electronics">+</span>
+                                <a href="#">{{$category['name']}}</a>
+                                <span class="toggle-icon" data-toggle="category_{{$category['id']}}">+</span>
                             </div>
-                            <div class="sub-categories" id="electronics">
+                            <div class="sub-categories" id="category_{{$category['id']}}">
+                                @foreach($category->childes as $child)
                                 <div class="sub-category">
                                     <div class="sub-category-header">
-                                        <a href="#">Mobiles</a>
-                                        <span class="toggle-icon" data-toggle="mobiles">+</span>
+                                        <a href="#">{{$child['name']}}</a>
+                                        <span class="toggle-icon" data-toggle="subCategory_{{$child['name']}}">+</span>
                                     </div>
-                                    <div class="child-categories" id="mobiles">
-                                        <a href="#">Smartphones</a><br>
-                                        <a href="#">Feature Phones</a>
-                                    </div>
-                                </div>
-                                <div class="sub-category">
-                                    <div class="sub-category-header">
-                                        <a href="#">Televisions</a>
+                                    <div class="child-categories" id="subCategory_{{$child['name']}}">
+                                        @foreach($child->childes as $ch)
+                                        <a href="#">{{$ch['name']}}</a><br>
+                                        @endforeach
                                     </div>
                                 </div>
+                                @endforeach
                             </div>
                         </div>
-                        <div class="category">
-                            <div class="category-header">
-                                <a href="#">Fashion</a>
-                                <span class="toggle-icon" data-toggle="fashion">+</span>
-                            </div>
-                            <div class="sub-categories" id="fashion">
-                                <div class="sub-category">
-                                    <div class="sub-category-header">
-                                        <a href="#">Men</a>
-                                        <span class="toggle-icon" data-toggle="men">+</span>
-                                    </div>
-                                    <div class="child-categories" id="men">
-                                        <a href="#">Clothing</a><br>
-                                        <a href="#">Shoes</a>
-                                    </div>
-                                </div>
-                                <div class="sub-category">
-                                    <div class="sub-category-header">
-                                        <a href="#">Women</a>
-                                        <span class="toggle-icon" data-toggle="women">+</span>
-                                    </div>
-                                    <div class="child-categories" id="women">
-                                        <a href="#">Clothing</a><br>
-                                        <a href="#">Accessories</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        @endforeach
                     </div>
                     <!--end category filter-->
                 </div>
@@ -137,33 +109,16 @@
                     <div class="color-selection mb-3">
                         <h4 class="color-heading">Brand:</h4>
                         <div class="brand-filter">
+                            @foreach(\App\CPU\BrandManager::get_brands() as $brand)
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="brand"
-                                    id="brandNike" value="nike">
-                                <label class="form-check-label" for="brandNike">
-                                    <span class="brand-logo"
-                                        style="background-image: url('https://via.placeholder.com/20x20?text=N');"></span>
-                                    Nike
+                                    id="brandNike__{{ $brand['id'] }}" value="{{ $brand['name'] }}">
+                                <label class="form-check-label" for="brandNike__{{ $brand['id'] }}">
+                                    <span class="brand-logo"></span>
+                                        {{ $brand['name'] }}
                                 </label>
                             </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="brand"
-                                    id="brandAdidas" value="adidas">
-                                <label class="form-check-label" for="brandAdidas">
-                                    <span class="brand-logo"
-                                        style="background-image: url('https://via.placeholder.com/20x20?text=A');"></span>
-                                    Adidas
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="brand"
-                                    id="brandPuma" value="puma">
-                                <label class="form-check-label" for="brandPuma">
-                                    <span class="brand-logo"
-                                        style="background-image: url('https://via.placeholder.com/20x20?text=P');"></span>
-                                    Puma
-                                </label>
-                            </div>
+                            @endforeach
                             <!-- Add more brands as needed -->
                         </div>
                     </div>

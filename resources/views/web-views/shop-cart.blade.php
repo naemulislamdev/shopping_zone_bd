@@ -13,10 +13,44 @@
     <meta property="twitter:url" content="{{env('APP_URL')}}">
     <meta property="twitter:description" content="{!! substr($web_config['about']->value,0,100) !!}">
     <link rel="stylesheet" href="{{asset('public/assets/front-end')}}/css/shop-cart.css"/>
+    <style>
+        .card-header {
+            padding: 6px 0px;
+            margin-bottom: 0;
+            border-bottom: 0px solid rgba(0, 0, 0, .125);
+            background: #f26d21;
+            color: #fff;
+            text-align: center;
+        }
+
+        header {
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 9999;
+            border-bottom: 1px solid hsla(0, 0%, 100%, .14);
+            background: #fff;
+            transition: 0.5s;
+        }
+
+        .menu-area>ul>li>a {
+            text-decoration: none;
+            color: #343a40;
+        }
+
+        .menu-icon {
+            color: #504f4f;
+        }
+
+        .header-icon>a>.fa {
+            color: #464545;
+        }
+    </style>
 @endpush
 
 @section('content')
-    <div class="container pb-5 mb-2 mt-3 rtl" style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};" id="cart-summary">
+    <div class="container pb-5 mb-2 mt-3" id="cart-summary">
         @include('layouts.front-end.partials.cart_details')
     </div>
 @endsection

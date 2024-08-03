@@ -266,4 +266,7 @@ $("#search-brand-m").on("keyup", function () {
     }).hide();
 });
 </script>
+<script>
+    cartQuantityInitialize();
+</script>
 @endpush
