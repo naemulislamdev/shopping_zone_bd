@@ -79,7 +79,7 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
             Route::post('add-product/{deal_id}', 'DealController@add_product_submit');
             Route::post('delete-product', 'DealController@delete_product')->name('delete-product');
         });
-        
+
          Route::group(['prefix' => 'landingpages', 'as' => 'landingpages.','middleware'=>['module:marketing_section']], function () {
             Route::get('landing', 'LandingPagesController@landing_index')->name('landing');
             Route::post('landing', 'LandingPagesController@landing_submit');
@@ -89,8 +89,8 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
             Route::get('add-product/{landing_id}', 'LandingPagesController@add_product')->name('add-product');
             Route::post('add-product/{landing_id}', 'LandingPagesController@add_product_submit');
             Route::post('delete-product', 'LandingPagesController@delete_product')->name('delete-product');
-           
-            
+
+
         });
 
         Route::group(['prefix' => 'employee', 'as' => 'employee.','middleware'=>['module:employee_section']], function () {
@@ -271,6 +271,15 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
 
             Route::post('sales-commission-update/{id}', 'SellerController@sales_commission_update')->name('sales-commission-update');
         });
+
+        Route::group(['prefix' => 'branches', 'as' => 'branches.','middleware'=>['module:business_settings']], function () {
+            Route::get('branch-list', 'BranchController@index')->name('branch-list');
+            Route::get('create', 'BranchController@create')->name('create');
+            Route::post('store', 'BranchController@store')->name('store');
+            Route::get('edit/{id}', 'BranchController@edit')->name('edit');
+            Route::post('update/{id}', 'BranchController@update')->name('update');
+        });
+
         Route::group(['prefix' => 'product', 'as' => 'product.','middleware'=>['module:product_management']], function () {
             Route::get('add-new', 'ProductController@add_new')->name('add-new');
             Route::post('store', 'ProductController@store')->name('store');
@@ -434,18 +443,18 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
                 Route::post('social-media-update', 'BusinessSettingsController@social_media_update')->name('social-media-update');
                 Route::post('social-media-delete', 'BusinessSettingsController@social_media_delete')->name('social-media-delete');
                 Route::post('social-media-status-update', 'BusinessSettingsController@social_media_status_update')->name('social-media-status-update');
-                
-                
+
+
                 //meta
                  Route::get('meta', 'BusinessSettingsController@meta')->name('meta');
                  Route::get('meta-post', 'BusinessSettingsController@meta_post')->name('meta-post');
                  Route::post('meta-post-edit', 'BusinessSettingsController@meta_post_edit')->name('meta-post-edit');
                  Route::post('meta-post-update', 'BusinessSettingsController@meta_post_update')->name('meta-post-update');
                 //facebook-post
-                
+
                 Route::get('facebook-post', 'BusinessSettingsController@facebook_post')->name('facebook-post');
                 Route::post('facebook-post-status', 'BusinessSettingsController@facebook_status_update')->name('facebook-post-status');
-               
+
                 Route::post('facebook-media-store', 'BusinessSettingsController@facebook_media_store')->name('facebook-media-store');
                 Route::get('facebookget', 'BusinessSettingsController@facebookget')->name('facebookget');
                  Route::post('facebook-media-delete', 'BusinessSettingsController@facebook_media_delete')->name('facebook-media-delete');

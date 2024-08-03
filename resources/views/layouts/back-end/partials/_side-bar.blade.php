@@ -600,6 +600,37 @@
                                 </ul>
                             </li>
 
+                            <li class="navbar-vertical-aside-has-menu {{Request::is('admin/branches*')?'active':''}}">
+                                <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle"
+                                   href="javascript:">
+                                    <i class="tio-shop-outlined nav-icon"></i>
+                                    <span
+                                        class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Branch</span>
+                                </a>
+                                <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
+                                    style="display: {{Request::is('admin/branches*')?'block':'none'}}">
+                                    <li class="nav-item {{Request::is('admin/branches/create')?'active':''}}">
+                                        <a class="nav-link"
+                                           href="{{route('admin.branches.create')}}">
+                                            <span class="tio-circle nav-indicator-icon"></span>
+                                            <span class="text-truncate">
+                                                Add New
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item {{Request::is('admin/branches/create')?'active':''}}">
+                                        <a class="nav-link"
+                                           href="{{route('admin.branches.branch-list')}}">
+                                            <span class="tio-circle nav-indicator-icon"></span>
+                                            <span class="text-truncate">
+                                                {{\App\CPU\translate('list')}}
+                                            </span>
+                                        </a>
+                                    </li>
+
+                                </ul>
+                            </li>
+
 
                             <li class="nav-item {{Request::is('admin/customer/list')?'active':''}}">
                                 <a class="nav-link " href="{{route('admin.customer.list')}}">
