@@ -34,6 +34,7 @@
   --jost: "Jost", sans-serif;
 }
 a:hover{text-decoration: none;}
+.btn-primary{background-color: #f26d21;border: none;}
 
 .container {
   width: 100%;

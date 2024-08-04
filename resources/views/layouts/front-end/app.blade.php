@@ -25,6 +25,7 @@
     <link rel="stylesheet" href="{{ asset('public/assets/front-end') }}/css/bootstrap_v4.min.css">
     <link rel="stylesheet" href="{{ asset('public/assets/front-end') }}/css/simple-lightbox.min.css" />
     <link rel="stylesheet" href="{{ asset('public/assets/front-end') }}/css/bs_customize.css">
+    <link rel="stylesheet" href="{{ asset('public/assets/front-end/css/user_account.css') }}">
     <link rel="stylesheet" href="{{ asset('public/assets/front-end/css/custome.css') }}">
     <link rel="stylesheet" href="{{ asset('public/assets/front-end') }}/css/responsive.css">
     {{-- dont touch this --}}
@@ -63,6 +64,20 @@
             border: 2px solid #121212;
         }
     </style>
+    @php
+        $request = request()->route()->getName();
+    @endphp
+    @if ($request !='home')
+    <style>
+        .menu-area>ul>li>a {
+            color: #1a1919;
+        }
+
+        .header-icon>a>.fa {
+            color: #1a1919;
+        }
+    </style>
+    @endif
 
     @php($google_tag_manager_id = \App\CPU\Helpers::get_business_settings('google_tag_manager_id'))
     @if ($google_tag_manager_id)
@@ -135,8 +150,12 @@
                             <ul>
                                 <li><a href="#">Complain</a></li>
                                 <li><a href="#">Place Manual Order</a></li>
-                                <li><a href="#">Order Track</a></li>
+                                <li><a href="{{ route('track-order.index')}}">Order Track</a></li>
+                                @if(auth('customer')->check())
+                                <li><a href="{{ route('user-account')}}">Profile</a></li>
+                                @else
                                 <li><a href="{{ route('customer.auth.login')}}">Login</a></li>
+                                @endif
                             </ul>
                         </div>
                     </div>

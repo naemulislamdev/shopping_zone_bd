@@ -32,11 +32,14 @@
             </div>
             <div class="col-md-3">
                 <div class="footer-title">
-                    <h3>Useful Links</h3>
+                    <h3>About Us</h3>
                     <ul>
-                        <li><a href="#">About</a></li>
-                        <li><a href="#">FAQ</a></li>
-                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="{{ route('about-us')}}">About</a></li>
+                        <li><a href="{{ route('helpTopic')}}">FAQ</a></li>
+                        <li><a href="{{ route('terms')}}">Terms & Conditions</a></li>
+                        <li><a href="{{ route('privacy-policy')}}">Privacy Policy</a></li>
+                        <li><a href="{{ route('outlets') }}">Our Outlets</a></li>
+                        <li><a href="{{ route('contacts')}}">Contact Us</a></li>
                     </ul>
                 </div>
             </div>
@@ -44,10 +47,10 @@
                 <div class="footer-title">
                     <h3>My Account</h3>
                     <ul>
-                        <li><a href="{{ route('customer.auth.login')}}">Login</a></li>
+                        <li><a href="{{ route('customer.auth.login')}}">Profile info</a></li>
+                        <li><a href="{{ route('customer.auth.login')}}">Wish List</a></li>
                         <li><a href="#">Order History</a></li>
-                        <li><a href="#">Track Order</a></li>
-                        <li><a href="#">Our Outlets</a></li>
+                        <li><a href="{{ route('track-order.index')}}">Track Order</a></li>
                     </ul>
                 </div>
             </div>

@@ -21,7 +21,6 @@
             border-radius: 10px;
         }
        .closet{
-            float: {{Session::get('direction') === "rtl" ? 'left' : 'right'}};
             font-size: 1.5rem;
             font-weight: 300;
             line-height: 1;
@@ -78,7 +77,7 @@
 @endsection
 
 
-@push('script')
+@push('scripts')
     <script src="{{asset('public/assets/front-end')}}/vendor/nouislider/distribute/nouislider.min.js">
     </script>
 @endpush
