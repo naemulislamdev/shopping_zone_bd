@@ -492,22 +492,17 @@
                     @endforeach
                 </div>
             @endforeach
+            @foreach(\App\Model\Banner::where('banner_type','Footer Banner')->where('published',1)->orderBy('id','desc')->take(3)->get() as $banner)
             <div class="row my-3">
                 <div class="col-md-12">
                     <div class="big-banner">
-                        <img src="{{ asset('public/assets/front-end') }}/images/product-banner/main-Banner.jpg"
-                            alt="">
+                        <a href="{{$banner['url']}}">
+                        <img onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'" src="{{asset('storage/app/public/banner')}}/{{$banner['photo']}}" alt="">
+                        </a>
                     </div>
                 </div>
             </div>
-            <div class="row my-3">
-                <div class="col-md-12">
-                    <div class="big-banner">
-                        <img src="{{ asset('public/assets/front-end') }}/images/product-banner/main-banner3.jpg"
-                            alt="">
-                    </div>
-                </div>
-            </div>
+            @endforeach
         </div>
     </section>
 

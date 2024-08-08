@@ -672,8 +672,35 @@ class WebController extends Controller
                 return redirect('/');
             }
         }
+        $categoryName = Category::find((int)$request['id'])->name;
 
-        return view('web-views.category_wise_product', compact('products', 'data'), $data);
+        return view('web-views.category_wise_product', compact('products', 'data','categoryName'), $data);
+    }
+    public function videoShopping($slug){
+        $signleCategory = Category::where('slug', $slug)->first();
+        if($signleCategory){
+
+            $porduct_data = Product::active()->with(['reviews']);
+
+            $products = $porduct_data->get();
+            $product_ids = [];
+            foreach ($products as $product) {
+                foreach (json_decode($product['category_ids'], true) as $category) {
+
+                    if ($category['id'] == $signleCategory['id']) {
+                        // dd(''.$signleCategory['id'].'');
+                        array_push($product_ids, $product['id']);
+                    }
+                }
+            }
+            $allProducts = $porduct_data->whereIn('id', $product_ids)->get();
+            $categoryName = $signleCategory['name'];
+            return view('web-views.video_shopping', compact('allProducts','categoryName'));
+
+        }else {
+                Toastr::warning(translate('not_found'));
+                return redirect('/');
+            }
     }
 
     public function discounted_products(Request $request)

@@ -58,7 +58,7 @@
                             </li>
                             <li><a href="{{ route('shop') }}">Shop</i></a>
                             </li>
-                            <li><a href="#!">video Shopping</i></a>
+                            <li><a href="{{ route('video_shopping','video-shopping') }}">video Shopping</i></a>
                             </li>
                             <li><a href="#!">Campain</i></a>
                             </li>
