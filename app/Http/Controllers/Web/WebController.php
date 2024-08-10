@@ -42,6 +42,7 @@ use Gregwar\Captcha\PhraseBuilder;
 use Gregwar\Captcha\CaptchaBuilder;
 use App\CPU\CustomerManager;
 use App\CPU\Convert;
+use Carbon\Carbon;
 
 class WebController extends Controller
 {
@@ -702,6 +703,24 @@ class WebController extends Controller
                 return redirect('/');
             }
     }
+    //Campain products
+    public function campaing_products()
+    {
+        $todayDate=Carbon::today()->toDateString();
+
+        $data = Product::join('campaing_detalies', 'campaing_detalies.product_id', '=', 'products.id')->where('campaing_detalies.start_day', $todayDate)
+              		->select(['products.*','campaing_detalies.id', 'campaing_detalies.product_id','campaing_detalies.start_day', 'campaing_detalies.end_day', 'campaing_detalies.discountCam'])->get();
+        dd($data);
+                    //return response()->json($data,200);
+    }
+      public function campaing_products_tomrrrow()
+    {
+         $tomrrrowDate=Carbon::tomorrow()->toDateString();
+        $data = Product::join('campaing_detalies', 'campaing_detalies.product_id', '=', 'products.id')->where('campaing_detalies.start_day', $tomrrrowDate)
+              		->select(['products.*','campaing_detalies.id','campaing_detalies.product_id','campaing_detalies.start_day', 'campaing_detalies.end_day', 'campaing_detalies.discountCam'])->get();
+        return response()->json($data,200);
+    }
+    //End
 
     public function discounted_products(Request $request)
     {

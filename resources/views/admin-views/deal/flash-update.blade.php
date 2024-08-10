@@ -79,7 +79,7 @@
                             </div>
 
                             <div class="row">
-                                
+
                                 <div class="col-md-12 pt-3">
                                     <label for="name">{{\App\CPU\translate('Upload')}} {{\App\CPU\translate('Image')}}</label><span class="badge badge-soft-danger">( {{\App\CPU\translate('ratio')}} 5:1 )</span>
                                     <div class="custom-file" style="text-align: left">
@@ -105,9 +105,6 @@
             </div>
         </div>
     </div>
-
-    <!--modal-->
-    @include('shared-partials.image-process._image-crop-modal',['modal_id'=>'banner-image-modal','width'=>1100,'margin_left'=>'-65%'])
 </div>
 @endsection
 
@@ -182,12 +179,4 @@
             $('#dataTable').DataTable();
         });
     </script>
-
-    @include('shared-partials.image-process._script',[
-     'id'=>'banner-image-modal',
-     'height'=>170,
-     'width'=>1050,
-     'multi_image'=>false,
-     'route'=>route('image-upload')
-     ])
 @endpush
