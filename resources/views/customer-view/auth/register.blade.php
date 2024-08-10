@@ -10,6 +10,20 @@
             }
 
         }
+        .card{
+            box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+        }
+        .register-password-show {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
     </style>
 @endpush
 
@@ -65,16 +79,13 @@
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label for="si-password">{{\App\CPU\translate('password')}}</label>
-                                        <div class="password-toggle">
-                                            <input class="form-control" name="password" type="password" id="si-password"
+                                        <div class="register-password-show">
+                                            <input class="form-control" name="password" type="password"
                                                    style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};"
                                                    placeholder="{{\App\CPU\translate('minimum_8_characters_long')}}"
                                                    required>
-                                            <label class="password-toggle-btn">
-                                                <input class="custom-control-input" type="checkbox"><i
-                                                    class="czi-eye password-toggle-indicator"></i><span
-                                                    class="sr-only">{{\App\CPU\translate('Show')}} {{\App\CPU\translate('password')}} </span>
-                                            </label>
+                                                   <i class="fa fa-eye toggle-password"
+                                                   onclick="togglePassword('password')"></i>
                                         </div>
                                     </div>
 
@@ -82,21 +93,15 @@
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label for="si-password">{{\App\CPU\translate('confirm_password')}}</label>
-                                        <div class="password-toggle">
+                                        <div class="register-password-show">
                                             <input class="form-control" name="con_password" type="password"
                                                    style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};"
                                                    placeholder="{{\App\CPU\translate('minimum_8_characters_long')}}"
-                                                   id="si-password"
                                                    required>
-                                            <label class="password-toggle-btn">
-                                                <input class="custom-control-input" type="checkbox"
-                                                       style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};"><i
-                                                    class="czi-eye password-toggle-indicator"></i><span
-                                                    class="sr-only">{{\App\CPU\translate('Show')}} {{\App\CPU\translate('password')}} </span>
-                                            </label>
+                                                   <i class="fa fa-eye toggle-password"
+                                                   onclick="togglePassword('con_password')"></i>
                                         </div>
                                     </div>
-                                    
                                 </div>
                             </div>
                             <div class="form-group d-flex flex-wrap justify-content-between">
@@ -113,7 +118,7 @@
                                 </div>
 
                             </div>
-                            <div class="flex-between row" style="direction: {{ Session::get('direction') }}">
+                            <div class="d-flex justify-content-between">
                                 <div class="mx-1">
                                     <div class="text-right">
                                         <button class="btn btn-primary" id="sign-up" type="submit" disabled>
@@ -127,11 +132,13 @@
                                         <i class="fa fa-sign-in"></i> {{\App\CPU\translate('sign_in')}}
                                     </a>
                                 </div>
+                            </div>
+                            <div class="row" style="direction: {{ Session::get('direction') }}">
                                 <div class="col-12 mt-3">
                                     <div class="row">
                                         @foreach (\App\CPU\Helpers::get_business_settings('social_login') as $socialLoginService)
                                             @if (isset($socialLoginService) && $socialLoginService['status']==true)
-                                                <div class="col-sm-6 text-center mt-1">
+                                                <div class="col-sm-6 text-center mt-1 mx-auto">
                                                     <a class="btn btn-outline-primary"
                                                        href="{{route('customer.auth.service-login', $socialLoginService['login_medium'])}}"
                                                        style="width: 100%">
@@ -152,7 +159,7 @@
     </div>
 @endsection
 
-@push('script')
+@push('scripts')
     <script>
         $('#inputCheckd').change(function () {
             // console.log('jell');
@@ -163,6 +170,21 @@
             }
 
         });
-        
+
+    </script>
+     <script>
+        function togglePassword(fieldId) {
+            const field = document.querySelector(`input[name="${fieldId}"]`);
+            const icon = field.nextElementSibling;
+            if (field.type === "password") {
+                field.type = "text";
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                field.type = "password";
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
     </script>
 @endpush

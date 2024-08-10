@@ -146,15 +146,14 @@ class CartController extends Controller
 
         return response()->json([
             'data' => $data,
-            'status' => 'success'
+            'status' => 'success',
+            'count' => session()->has('cart') ? count(session()->get('cart')) : 0
         ]);
     }
 
     public function updateNavCart()
     {
-        return view('layouts.front-end.partials.cart');
-        // return response()->json(['data' => view('layouts.front-end.partials.cart')->render()]);
-    }
+        return view('layouts.front-end.partials.cart');    }
 
     //removes from Cart
 
@@ -169,22 +168,55 @@ class CartController extends Controller
         session()->forget('coupon_code');
         session()->forget('coupon_discount');
         session()->forget('shipping_method_id');
+        $data['count'] = session()->has('cart') ? count(session()->get('cart')) : 0;
+        $data['html'] = view('layouts.front-end.partials.cart');
 
-        return view('layouts.front-end.partials.cart');
+        return $data;
     }
 
     //updated the quantity for a cart item
     public function updateQuantity(Request $request)
     {
-        $response = CartManager::update_cart_qty($request);
+        $status = 1;
+        $qty = 0;
+        $cart = $request->session()->get('cart', collect([]));
+        $cart = $cart->map(function ($object, $key) use ($request, &$status, &$qty) {
+            if ($key == $request->key) {
+                $product = Product::find($object['id']);
+                $count = count(json_decode($product->variation));
+                if ($count) {
+                    for ($i = 0; $i < $count; $i++) {
+                        if (json_decode($product->variation)[$i]->type == $object['variant']) {
+                            if (json_decode($product->variation)[$i]->qty < $request->quantity) {
+                                $status = 0;
+                                $qty = $object['quantity'];
+                            } else {
+                                $object['quantity'] = $request->quantity;
+                            }
+                        }
+                    }
+                } else if ($product['current_stock'] < $request->quantity) {
+                    $status = 0;
+                    $qty = $object['quantity'];
+                } else {
+                    $object['quantity'] = $request->quantity;
+                }
+            }
+            return $object;
+        });
+
+        if ($status == 0) {
+            return response()->json([
+                'data' => $status,
+                'qty' => $qty,
+            ]);
+        }
+
+        $request->session()->put('cart', $cart);
 
         session()->forget('coupon_code');
         session()->forget('coupon_discount');
 
-        if ($response['status'] == 0) {
-            return response()->json($response);
-        }
-
-        return response()->json(view('layouts.front-end.partials.cart_details')->render());
+        return view('layouts.front-end.partials.cart_details');
     }
 }

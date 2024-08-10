@@ -98,15 +98,15 @@
                                     <div id="accordion">
                                         <div class="row mb-0" style="color: black;">
                                             <div class="col-1 mt-3">
-                                                <i class="czi-book text-muted mr-2"></i>
+                                                <i class="fa fa-book text-muted mr-2"></i>
                                             </div>
                                             <div class="col-11">
-                                                <button class="btnF btn-link collapsed" data-toggle="collapse"
+                                                <a class="btnF btn-link collapsed" data-toggle="collapse"
                                                         data-target="#collapseTwo{{ $helps[$i]['id'] }}"
                                                         aria-expanded="false" aria-controls="collapseTwo"
-                                                        style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}}">
+                                                        style="cursor: pointer; text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}}">
                                                     <li class="d-flex align-items-center border-bottom pb-3 mb-3">{{ $helps[$i]['question'] }}</li>
-                                                </button>
+                                                </a>
                                             </div>
                                         </div>
                                         <div id="collapseTwo{{ $helps[$i]['id'] }}" class="collapse"
@@ -126,15 +126,15 @@
                                     <div id="accordion">
                                         <div class="row mb-0" style="color: black;">
                                             <div class="col-1 mt-3">
-                                                <i class="czi-book text-muted mr-2"></i>
+                                                <i class="fa fa-book text-muted mr-2"></i>
                                             </div>
                                             <div class="col-11">
-                                                <button class="btnF btn-link collapsed" data-toggle="collapse"
+                                                <a class="btnF btn-link collapsed" data-toggle="collapse"
                                                         data-target="#collapseTwo{{ $helps[$i]['id'] }}"
                                                         aria-expanded="false" aria-controls="collapseTwo"
-                                                        style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}}">
+                                                        style="cursor: pointer; text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}}">
                                                     <li class="d-flex align-items-center border-bottom pb-3 mb-3">{{ $helps[$i]['question'] }}</li>
-                                                </button>
+                                                </a>
                                             </div>
                                         </div>
                                         <div id="collapseTwo{{ $helps[$i]['id'] }}" class="collapse"

@@ -207,75 +207,57 @@
                                 @endif
                                 <p class="product-description">This is a great product that you will love. It has many
                                     amazing features and benefits that make it a must-have item.</p>
-                                <form id="add-to-cart-form_{{ $product->id }}" class="mb-2">
+                                <form id="form-{{ $product->id }}" class="mb-2">
                                     @csrf
                                     <input type="hidden" name="id" value="{{ $product->id }}">
-                                    <div class="position-relative mr-n4 mb-3">
-                                        @if (count(json_decode($product->colors)) > 0)
-                                            <div class="row no-gutters">
-                                                <div class="col-2">
-                                                    <div class="product-description-label mt-2">{{ __('Color') }}:
+
+                                    @if (count(json_decode($product->colors)) > 0)
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <h4>Color</h4>
+                                            </div>
+                                            @foreach (json_decode($product->colors) as $key => $color)
+                                                <div class="col-md-3">
+                                                    <div class="v-color-box">
+                                                        <input type="radio"
+                                                            id="{{ $product->id }}-color-{{ $key }}" checked
+                                                            name="color" value="{{ $color }}"
+                                                            @if ($key == 0) checked @endif>
+                                                        <label style="background: {{ $color }}"
+                                                            for="{{ $product->id }}-color-{{ $key }}"
+                                                            class="color-label"></label>
                                                     </div>
                                                 </div>
-                                                <div class="col-10">
-                                                    <ul class="list-inline checkbox-color mb-1">
-                                                        @foreach (json_decode($product->colors) as $key => $color)
-                                                            <li>
-                                                                <input type="radio"
-                                                                    id="{{ $product->id }}-color-{{ $key }}"
-                                                                    name="color" value="{{ $color }}"
-                                                                    @if ($key == 0) checked @endif>
-                                                                <label style="background: {{ $color }};"
-                                                                    for="{{ $product->id }}-color-{{ $key }}"
-                                                                    data-toggle="tooltip"></label>
-                                                            </li>
-                                                        @endforeach
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        @endif
-                                        @php
-                                            $qty = 0;
-                                            if (!empty($product)) {
-                                                foreach (json_decode($product->variation) as $key => $variation) {
-                                                    $qty += $variation->qty;
-                                                }
+                                            @endforeach
+                                        </div>
+                                    @endif
+                                    @php
+                                        $qty = 0;
+                                        if (!empty($product)) {
+                                            foreach (json_decode($product->variation) as $key => $variation) {
+                                                $qty += $variation->qty;
                                             }
-                                        @endphp
-                                    </div>
+                                        }
+                                    @endphp
                                     @foreach (json_decode($product->choice_options) as $key => $choice)
-                                        <div class="row no-gutters">
-                                            <div class="col-3">
-                                                <div class="product-description-label mt-2">{{ $choice->title }}:
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <h4 style="font-size: 18px; margin:0;">{{ $choice->title }}</h4>
+                                            </div>
+                                            @foreach ($choice->options as $key => $option)
+                                                <div class="col-md-4">
+                                                    <div class="v-size-box">
+                                                        <input type="radio"
+                                                            id="{{ $choice->name }}-{{ $option }}" checked
+                                                            name="{{ $choice->name }}" value="{{ $option }}"
+                                                            @if ($key == 0) checked @endif>
+                                                        <label for="{{ $choice->name }}-{{ $option }}"
+                                                            class="size-label">{{ $option }}</label>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-9">
-                                                <ul
-                                                    class="list-inline checkbox-alphanumeric checkbox-alphanumeric--style-1 mb-2">
-                                                    @foreach ($choice->options as $key => $option)
-                                                        <li class="for-mobile-capacity">
-                                                            <input type="radio"
-                                                                id="{{ $choice->name }}-{{ $option }}"
-                                                                name="{{ $choice->name }}" value="{{ $option }}"
-                                                                @if ($key == 0) checked @endif>
-                                                            <label
-                                                                for="{{ $choice->name }}-{{ $option }}">{{ $option }}</label>
-                                                        </li>
-                                                    @endforeach
-                                                </ul>
-                                            </div>
+                                            @endforeach
                                         </div>
                                     @endforeach
-
-                                    <div class="size-selection mb-3">
-                                        <label for="size">Size:</label>
-                                        <select id="size" class="form-control w-50">
-                                            <option>Small</option>
-                                            <option>Medium</option>
-                                            <option>Large</option>
-                                        </select>
-                                    </div>
-
 
                                     <div class="row mb-3">
                                         <div class="col-md-4 mb-2">
@@ -314,11 +296,12 @@
 
                                     <div class="row mb-3">
                                         <div class="col-md-6 mb-3">
-                                            <a onclick="buy_now();" href="javascript:void(0);"
+                                            <a onclick="buy_now('form-{{ $product->id }}')" href="javascript:void(0);"
                                                 class="w-100 common-btn">Order Now</a>
                                         </div>
                                         <div class="col-md-6">
-                                            <button class="btn btn-dark btn-block" onclick="addToCart('add-to-cart-form_{{ $product->id }}')">Add to
+                                            <button class="btn btn-dark btn-block"
+                                                onclick="addToCart('form-{{ $product->id }}')">Add to
                                                 Cart</button>
                                         </div>
                                         <button type="button" onclick="addWishlist('{{ $product['id'] }}')"
@@ -542,6 +525,8 @@
         });
     </script>
     <script type="text/javascript">
+        cartQuantityInitialize();
+        getVariantPrice();
         $('#add-to-cart-form input').on('change', function() {
             getVariantPrice();
         });

@@ -101,11 +101,6 @@
                 font-size: 19px;
             }
 
-            .photoHeader {
-                margin- {{Session::get('direction') === "rtl" ? 'right' : 'left'}}: 2px !important;
-                margin- {{Session::get('direction') === "rtl" ? 'left' : 'right'}}: 1px !important;
-                padding: 13px;
-            }
         }
     </style>
 @endpush
@@ -130,8 +125,8 @@
             <section class="col-lg-9 col-md-9">
                 <div class="card box-shadow-sm">
                     <div class="card-header">
-                        
-                        
+
+
                         <form class="mt-3" action="{{route('user-update')}}" method="post"
                               enctype="multipart/form-data">
                             <div class="row photoHeader">
@@ -153,7 +148,7 @@
                                     <input id="files" name="image" style="visibility:hidden;" type="file">
                                 </div>
 
-                                
+
 
                                 <div class="card-body mt-md-3" style="padding: 0px;">
                                     <h3 class="font-nameA">{{\App\CPU\translate('account_information')}} </h3>
@@ -223,14 +218,14 @@
                                             <div id='message'></div>
                                         </div>
                                     </div>
-                                   
+
                                     <a class="btn btn-danger float-{{Session::get('direction') === "rtl" ? 'right' : 'left'}}"
                                         href="javascript:"
                                         onclick="route_alert('{{ route('account-delete',[$customerDetail['id']]) }}','{{\App\CPU\translate('want_to_delete_this_account?')}}')">
                                         {{\App\CPU\translate('delete_account')}}
-                                    </a>   
-                                    
-                                
+                                    </a>
+
+
                                     <button type="submit"
                                             class="btn btn-primary float-{{Session::get('direction') === "rtl" ? 'left' : 'right'}}">{{\App\CPU\translate('update')}}   </button>
                                 </div>

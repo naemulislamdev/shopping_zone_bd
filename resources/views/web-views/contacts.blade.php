@@ -22,12 +22,14 @@
 
         .for-contac-image {
             padding: 6%;
+            width: 100%;
         }
 
         .for-send-message {
             padding: 26px;
             margin-bottom: 2rem;
             margin-top: 2rem;
+            box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
         }
 
         @media (max-width: 600px) {
@@ -75,7 +77,7 @@
                           <div class="col-sm-6">
                               <div class="form-group">
                                 <label >{{\App\CPU\translate('your_name')}}</label>
-                                <input class="form-control name" name="name" type="text" 
+                                <input class="form-control name" name="name" type="text"
                                   value="{{ old('name') }}" placeholder="John Doe" required>
 
                               </div>
@@ -83,7 +85,7 @@
                           <div class="col-sm-6">
                               <div class="form-group">
                                 <label for="cf-email">{{\App\CPU\translate('email_address')}}</label>
-                                <input class="form-control email" name="email" type="email" 
+                                <input class="form-control email" name="email" type="email"
                                   value="{{ old('email') }}"
                                   placeholder="johndoe@email.com" required >
 
@@ -100,7 +102,7 @@
                             <div class="col-sm-6">
                               <div class="form-group">
                                 <label for="cf-subject">{{\App\CPU\translate('Subject')}}:</label>
-                                <input class="form-control subject" type="text" name="subject" 
+                                <input class="form-control subject" type="text" name="subject"
                                   value="{{ old('subject') }}"   placeholder="{{\App\CPU\translate('Short title')}}" required>
 
                               </div>
@@ -132,7 +134,7 @@
                             </div>
                         @endif
                         <div class=" ">
-                          <button class="btn btn-primary" type="submit" >{{\App\CPU\translate('send')}}</button>
+                          <button class="btn btn-primary" type="submit" >{{\App\CPU\translate('send message')}}</button>
                       </div>
                     </form>
             </div>
@@ -142,7 +144,7 @@
 @endsection
 
 
-@push('script')
+@push('scripts')
 {{-- recaptcha scripts start --}}
 @if(isset($recaptcha) && $recaptcha['status'] == 1)
     <script type="text/javascript">
@@ -157,7 +159,7 @@
     <script>
         $("#getResponse").on('submit', function (e) {
             var response = grecaptcha.getResponse();
-        
+
             if (response.length === 0) {
                 e.preventDefault();
                 toastr.error("{{\App\CPU\translate('Please check the recaptcha')}}");

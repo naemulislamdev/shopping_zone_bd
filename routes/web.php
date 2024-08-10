@@ -24,7 +24,7 @@ Route::group(['namespace' => 'Web','middleware'=>['maintenance_mode']], function
         Route::get('/product-details', 'productDeails')->name('product.details');
         Route::get('/shop', 'shop')->name('shop');
         Route::get('/outlets', 'outlets')->name('outlets');
-        Route::get('/checkout-details', 'checkout_details')->name('checkout-details');
+        Route::get('/shop-cart', 'shop_cart')->name('shop-cart');
     });
 
     Route::get('quick-view', 'WebController@quick_view')->name('quick-view');
@@ -37,7 +37,7 @@ Route::group(['namespace' => 'Web','middleware'=>['maintenance_mode']], function
         Route::get('checkout-review', 'WebController@checkout_review')->name('checkout-review')->middleware('customer');
         Route::get('checkout-complete', 'WebController@checkout_complete')->name('checkout-complete')->middleware('customer');
         Route::get('order-placed', 'WebController@order_placed')->name('order-placed')->middleware('customer');
-        Route::get('shop-cart', 'WebController@shop_cart')->name('shop-cart');
+        // Route::get('shop-cart', 'WebController@shop_cart')->name('shop-cart');
         Route::post('order_note', 'WebController@order_note')->name('order_note');
     });
 
@@ -58,6 +58,7 @@ Route::group(['namespace' => 'Web','middleware'=>['maintenance_mode']], function
     Route::get('terms', 'WebController@termsandCondition')->name('terms');
     Route::get('privacy-policy', 'WebController@privacy_policy')->name('privacy-policy');
 
+    Route::get('/category/{slug}', 'WebController@videoShopping')->name('video_shopping');
     Route::get('/product/{slug}', 'WebController@product')->name('product');
     Route::get('products', 'WebController@products')->name('products');
     Route::get('orderDetails', 'WebController@orderdetails')->name('orderdetails');
@@ -156,9 +157,10 @@ Route::group(['prefix' => 'shop', 'as' => 'shop.', 'namespace' => 'Seller\Auth']
 //check done
 Route::group(['prefix' => '/cart', 'as' => 'cart.', 'namespace' => 'Web'], function () {
     Route::post('variant_price', 'CartController@variant_price')->name('variant_price');
-    Route::post('/add-product', 'CartController@addToCartOnSession')->name('product_add');
+    Route::post('/add-product', 'CartController@addToCartOnSession')->name('add');
     Route::post('/remove', 'CartController@removeFromCart')->name('remove');
     Route::post('/nav-cart-items', 'CartController@updateNavCart')->name('nav_cart');
+    Route::post('toolbar', 'CartController@updateToolbar')->name('toolbar');
     Route::post('/updateQuantity', 'CartController@updateQuantity')->name('updateQuantity');
     // In web.php
 // Route::post('/add-to-cart', 'CartController@addToCart')->name('add.to.cart');

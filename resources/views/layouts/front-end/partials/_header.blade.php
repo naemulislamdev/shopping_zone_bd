@@ -9,7 +9,7 @@
                 </a>
             </div>
             <div class="col-md-8">
-                @php($categories=\App\CPU\CategoryManager::parents())
+                @php($categories = \App\CPU\CategoryManager::parents())
                 <nav class="navbar">
                     <div class="menu-area">
                         <ul>
@@ -58,7 +58,7 @@
                             </li>
                             <li><a href="{{ route('shop') }}">Shop</i></a>
                             </li>
-                            <li><a href="#!">video Shopping</i></a>
+                            <li><a href="{{ route('video_shopping','video-shopping') }}">video Shopping</i></a>
                             </li>
                             <li><a href="#!">Campain</i></a>
                             </li>
@@ -78,13 +78,20 @@
                         aria-controls="searchOffcanvas"><i class="fa fa-search" aria-hidden="true"></i></a>
                     <a href=""><i class="fa fa-heart-o" aria-hidden="true"></i><span
                             class="badge badge-danger">0</span></a>
-
-                    @include('layouts.front-end.partials.cart')
+                    <a data-bs-toggle="offcanvas" href="#shoppingCartOffcanvas" role="button"
+                        aria-controls="shoppingCartOffcanvas"><i class="fa fa-shopping-cart"
+                            aria-hidden="true"></i><span class="badge badge-danger" id="total_cart_count">
+                                {{session()->has('cart') ? count(session()->get('cart')) : 0}}
+                        </span></a>
                 </div>
             </div>
         </div>
     </div>
 </header>
+
+
+
+
 <!--end header-->
 <!--start mobile menu-->
 <div class="mobile-menu">
@@ -125,8 +132,9 @@
                                             <li class="mega-dd-btn-2">
                                                 <div class="menu-link d-flex justify-content-between">
                                                     <a href="#">Sub Category</a>
-                                                    <a type="button" data-toggle="collapse" data-target="#subCategory"
-                                                        aria-expanded="true"><i class="fa fa-plus"></i></a>
+                                                    <a type="button" data-toggle="collapse"
+                                                        data-target="#subCategory" aria-expanded="true"><i
+                                                            class="fa fa-plus"></i></a>
                                                 </div>
                                                 <div class="collapse" id="subCategory">
                                                     <div class="card card-body">

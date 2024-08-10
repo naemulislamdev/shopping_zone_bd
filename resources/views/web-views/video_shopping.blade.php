@@ -1,5 +1,5 @@
 @extends('layouts.front-end.app')
-@section('title', ucfirst($data['data_from']) . ' products')
+@section('title', ' products')
 @push('css_or_js')
     <meta property="og:image" content="{{ asset('storage/app/public/company') }}/{{ $web_config['web_logo'] }}" />
     <meta property="og:title" content="Products of {{ $web_config['name'] }} " />
@@ -29,7 +29,7 @@
             <div class="row mb-3">
                 <div class="col text-center">
                     <div class="section-heading-title">
-                        <h3>{{$categoryName}}</h3>
+                        <h3>{{ $categoryName }}</h3>
                         <div class="heading-border"></div>
                     </div>
                     <div class="grid-controls">
@@ -69,23 +69,10 @@
                 </div>
             </div>
 
-            @if (count($products) > 0)
+            @if (count($allProducts) > 0)
                 <div class="row product-grid" id="ajax-products">
                     <!-- Your product columns go here -->
-                        @include('web-views.products._ajax-products',['products'=>$products])
-                </div>
-                <hr class="my-3">
-                <!-- Pagination-->
-                {{-- {{ count($products) }} --}}
-                <div class="row">
-                    <div class="col-12">
-                        <nav class="d-flex justify-content-between pt-2" aria-label="Page navigation" id="paginator-ajax">
-                            @include('web-views.products._ajax-paginator', [
-                                'page' => $data['page_no'],
-                                'data' => $data,
-                            ])
-                        </nav>
-                    </div>
+                    @include('web-views.products._ajax-products', ['products' => $allProducts])
                 </div>
             @else
                 <div class="text-center pt-5">
@@ -118,58 +105,6 @@
     </script>
 
     <script>
-
-        function filter(value) {
-            $.get({
-                url: '{{ url('/') }}/products',
-                data: {
-                    id: '{{ $data['id'] }}',
-                    name: '{{ $data['name'] }}',
-                    data_from: '{{ $data['data_from'] }}',
-                    min_price: '{{ $data['min_price'] }}',
-                    max_price: '{{ $data['max_price'] }}',
-                    sort_by: value
-                },
-                dataType: 'json',
-                beforeSend: function() {
-                    $('#loading').show();
-                },
-                success: function(response) {
-                    $('#ajax-products').html(response.view);
-                },
-                complete: function() {
-                    $('#loading').hide();
-                },
-            });
-        }
-
-        function searchByPrice() {
-            let min = $('#min_price').val();
-            let max = $('#max_price').val();
-            $.get({
-                url: '{{ url('/') }}/products',
-                data: {
-                    id: '{{ $data['id'] }}',
-                    name: '{{ $data['name'] }}',
-                    data_from: '{{ $data['data_from'] }}',
-                    sort_by: '{{ $data['sort_by'] }}',
-                    min_price: min,
-                    max_price: max,
-                },
-                dataType: 'json',
-                beforeSend: function() {
-                    $('#loading').show();
-                },
-                success: function(response) {
-                    $('#ajax-products').html(response.view);
-                    $('#paginator-ajax').html(response.paginator);
-                },
-                complete: function() {
-                    $('#loading').hide();
-                },
-            });
-        }
-
         $("#search-brand").on("keyup", function() {
             var value = this.value.toLowerCase().trim();
             $("#lista1 div>li").show().filter(function() {

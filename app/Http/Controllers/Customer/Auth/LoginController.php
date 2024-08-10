@@ -58,7 +58,7 @@ class LoginController extends Controller
             'user_id' => 'required',
             'password' => 'required|min:8'
         ]);
-        
+
         //recaptcha validation
         $recaptcha = Helpers::get_business_settings('recaptcha');
         if (isset($recaptcha) && $recaptcha['status'] == 1) {

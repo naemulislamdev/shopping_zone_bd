@@ -11,7 +11,7 @@
             text-align: center;
         }
     </style>
-    
+
     <style>
         .input-icons i {
             /* position: absolute; */
@@ -33,6 +33,9 @@
             padding: 10px 0 10px 10px;
             text-align: center;
             border-right-style: none;
+        }
+        .card{
+            box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
         }
     </style>
 @endpush
@@ -112,21 +115,21 @@
                         </form>
                     </div>
                     <div class="card-footer">
-                        <div class="row">
-                            <div class="col-12 flex-between row p-0" style="direction: {{ Session::get('direction') }}">
-                                <div class="mb-3 {{Session::get('direction') === "rtl" ? '' : 'ml-2'}}">
-                                    <h6>{{ \App\CPU\translate('no_account_Sign_up_now') }}</h6>
-                                </div>
-                                <div class="mb-3 {{Session::get('direction') === "rtl" ? 'ml-2' : ''}}">
-                                    <a class="btn btn-outline-primary"
-                                       href="{{route('customer.auth.sign-up')}}">
-                                        <i class="fa fa-user-circle"></i> {{\App\CPU\translate('sign_up')}}
-                                    </a>
-                                </div>
+                        <div class="p-3 d-flex justify-content-between">
+                            <div class="mb-3">
+                                <h6>{{ \App\CPU\translate('no_account_Sign_up_now') }}</h6>
                             </div>
+                            <div class="mb-3">
+                                <a class="btn btn-outline-primary"
+                                   href="{{route('customer.auth.sign-up')}}">
+                                    <i class="fa fa-user-circle"></i> {{\App\CPU\translate('sign_up')}}
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row">
                             @foreach (\App\CPU\Helpers::get_business_settings('social_login') as $socialLoginService)
                                 @if (isset($socialLoginService) && $socialLoginService['status']==true)
-                                    <div class="col-sm-6 text-center mb-1">
+                                    <div class="col-sm-6 text-center mb-1 mx-auto">
                                         <a class="btn btn-outline-primary"
                                            href="{{route('customer.auth.service-login', $socialLoginService['login_medium'])}}"
                                            style="width: 100%">
@@ -143,8 +146,8 @@
     </div>
 @endsection
 
-@push('script')
-    
+@push('scripts')
+
     {{-- recaptcha scripts start --}}
     @if(isset($recaptcha) && $recaptcha['status'] == 1)
         <script type="text/javascript">
