@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\CPU\Helpers;
 use App\Http\Controllers\Controller;
-use App\Model\Branch;
+use App\Model\SocialPage;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
 
-class BranchController extends Controller
+class SocialPageController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,14 +19,14 @@ class BranchController extends Controller
     {
         $search      = $request['search'];
         $query_param = $search ? ['search' => $request['search']] : '';
-            $branches = Branch::when($request['search'], function ($q) use($request){
+            $socialpages = SocialPage::when($request['search'], function ($q) use($request){
                 $key = explode(' ', $request['search']);
                 foreach ($key as $value) {
                     $q->Where('name', 'like', "%{$value}%");
                 }
             })->latest()->paginate(Helpers::pagination_limit($query_param));
             // dd($branches);
-           return view('admin-views.branch.index', compact('branches','search'));
+           return view('admin-views.social-pages.index', compact('socialpages','search'));
     }
 
     /**
@@ -36,7 +36,7 @@ class BranchController extends Controller
      */
     public function create()
     {
-        return view('admin-views.branch.create');
+        return view('admin-views.social-pages.create');
     }
 
     /**
@@ -50,27 +50,18 @@ class BranchController extends Controller
         // dd($request->all());
         $request->validate([
             'name' => 'required',
-            'email' => 'required',
-            'phone' => 'required',
-            'address' => 'required',
+            'link' => 'required',
         ], [
-            'name.required'   => 'Brand name is required!',
-            'email.required'   => 'Brand email is required!',
-            'phone.required'   => 'Brand phone is required!',
-            'address.required'   => 'Brand address is required!',
+            'name.required'   => 'Social Page name is required!',
+            'link.required'   => 'Social Page LInk is required!',
         ]);
 
-        $branch = new Branch();
-        $branch->user_id = auth('admin')->id();
-        $branch->name = $request->name;
-        $branch->email = $request->email;
-        $branch->phone = $request->phone;
-        $branch->address = $request->address;
-        $branch->status = 1;
-        $branch->save();
-
-
-        Toastr::success('Branch added successfully!');
+        $page = new SocialPage();
+        $page->name = $request->name;
+        $page->link = $request->link;
+        $page->status = 1;
+        $page->save();
+        Toastr::success('Social Page added successfully!');
         return back();
     }
 
@@ -93,9 +84,9 @@ class BranchController extends Controller
      */
     public function edit($id)
     {
-        $b = Branch::where(['id' => decrypt($id)])->withoutGlobalScopes()->first();
+        $b = SocialPage::where(['id' => decrypt($id)])->withoutGlobalScopes()->first();
         // dd($b);
-        return view('admin-views.branch.edit', compact('b'));
+        return view('admin-views.social-pages.edit', compact('b'));
     }
 
     /**
@@ -110,25 +101,18 @@ class BranchController extends Controller
         // dd($id);
         $request->validate([
             'name' => 'required',
-            'email' => 'required',
-            'phone' => 'required',
-            'address' => 'required',
+            'link' => 'required',
         ], [
-            'name.required'   => 'Brand name is required!',
-            'email.required'   => 'Brand email is required!',
-            'phone.required'   => 'Brand phone is required!',
-            'address.required'   => 'Brand address is required!',
+            'name.required'   => 'Social Page name is required!',
+            'link.required'   => 'Social Page Link is required!',
         ]);
 
-        $branch = Branch::find($id);
-        $branch->user_id = auth('admin')->id();
-        $branch->name = $request->name;
-        $branch->email = $request->email;
-        $branch->phone = $request->phone;
-        $branch->address = $request->address;
-        $branch->status = $request->status;
-        $branch->save();
-        Toastr::success('Branch Updated successfully!');
+        $socialPage = SocialPage::find($id);
+        $socialPage->name = $request->name;
+        $socialPage->link = $request->link;
+        $socialPage->status = $request->status;
+        $socialPage->save();
+        Toastr::success('Social Page Updated successfully!');
         return back();
     }
 

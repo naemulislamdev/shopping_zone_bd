@@ -20,6 +20,7 @@
                 $ext_discount = 0;
                 $ext_discount_type = 'amount';
                 $coupon_discount =0;
+                $total_shipping_cost = 0
             ?>
             @if(session()->has($cart_id) && count( session()->get($cart_id)) > 0)
                 <?php
@@ -45,7 +46,7 @@
                 @foreach(session()->get($cart_id) as $key => $cartItem)
                 @if(is_array($cartItem))
                     <?php
-                    
+
                     $product_subtotal = ($cartItem['price'])*$cartItem['quantity'];
                     $discount_on_product += ($cartItem['discount']*$cartItem['quantity']);
                     $subtotal += $product_subtotal;
@@ -53,9 +54,9 @@
                     //tax calculation
                     $product = \App\Model\Product::find($cartItem['id']);
                     $total_tax += \App\CPU\Helpers::tax_calculation($cartItem['price'], $product['tax'], $product['tax_type'])*$cartItem['quantity'];
-                    
+
                     ?>
-                    
+
                 <tr>
                     <td class="media align-items-center">
                         <img class="avatar avatar-sm mr-1" src="{{asset('storage/app/public/product/thumbnail')}}/{{$cartItem['image']}}"
@@ -63,7 +64,7 @@
                         <div class="media-body">
                             <h5 class="text-hover-primary mb-0">{{Str::limit($cartItem['name'], 10)}}</h5>
                             <small>{{Str::limit($cartItem['variant'], 20)}}</small>
-                            
+
                         </div>
                     </td>
                     <td class="align-items-center text-center">
@@ -81,6 +82,9 @@
                 @endif
                 @endforeach
             @endif
+
+                @php($total_shipping_cost += session('shipping_cost'))
+
             </tbody>
         </table>
     </div>
@@ -133,6 +137,26 @@
                     {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($coupon_discount))}}
                 </dd>
             </div>
+            <div class="col-12 d-flex justify-content-between">
+                <dt  class="col-sm-6">Shipping Cost :
+                    <select class="form-control" id="shipping_method_id"
+                    onchange="set_shipping_id(this.value)">
+                    <option selected disabled>Select Shipping Method</option>
+                    @foreach (\App\Model\ShippingMethod::where(['status' => 1])->get() as $shipping)
+                        <option value="{{ $shipping['id'] }}"
+                            {{ session()->has('shipping_method_id') ? (session('shipping_method_id') == $shipping['id'] ? 'selected' : '') : '' }}>
+                            {{ $shipping['title'] . ' ( ' . $shipping['duration'] . ' ) ' . \App\CPU\Helpers::currency_converter($shipping['cost']) }}
+                        </option>
+                    @endforeach
+                </select>
+                </dt>
+                <dd class="col-sm-6 text-right">
+
+                    {{ \App\CPU\Helpers::currency_converter(@$total_shipping_cost) }}
+
+
+                </dd>
+            </div>
 
             <div class="col-12 d-flex justify-content-between">
                 <dt  class="col-sm-6">{{\App\CPU\translate('tax')}} : </dt>
@@ -182,8 +206,8 @@
                             <button class="btn btn-primary" onclick="extra_discount();" type="submit">{{\App\CPU\translate('submit')}}</button>
                         </div>
                     </div>
-                        
-                    
+
+
                 </div>
             </div>
         </div>
@@ -199,17 +223,17 @@
                     </button>
                 </div>
                 <div class="modal-body">
-    
+
                         <div class="form-group col-sm-12">
                             <label for="">{{\App\CPU\translate('coupon_code')}}</label>
                             <input type="text" id="coupon_code" class="form-control" name="coupon_code">
                             {{-- <input type="hidden" id="user_id" name="user_id" > --}}
                         </div>
-    
+
                         <div class="form-group col-sm-12">
                             <button class="btn btn-primary" type="submit" onclick="coupon_discount();">{{\App\CPU\translate('submit')}}</button>
                         </div>
-    
+
                 </div>
             </div>
         </div>
@@ -255,7 +279,7 @@
                         @csrf
                         <div class="form-group col-12">
                             <label class="input-label" for="">{{\App\CPU\translate('amount')}}({{\App\CPU\currency_symbol()}})</label>
-                            <input type="number" class="form-control" name="amount" min="0" step="0.01" 
+                            <input type="number" class="form-control" name="amount" min="0" step="0.01"
                                     value="{{\App\CPU\BackEndHelper::usd_to_currency($total+$total_tax_amount-$coupon_discount)}}"
                                     readonly>
                         </div>
@@ -304,4 +328,39 @@
             </div>
         </div>
     </div>
+    <script>
+        function set_shipping_id(id) {
+
+       $.get({
+           url: '{{url('/')}}/customer/set-pos-shipping-method',
+           dataType: 'json',
+           data: {
+               id: id
+           },
+           beforeSend: function () {
+               $('#loading').show();
+           },
+           success: function (data) {
+            // console.log(data);
+               if (data.status == 1) {
+                   toastr.success('Shipping method selected', {
+                       CloseButton: true,
+                       ProgressBar: true
+                   });
+                   setInterval(function () {
+                       location.reload();
+                   }, 2000);
+               } else {
+                   toastr.error('Choose proper shipping method.', {
+                       CloseButton: true,
+                       ProgressBar: true
+                   });
+               }
+           },
+           complete: function () {
+               $('#loading').hide();
+           },
+       });
+   }
+   </script>
 
