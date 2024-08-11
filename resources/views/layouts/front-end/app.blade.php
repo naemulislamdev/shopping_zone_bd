@@ -507,7 +507,6 @@
                     }
                 });
 
-
                 $.post({
                     url: '{{ route('cart.add') }}',
                     data: $('#' + form_id).serializeArray(),
@@ -536,11 +535,10 @@
                             CloseButton: true,
                             ProgressBar: true
                         });
-                        // Hide the specific modal
-                        $('.modal').hide();
 
                         // Remove any backdrop that might still be visible
-                        $('.modal-backdrop').remove();
+                        // $('.modal-backdrop').remove();
+                        // $('.modal').hide();
 
                         $('#total_cart_count').text(data.count);
                         updateNavCart();
@@ -587,9 +585,9 @@
                 _token: '{{ csrf_token() }}',
                 key: key
             }, function(data) {
+                updateTotalCart();
                 updateNavCart();
-                $('#total_cart_count').text(data.count);
-                $('#cart-summary').empty().html(data.html);
+                $('#cart-summary').empty().html(data);
                 toastr.info('Item has been removed from cart', {
                     CloseButton: true,
                     ProgressBar: true
@@ -597,6 +595,13 @@
             });
         }
 
+        function updateTotalCart() {
+            $.post('<?php echo e(route('cart.totalCart')); ?>', {
+                _token: '<?php echo e(csrf_token()); ?>'
+            }, function(data) {
+                $('#total_cart_count').text(data);
+            });
+        }
         function updateNavCart() {
             $.post('<?php echo e(route('cart.nav_cart')); ?>', {
                 _token: '<?php echo e(csrf_token()); ?>'

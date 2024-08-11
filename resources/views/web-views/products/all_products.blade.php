@@ -1,15 +1,6 @@
 @extends('layouts.front-end.app')
 @section('title', 'Shop')
 @section('content')
-    <style>
-        .menu-area>ul>li>a {
-            color: #1a1919;
-        }
-
-        .header-icon>a>.fa {
-            color: #1a1919;
-        }
-    </style>
     <section class="py-3">
         <div class="container">
             <div class="row">

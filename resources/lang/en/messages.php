@@ -1706,4 +1706,7 @@
   'Topic' => 'Topic',
   'submition_date' => 'Submition date',
   'add_new_ticket' => 'Add new ticket',
+  'Campain are not available' => 'Campain are not available',
+  'No_data_to_show<' => 'No data to show ',
+  'no_data_found' => 'No data found',
 );

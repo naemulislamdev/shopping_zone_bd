@@ -13,16 +13,22 @@
     <meta property="twitter:description" content="{!! substr($web_config['about']->value, 0, 100) !!}">
 @endpush
 @section('content')
-    {{-- <div class="overlay"></div>
+@php $banner=\App\Model\Banner::inRandomOrder()->where(['published'=>1,'banner_type'=>'Popup Banner'])->first(); @endphp
+@if(isset($banner))
+    <div class="overlay"></div>
 <div class="popup">
     <div class="popup-header">
         <div>Announcement</div>
         <div class="popup-close">&times;</div>
     </div>
     <div class="popup-body">
-        <img src="{{ asset('public/frontend/assets/images/product-banner/popup-image.jpg')}}" class="img-fluid" alt="Banner Image">
+        <a href="{{$banner['url']}}">
+            <img onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
+        src="{{asset('storage/app/public/banner')}}/{{$banner['photo']}}" class="img-fluid" alt="Banner Image">
+        </a>
     </div>
-</div> --}}
+</div>
+@endif
     <!------start  header main slider-->
     @include('frontend.layouts.include.slider')
     <section class="category-section my-4">
@@ -151,8 +157,7 @@
                                                     class="fa fa-shopping-cart"></i></a>
                                         </li>
                                     </ul>
-                                    <button type="button" style="cursor: pointer;" class="buy-now"
-                                        onclick="buy_now('form-{{ $product->id }}')">Buy Now</button>
+                                    <button type="button" style="cursor: pointer;" class="buy-now" onclick="buy_now('form-{{ $product->id }}')">Buy Now</button>
                                 </div>
                                 <div class="product-content">
                                     <h3 class="title"><a
@@ -171,7 +176,7 @@
                         <!-- AddToCart Modal -->
                         <div class="modal fade" id="addToCartModal_{{ $product->id }}" tabindex="-1" role="dialog"
                             data-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
                                 <form id="form-{{ $product->id }}" class="mb-2">
                                     @csrf
                                     <input type="hidden" name="id" value="{{ $product->id }}">
@@ -360,12 +365,12 @@
                                                         class="fa fa-eye"></i></a></li>
 
                                             <li><a style="cursor: pointer" data-toggle="modal"
-                                                    data-target="#addToCartModal_{{ $product->id }}"data-tip="Add to Cart"><i
+                                                    data-target="#addToCartModal_{{ $product->id }}" data-tip="Add to Cart"><i
                                                         class="fa fa-shopping-cart"></i></a>
                                             </li>
                                         </ul>
                                         <button type="button" style="cursor: pointer;" class="buy-now"
-                                            onclick="buy_now('form-{{ $product->id }}')">Buy Now</button>
+                                        onclick="buy_now('form-{{ $product->id }}')">Buy Now</button>
                                     </div>
                                     <div class="product-content">
                                         <h3 class="title">
@@ -645,5 +650,18 @@
 @push('scripts')
 <script>
     cartQuantityInitialize();
+</script>
+<script>
+    $(document).ready(function() {
+        // Show the popup when the window has fully loaded
+        $(window).on('load', function() {
+            $('.overlay, .popup').fadeIn('slow');
+        });
+
+        // Close the popup smoothly
+        $('.popup-close, .overlay').on('click', function() {
+            $('.popup, .overlay').fadeOut('slow');
+        });
+    });
 </script>
 @endpush

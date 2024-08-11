@@ -1211,6 +1211,7 @@ footer{
   font-family: var(--jost);
   font-size: 17px;
   font-weight: 600;
+  cursor: pointer;
 }
 .thumbnail-images{
   display: block;
