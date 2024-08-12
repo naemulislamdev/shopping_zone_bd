@@ -632,6 +632,40 @@
                             </li>
 
 
+                            {{-- Socail Page start --}}
+                            <li class="navbar-vertical-aside-has-menu {{Request::is('admin/social-page*')?'active':''}}">
+                                <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle"
+                                   href="javascript:">
+                                    <i class="tio-shop-outlined nav-icon"></i>
+                                    <span
+                                        class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Social Page</span>
+                                </a>
+                                <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
+                                    style="display: {{Request::is('admin/social-page*')?'block':'none'}}">
+                                    <li class="nav-item {{Request::is('admin/social-page/create')?'active':''}}">
+                                        <a class="nav-link"
+                                           href="{{route('admin.social-page.create')}}">
+                                            <span class="tio-circle nav-indicator-icon"></span>
+                                            <span class="text-truncate">
+                                                Add New
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item {{Request::is('admin/social-page/create')?'active':''}}">
+                                        <a class="nav-link"
+                                           href="{{route('admin.social-page.social-page-list')}}">
+                                            <span class="tio-circle nav-indicator-icon"></span>
+                                            <span class="text-truncate">
+                                                {{\App\CPU\translate('list')}}
+                                            </span>
+                                        </a>
+                                    </li>
+
+                                </ul>
+                            </li>
+                            {{-- Socail Page end --}}
+
+
                             <li class="nav-item {{Request::is('admin/customer/list')?'active':''}}">
                                 <a class="nav-link " href="{{route('admin.customer.list')}}">
                                     <span class="tio-poi-user nav-icon"></span>

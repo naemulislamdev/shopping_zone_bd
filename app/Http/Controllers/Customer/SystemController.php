@@ -49,6 +49,24 @@ class SystemController extends Controller
             'status' => 0
         ]);
     }
+    public function set_pos_shipping_method(Request $request)
+    {
+        if ($request['id'] != 0) {
+            session()->put('shipping_method_id', $request['id']);
+
+
+          $shipping_cost = ShippingMethod::find($request['id'])->cost;
+
+            $request->session()->put('shipping_cost', $shipping_cost);
+
+            return response()->json([
+                'status' => 1
+            ]);
+        }
+        return response()->json([
+            'status' => 0
+        ]);
+    }
 
     public static function insert_into_cart_shipping($request)
     {

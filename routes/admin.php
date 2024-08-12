@@ -278,6 +278,16 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
             Route::post('store', 'BranchController@store')->name('store');
             Route::get('edit/{id}', 'BranchController@edit')->name('edit');
             Route::post('update/{id}', 'BranchController@update')->name('update');
+
+        });
+
+        Route::group(['prefix' => 'social-page', 'as' => 'social-page.','middleware'=>['module:business_settings']], function () {
+           Route::get('social-page-list', 'SocialPageController@index')->name('social-page-list');
+            Route::get('create', 'SocialPageController@create')->name('create');
+            Route::post('store', 'SocialPageController@store')->name('store');
+            Route::get('edit/{id}', 'SocialPageController@edit')->name('edit');
+            Route::post('update/{id}', 'SocialPageController@update')->name('update');
+
         });
 
         Route::group(['prefix' => 'product', 'as' => 'product.','middleware'=>['module:product_management']], function () {

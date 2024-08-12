@@ -246,7 +246,7 @@
                                                 <div class="col-md-4">
                                                     <div class="v-size-box">
                                                         <input type="radio" id="{{ $choice->name }}-{{ $option }}"
-                                                            checked name="{{ $choice->name }}" value="{{ $option }}"
+                                                             name="{{ $choice->name }}" value="{{ $option }}"
                                                             @if ($key == 0) checked @endif>
                                                         <label for="{{ $choice->name }}-{{ $option }}"
                                                             class="size-label">{{ $option }}</label>

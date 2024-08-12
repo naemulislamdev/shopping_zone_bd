@@ -232,12 +232,10 @@
                                                         @foreach ($choice->options as $key => $option)
                                                             <div class="col-md-4">
                                                                 <div class="v-size-box">
-                                                                    <input type="radio"
-                                                                        id="{{ $choice->name }}-{{ $option }}"
-                                                                        checked name="{{ $choice->name }}"
-                                                                        value="{{ $option }}"
+                                                                    <input type="radio" id="{{ $product->id }}-size-{{ $key }}"
+                                                                         name="{{ $choice->name }}" value="{{ $option }}"
                                                                         @if ($key == 0) checked @endif>
-                                                                    <label for="{{ $choice->name }}-{{ $option }}"
+                                                                    <label for="{{ $product->id }}-size-{{ $key }}"
                                                                         class="size-label">{{ $option }}</label>
                                                                 </div>
                                                             </div>
@@ -389,7 +387,7 @@
                             <!-- AddToCart Modal -->
                         <div class="modal fade" id="addToCartModal_{{ $product->id }}" tabindex="-1" role="dialog"
                             data-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
                                 <form id="form-{{ $product->id }}" class="mb-2">
                                     @csrf
                                     <input type="hidden" name="id" value="{{ $product->id }}">
@@ -445,12 +443,10 @@
                                                         @foreach ($choice->options as $key => $option)
                                                             <div class="col-md-4">
                                                                 <div class="v-size-box">
-                                                                    <input type="radio"
-                                                                        id="{{ $choice->name }}-{{ $option }}"
-                                                                        checked name="{{ $choice->name }}"
-                                                                        value="{{ $option }}"
+                                                                    <input type="radio" id="{{ $product->id }}-size-{{ $key }}"
+                                                                         name="{{ $choice->name }}" value="{{ $option }}"
                                                                         @if ($key == 0) checked @endif>
-                                                                    <label for="{{ $choice->name }}-{{ $option }}"
+                                                                    <label for="{{ $product->id }}-size-{{ $key }}"
                                                                         class="size-label">{{ $option }}</label>
                                                                 </div>
                                                             </div>

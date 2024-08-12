@@ -32,7 +32,7 @@
                                     @endif
                                     <p>{{ \App\CPU\Helpers::currency_converter(($cartItem['price'] - $cartItem['discount']) * $cartItem['quantity']) }}
                                     </p>
-                                    <a href="#" onclick="removeFromCart({{ $cartItem['id'] }})"><i
+                                    <a href="#" onclick="removeFromCartsfd({{ $cartItem['id'] }})"><i
                                             class="fa fa-trash"></i></a>
                                 </div>
                             </div>
