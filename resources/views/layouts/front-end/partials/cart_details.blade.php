@@ -131,7 +131,6 @@
 
 
 <script>
-    cartQuantityInitialize();
 
     function set_shipping_id(id) {
         @foreach(session()->get('cart') as $key => $item)

@@ -161,7 +161,7 @@ Route::group(['prefix' => '/cart', 'as' => 'cart.', 'namespace' => 'Web'], funct
     Route::post('/add-product', 'CartController@addToCartOnSession')->name('add');
     Route::post('/remove', 'CartController@removeFromCart')->name('remove');
     Route::post('/nav-cart-items', 'CartController@updateNavCart')->name('nav_cart');
-    Route::post('toolbar', 'CartController@updateToolbar')->name('toolbar');
+    Route::post('total-cart-count', 'CartController@totalCartCount')->name('totalCart');
     Route::post('/updateQuantity', 'CartController@updateQuantity')->name('updateQuantity');
     // In web.php
 // Route::post('/add-to-cart', 'CartController@addToCart')->name('add.to.cart');

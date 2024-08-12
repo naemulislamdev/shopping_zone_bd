@@ -99,7 +99,6 @@ class CartController extends Controller
                         ]);
                     }
                 }
-
             }
         }
         //Check the string and decreases quantity for the stock
@@ -153,7 +152,8 @@ class CartController extends Controller
 
     public function updateNavCart()
     {
-        return view('layouts.front-end.partials.cart');    }
+        return view('layouts.front-end.partials.cart');
+    }
 
     //removes from Cart
 
@@ -168,9 +168,11 @@ class CartController extends Controller
         session()->forget('coupon_code');
         session()->forget('coupon_discount');
         session()->forget('shipping_method_id');
-        $data['count'] = session()->has('cart') ? count(session()->get('cart')) : 0;
-        $data['html'] = view('layouts.front-end.partials.cart');
 
+        return view('layouts.front-end.partials.cart_details');
+    }
+    public function totalCartCount(){
+        $data = session()->has('cart') ? count(session()->get('cart')) : 0;
         return $data;
     }
 

@@ -41,8 +41,6 @@
     @endif
     <meta property="twitter:url" content="{{ route('product', [$product->slug]) }}">
 
-    <link rel="stylesheet" href="{{ asset('public/assets/front-end/css/product-details.css') }}" />
-
 @endpush
 
 @section('content')
@@ -205,8 +203,8 @@
                                         <del>{{ \App\CPU\Helpers::currency_converter($product->unit_price) }} </del> -
                                         {{ $product->discount }}%</span>
                                 @endif
-                                <p class="product-description">This is a great product that you will love. It has many
-                                    amazing features and benefits that make it a must-have item.</p>
+                                <p class="product-description">{!! $product['short_description'] !!}</p>
+
                                 <form id="form-{{ $product->id }}" class="mb-2">
                                     @csrf
                                     <input type="hidden" name="id" value="{{ $product->id }}">
@@ -247,9 +245,8 @@
                                             @foreach ($choice->options as $key => $option)
                                                 <div class="col-md-4">
                                                     <div class="v-size-box">
-                                                        <input type="radio"
-                                                            id="{{ $choice->name }}-{{ $option }}" checked
-                                                            name="{{ $choice->name }}" value="{{ $option }}"
+                                                        <input type="radio" id="{{ $choice->name }}-{{ $option }}"
+                                                            checked name="{{ $choice->name }}" value="{{ $option }}"
                                                             @if ($key == 0) checked @endif>
                                                         <label for="{{ $choice->name }}-{{ $option }}"
                                                             class="size-label">{{ $option }}</label>
@@ -296,11 +293,11 @@
 
                                     <div class="row mb-3">
                                         <div class="col-md-6 mb-3">
-                                            <a onclick="buy_now('form-{{ $product->id }}')" href="javascript:void(0);"
-                                                class="w-100 common-btn">Order Now</a>
+                                            <button type="button" onclick="buy_now('form-{{ $product->id }}')" href="javascript:void(0);"
+                                                class="w-100 common-btn border-0">Order Now</button>
                                         </div>
                                         <div class="col-md-6">
-                                            <button class="btn btn-dark btn-block"
+                                            <button type="button" class="btn btn-dark d-block"
                                                 onclick="addToCart('form-{{ $product->id }}')">Add to
                                                 Cart</button>
                                         </div>
@@ -378,13 +375,13 @@
                                         <p><i class="fa fa-refresh"></i> Refund Rules:</p>
                                     </div>
                                     <div class="box1">
-                                        <a href="#">
-                                            <p>01406667669</p>
+                                        <a href="tel:{{ $web_config['phone']->value }}">
+                                            <p>{{ $web_config['phone']->value }}</p>
                                         </a>
                                         <p>2-3 working days</p>
                                         <p>3-4 working days</p>
                                         <p>Available</p>
-                                        <p>Within 7 Days<a href="#"> View Policy</a></p>
+                                        <p>Within 7 Days<a href="{{ route('privacy-policy') }}"> View Policy</a></p>
                                     </div>
                                 </div>
                                 <div class="pay-method">
@@ -589,7 +586,7 @@
         });
     </script>
 
-    <script type="text/javascript"
+    {{-- <script type="text/javascript"
         src="https://platform-api.sharethis.com/js/sharethis.js#property=5f55f75bde227f0012147049&product=sticky-share-buttons"
-        async="async"></script>
+        async="async"></script> --}}
 @endpush

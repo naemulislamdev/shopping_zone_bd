@@ -18,9 +18,6 @@
             <img class="pic-2"
                 src="{{ \App\CPU\ProductManager::product_image_path('thumbnail') }}/{{ $product['thumbnail'] }}">
         </a>
-        <form id="add-to-cart-form" class="mb-2">
-            @csrf
-            <input type="hidden" name="id" value="{{ $product->id }}">
             <ul class="social">
                 <li><a href="{{ route('product', $product->slug) }}"
                         data-tip="Quick View"><i class="fa fa-eye"></i></a></li>
@@ -28,8 +25,7 @@
                             class="fa fa-shopping-cart"></i></a>
                 </li>
             </ul>
-            <a class="buy-now" href="javascript:void(0);" data-toggle="modal" data-target="#addToCartModal_{{$product->id}}">Buy Now</a>
-        </form>
+            <a class="buy-now" href="javascript:void(0);" onclick="buy_now('form-{{ $product->id }}')">Buy Now</a>
     </div>
     <div class="product-content">
         <h3 class="title"><a

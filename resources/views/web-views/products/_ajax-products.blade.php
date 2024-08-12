@@ -11,7 +11,7 @@
      <!-- AddToCart Modal -->
      <div class="modal fade" id="addToCartModal_{{ $product->id }}" tabindex="-1" role="dialog" data-backdrop="static"
          aria-labelledby="exampleModalLabel" aria-hidden="true">
-         <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+         <div class="modal-dialog modal-dialog-centered" role="document">
              <form id="form-{{ $product->id }}" class="mb-2">
                  @csrf
                  <input type="hidden" name="id" value="{{ $product->id }}">

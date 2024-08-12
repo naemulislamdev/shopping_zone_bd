@@ -54,13 +54,12 @@
                                         @endforeach
                                     </ul>
                                 </div>
-
                             </li>
                             <li><a href="{{ route('shop') }}">Shop</i></a>
                             </li>
                             <li><a href="{{ route('video_shopping','video-shopping') }}">video Shopping</i></a>
                             </li>
-                            <li><a href="#!">Campain</i></a>
+                            <li><a href="{{ route('campain')}}">Campain</i></a>
                             </li>
                             <li><a href="#!">Selling product</i></a>
                             </li>
@@ -155,17 +154,17 @@
             </div>
             <div class="menu-box">
                 <div class="menu-link">
-                    <a href="#"><i class="fa fa-ptab3 mr-2"></i> Shop</a>
+                    <a href="{{ route('shop') }}"><i class="fa fa-ptab3 mr-2"></i> Shop</a>
                 </div>
             </div>
             <div class="menu-box">
                 <div class="menu-link">
-                    <a href="#"><i class="fa fa-ptab3 mr-2"></i> Video Shopping</a>
+                    <a href="{{ route('video_shopping','video-shopping') }}"><i class="fa fa-ptab3 mr-2"></i> Video Shopping</a>
                 </div>
             </div>
             <div class="menu-box">
                 <div class="menu-link">
-                    <a href="#"><i class="fa fa-ptab3 mr-2"></i>Campain</a>
+                    <a href="{{ route('campain')}}"><i class="fa fa-ptab3 mr-2"></i>Campain</a>
                 </div>
             </div>
             <div class="menu-box">
@@ -175,7 +174,7 @@
             </div>
             <div class="menu-box">
                 <div class="menu-link">
-                    <a href="#"><i class="fa fa-ptab3 mr-2"></i>Our Outlets</a>
+                    <a href="{{ route('outlets') }}"><i class="fa fa-ptab3 mr-2"></i>Our Outlets</a>
                 </div>
             </div>
         </div>

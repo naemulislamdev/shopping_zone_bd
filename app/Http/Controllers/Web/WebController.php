@@ -675,11 +675,12 @@ class WebController extends Controller
         }
         $categoryName = Category::find((int)$request['id'])->name;
 
-        return view('web-views.category_wise_product', compact('products', 'data','categoryName'), $data);
+        return view('web-views.category_wise_product', compact('products', 'data', 'categoryName'), $data);
     }
-    public function videoShopping($slug){
+    public function videoShopping($slug)
+    {
         $signleCategory = Category::where('slug', $slug)->first();
-        if($signleCategory){
+        if ($signleCategory) {
 
             $porduct_data = Product::active()->with(['reviews']);
 
@@ -696,29 +697,32 @@ class WebController extends Controller
             }
             $allProducts = $porduct_data->whereIn('id', $product_ids)->get();
             $categoryName = $signleCategory['name'];
-            return view('web-views.video_shopping', compact('allProducts','categoryName'));
-
-        }else {
-                Toastr::warning(translate('not_found'));
-                return redirect('/');
-            }
+            return view('web-views.video_shopping', compact('allProducts', 'categoryName'));
+        } else {
+            Toastr::warning(translate('not_found'));
+            return redirect('/');
+        }
     }
     //Campain products
     public function campaing_products()
     {
-        $todayDate=Carbon::today()->toDateString();
+        $todayDate = Carbon::today()->toDateString();
 
-        $data = Product::join('campaing_detalies', 'campaing_detalies.product_id', '=', 'products.id')->where('campaing_detalies.start_day', $todayDate)
-              		->select(['products.*','campaing_detalies.id', 'campaing_detalies.product_id','campaing_detalies.start_day', 'campaing_detalies.end_day', 'campaing_detalies.discountCam'])->get();
-        dd($data);
-                    //return response()->json($data,200);
+        $data['products'] = Product::join('campaing_detalies', 'campaing_detalies.product_id', '=', 'products.id')->where('campaing_detalies.start_day', $todayDate)
+            ->select(['products.*', 'campaing_detalies.id', 'campaing_detalies.product_id', 'campaing_detalies.start_day', 'campaing_detalies.end_day', 'campaing_detalies.discountCam'])->get();
+        if (count($data['products']) > 0) {
+            return view('web-views.campain', $data);
+        } else {
+            Toastr::warning(translate('Campain are not available'));
+            return redirect('/');
+        }
     }
-      public function campaing_products_tomrrrow()
+    public function campaing_products_tomrrrow()
     {
-         $tomrrrowDate=Carbon::tomorrow()->toDateString();
+        $tomrrrowDate = Carbon::tomorrow()->toDateString();
         $data = Product::join('campaing_detalies', 'campaing_detalies.product_id', '=', 'products.id')->where('campaing_detalies.start_day', $tomrrrowDate)
-              		->select(['products.*','campaing_detalies.id','campaing_detalies.product_id','campaing_detalies.start_day', 'campaing_detalies.end_day', 'campaing_detalies.discountCam'])->get();
-        return response()->json($data,200);
+            ->select(['products.*', 'campaing_detalies.id', 'campaing_detalies.product_id', 'campaing_detalies.start_day', 'campaing_detalies.end_day', 'campaing_detalies.discountCam'])->get();
+        return response()->json($data, 200);
     }
     //End
 
