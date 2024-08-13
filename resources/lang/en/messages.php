@@ -1709,4 +1709,7 @@
   'Campain are not available' => 'Campain are not available',
   'No_data_to_show<' => 'No data to show ',
   'no_data_found' => 'No data found',
+  'Nagad' => 'Nagad',
+  'Bkash' => 'Bkash',
+  'Cash On Delevery' => 'Cash On Delevery',
 );

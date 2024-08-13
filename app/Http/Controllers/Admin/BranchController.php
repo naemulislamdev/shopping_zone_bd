@@ -53,11 +53,13 @@ class BranchController extends Controller
             'email' => 'required',
             'phone' => 'required',
             'address' => 'required',
+            'map_url' => 'required',
         ], [
-            'name.required'   => 'Brand name is required!',
-            'email.required'   => 'Brand email is required!',
-            'phone.required'   => 'Brand phone is required!',
-            'address.required'   => 'Brand address is required!',
+            'name.required'   => 'Branch name is required!',
+            'email.required'   => 'Branch email is required!',
+            'phone.required'   => 'Branch phone is required!',
+            'address.required'   => 'Branch address is required!',
+            'map_url.required'   => 'Branch Map URL is required!',
         ]);
 
         $branch = new Branch();
@@ -66,6 +68,7 @@ class BranchController extends Controller
         $branch->email = $request->email;
         $branch->phone = $request->phone;
         $branch->address = $request->address;
+        $branch->map_url = $request->map_url;
         $branch->status = 1;
         $branch->save();
 
@@ -113,11 +116,13 @@ class BranchController extends Controller
             'email' => 'required',
             'phone' => 'required',
             'address' => 'required',
+            'map_url' => 'required',
         ], [
-            'name.required'   => 'Brand name is required!',
-            'email.required'   => 'Brand email is required!',
-            'phone.required'   => 'Brand phone is required!',
-            'address.required'   => 'Brand address is required!',
+            'name.required'   => 'Branch name is required!',
+            'email.required'   => 'Branch email is required!',
+            'phone.required'   => 'Branch phone is required!',
+            'address.required'   => 'Branch address is required!',
+            'map_url.required'   => 'Branch Google Map URL is required!',
         ]);
 
         $branch = Branch::find($id);
@@ -126,6 +131,7 @@ class BranchController extends Controller
         $branch->email = $request->email;
         $branch->phone = $request->phone;
         $branch->address = $request->address;
+        $branch->map_url = $request->map_url;
         $branch->status = $request->status;
         $branch->save();
         Toastr::success('Branch Updated successfully!');

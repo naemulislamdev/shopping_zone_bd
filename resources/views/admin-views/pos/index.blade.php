@@ -391,6 +391,7 @@
                                 </div>
                             </div>
 
+
                         <div class='w-100' id="cart">
                             @include('admin-views.pos._cart',['cart_id'=>$cart_id])
                         </div>

@@ -161,6 +161,15 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
             Route::post('delete', 'AttributeController@delete')->name('delete');
         });
 
+        Route::group(['prefix' => 'pospaymenttype', 'as' => 'pospaymenttype.','middleware'=>['module:pos_management']], function () {
+            Route::get('view', 'PosPaymentTypeController@index')->name('view');
+            Route::get('fetch', 'PosPaymentTypeController@fetch')->name('fetch');
+            Route::post('store', 'PosPaymentTypeController@store')->name('store');
+            Route::get('edit/{id}', 'PosPaymentTypeController@edit')->name('edit');
+            Route::post('update/{id}', 'PosPaymentTypeController@update')->name('update');
+            Route::post('delete', 'PosPaymentTypeController@delete')->name('delete');
+        });
+
         Route::group(['prefix' => 'coupon', 'as' => 'coupon.','middleware'=>['module:marketing_section']], function () {
             Route::get('add-new', 'CouponController@add_new')->name('add-new')->middleware('actch');;
             Route::post('store-coupon', 'CouponController@store')->name('store-coupon');
@@ -278,6 +287,14 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
             Route::post('store', 'BranchController@store')->name('store');
             Route::get('edit/{id}', 'BranchController@edit')->name('edit');
             Route::post('update/{id}', 'BranchController@update')->name('update');
+
+        });
+        Route::group(['prefix' => 'couriers', 'as' => 'couriers.','middleware'=>['module:business_settings']], function () {
+            Route::get('courier-list', 'CourierController@index')->name('courier-list');
+            Route::get('create', 'CourierController@create')->name('create');
+            Route::post('store', 'CourierController@store')->name('store');
+            Route::get('edit/{id}', 'CourierController@edit')->name('edit');
+            Route::post('update/{id}', 'CourierController@update')->name('update');
 
         });
 

@@ -50,9 +50,14 @@
                                     </div>
                                     <div class="form-group row">
                                         <div class="col-sm-12 mb-sm-0">
+                                            <label for="map_url">Google Map URL (Embed MAP Code)</label>
+                                            <input type="text" class="form-control form-control-user" id="exampleInputmap_url" name="map_url" value="{{old('map_url')}}" placeholder="Google Map URL (Embed MAP Code)" required>
+                                        </div>
+                                        <div class="col-sm-12 mb-sm-0">
                                             <label for="address">Address</label>
                                             <textarea name="address" class="form-control form-control-user" id="address" placeholder="Branch Address" >{{old('address')}}</textarea>
                                         </div>
+
 
                                     </div>
 
