@@ -500,7 +500,7 @@
         }
 
         function addToCart(form_id) {
-            if (checkAddToCartValidity(form_id)) {
+            if (form_id) {
                 $.ajaxSetup({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
@@ -551,7 +551,7 @@
                 Swal.fire({
                     type: 'info',
                     title: 'Cart',
-                    text: 'Please choose all the options'
+                    text: 'Something want wrong!'
                 });
             }
         }
@@ -581,6 +581,7 @@
         }
 
         function removeFromCart(key) {
+
             $.post('{{ route('cart.remove') }}', {
                 _token: '{{ csrf_token() }}',
                 key: key
@@ -740,7 +741,7 @@
         });
 
         function getVariantPrice() {
-            if ($('#add-to-cart-form input[name=quantity]').val() > 0 && checkAddToCartValidity()) {
+            if ($('#add-to-cart-form input[name=quantity]').val() > 0) {
                 $.ajaxSetup({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
@@ -760,22 +761,24 @@
             }
         }
 
-        function checkAddToCartValidity(form_id) {
-            var names = {};
-            $('#' + form_id + ' input:radio').each(function() { // find unique names
-                names[$(this).attr('name')] = true;
-            });
-            var count = 0;
-            $.each(names, function() { // then count them
-                count++;
-            });
-            console.log($('input:radio:checked').length);
-            console.log(count);
-            if ($('input:radio:checked').length == count) {
-                return true;
-            }
-            return false;
-        }
+        // function checkAddToCartValidity(form_id) {
+        //     console.log(form_id);
+
+        //     var names = {};
+        //     $('#' + form_id + ' input:radio').each(function() {
+        //         names[$(this).attr('name')] = true;
+        //     });
+        //     var count = 0;
+        //     $.each(names, function() {
+        //         count++;
+        //     });
+        //     console.log($('input:radio:checked').length);
+        //     console.log(count);
+        //     if ($('input:radio:checked').length == count) {
+        //         return true;
+        //     }
+        //     return false;
+        // }
 
         @if (Request::is('/') && \Illuminate\Support\Facades\Cookie::has('popup_banner') == false)
             $(document).ready(function() {

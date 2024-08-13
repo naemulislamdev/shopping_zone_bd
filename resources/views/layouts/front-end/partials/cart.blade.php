@@ -1,7 +1,7 @@
 @if (session()->has('cart') && count(session()->get('cart')) > 0)
     @php($sub_total = 0)
     @php($total_tax = 0)
-    @foreach (session('cart') as $key => $cartItem)
+    @foreach (session('cart') as $keyId => $cartItem)
         <div class="header-cart-product d-flex mb-3">
             <div class="img">
                 <img src="{{ \App\CPU\ProductManager::product_image_path('thumbnail') }}/{{ $cartItem['thumbnail'] }}"
@@ -18,7 +18,7 @@
                 @endif
                 <p>{{ \App\CPU\Helpers::currency_converter(($cartItem['price'] - $cartItem['discount']) * $cartItem['quantity']) }}
                 </p>
-                <a href="#" onclick="removeFromCart({{ $key }})"><i class="fa fa-trash"></i></a>
+                <a href="#" onclick="removeFromCart({{ $keyId }})"><i class="fa fa-trash"></i></a>
             </div>
         </div>
         @php($sub_total += ($cartItem['price'] - $cartItem['discount']) * $cartItem['quantity'])
