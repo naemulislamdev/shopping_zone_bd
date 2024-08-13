@@ -67,16 +67,16 @@
     @php
         $request = request()->route()->getName();
     @endphp
-    @if ($request !='home')
-    <style>
-        .menu-area>ul>li>a {
-            color: #1a1919;
-        }
+    @if ($request != 'home')
+        <style>
+            .menu-area>ul>li>a {
+                color: #1a1919;
+            }
 
-        .header-icon>a>.fa {
-            color: #1a1919;
-        }
-    </style>
+            .header-icon>a>.fa {
+                color: #1a1919;
+            }
+        </style>
     @endif
 
     @php($google_tag_manager_id = \App\CPU\Helpers::get_business_settings('google_tag_manager_id'))
@@ -139,9 +139,9 @@
     <section class="topbar-section">
         <div class="container">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-6 text-right">
                     <div>
-                        <span class="topbar-contact">Need any help: <a href="tel:/0255020580">0255020580</a></span>
+                        <span class="topbar-contact">Hotline: <a href="tel:/0255020580">0255020580</a></span>
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -150,13 +150,20 @@
                             <ul>
                                 <li><a href="#">Complain</a></li>
                                 <li><a href="#">Place Manual Order</a></li>
-                                <li><a href="{{ route('track-order.index')}}">Order Track</a></li>
-                                @if(auth('customer')->check())
-                                <li><a href="{{ route('user-account')}}">Profile</a></li>
+                                <li><a href="{{ route('track-order.index') }}">Order Track</a></li>
+                                @if (auth('customer')->check())
+                                    <li><a href="{{ route('user-account') }}">Profile</a></li>
                                 @else
-                                <li><a href="{{ route('customer.auth.login')}}">Login</a></li>
+                                    <li><a href="{{ route('customer.auth.login') }}">Login</a></li>
                                 @endif
+                                <li>
+                                        <select name="language" class="form-control" style="padding: 2px 6px; height:30px;">
+                                            <option value="en">English</option>
+                                            <option value="bd">Bangla</option>
+                                        </select>
+                                </li>
                             </ul>
+
                         </div>
                     </div>
                 </div>
@@ -259,6 +266,38 @@
         });
     </script>
     <script>
+        // Store the original title
+        let originalTitle = document.title;
+        let scrollTitle = "We miss you! Please come back soon.";
+        let timeout;
+        let scrollTimeout;
+        let position = 0;
+
+        // Function to scroll the title
+        function scrollText() {
+            document.title = scrollTitle.substring(position) + " " + scrollTitle.substring(0, position);
+            position++;
+            if (position > scrollTitle.length) {
+                position = 0;
+            }
+            scrollTimeout = setTimeout(scrollText, 200); // Adjust the speed by changing the timeout
+        }
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+                // When the user leaves the tab, wait for 10 seconds before changing the title
+                timeout = setTimeout(function() {
+                    scrollText(); // Start scrolling the text
+                }, 2000); // 10-second delay
+            } else {
+                // When the user comes back, clear the timeouts and revert to the original title
+                clearTimeout(timeout);
+                clearTimeout(scrollTimeout);
+                document.title = originalTitle;
+                position = 0;
+            }
+        });
+    </script>
+    <script>
         $(document).ready(function() {
             // Add minus icon for collapse element which is open by default
             $(".collapse.show").each(function() {
@@ -338,6 +377,15 @@
 
                 $('.grid-btn[data-category="' + category + '"]').removeClass('active');
                 $(this).addClass('active');
+                // Apply fixed dimensions to images
+                $('.product-box[data-category="' + category + '"]')
+                    .removeClass('product-box-col-2 product-box-col-3 product-box-col-4 product-box-col-6')
+                    .addClass('product-box-col-' + columns);
+                $('.product-image2[data-category="' + category + '"]')
+                    .removeClass(
+                        'product-image2-col-2 product-image2-col-3 product-image2-col-4 product-image2-col-6'
+                    )
+                    .addClass('product-image2-col-' + columns);
             });
         });
     </script>
@@ -354,6 +402,18 @@
 
                 $('.grid-btn-mobile[data-category="' + category + '"]').removeClass('active');
                 $(this).addClass('active');
+                // Apply fixed dimensions to images
+                $('.product-box[data-category="' + category + '"]')
+                    .removeClass(
+                        'product-box-col-2 product-box-col-3 product-box-col-4 product-box-col-6 product-box-col-sm-12 product-box-col-sm-6'
+                    )
+                    .addClass('product-box-col-sm-' + columns);
+
+                $('.product-image2[data-category="' + category + '"]')
+                    .removeClass(
+                        'product-image2-col-2 product-image2-col-3 product-image2-col-4 product-image2-col-6 product-image2-col-sm-12 product-image2-col-sm-6'
+                    )
+                    .addClass('product-image2-col-sm-' + columns);
             });
         });
     </script>
@@ -603,6 +663,7 @@
                 $('#total_cart_count').text(data);
             });
         }
+
         function updateNavCart() {
             $.post('<?php echo e(route('cart.nav_cart')); ?>', {
                 _token: '<?php echo e(csrf_token()); ?>'
@@ -760,25 +821,6 @@
                 });
             }
         }
-
-        // function checkAddToCartValidity(form_id) {
-        //     console.log(form_id);
-
-        //     var names = {};
-        //     $('#' + form_id + ' input:radio').each(function() {
-        //         names[$(this).attr('name')] = true;
-        //     });
-        //     var count = 0;
-        //     $.each(names, function() {
-        //         count++;
-        //     });
-        //     console.log($('input:radio:checked').length);
-        //     console.log(count);
-        //     if ($('input:radio:checked').length == count) {
-        //         return true;
-        //     }
-        //     return false;
-        // }
 
         @if (Request::is('/') && \Illuminate\Support\Facades\Cookie::has('popup_banner') == false)
             $(document).ready(function() {

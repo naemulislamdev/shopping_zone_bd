@@ -17,13 +17,13 @@
                              alt="">
                     </a>
                 </div>
-                {{-- <div class="slider-content-box wow animate__animated animate__fadeInUp">
-                    <h5> New Arrivals 2023 </h5>
+                <div class="slider-content-box wow animate__animated animate__fadeInUp">
+                    <h5> New Arrivals 2024 </h5>
                     <h3>The Clothing Collection</h3>
                     <div class="slider-inner-btn">
                         <a href="#">Shop Collection</a>
                     </div>
-                </div> --}}
+                </div>
             </div>
             @endforeach
         </div>
