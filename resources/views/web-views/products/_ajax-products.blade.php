@@ -9,7 +9,7 @@
          <hr class="d-sm-none">
      </div>
      <!-- AddToCart Modal -->
-     <div class="modal fade" id="addToCartModal_{{ $product->id }}" tabindex="-1" role="dialog" data-backdrop="static"
+     <div class="modal fade" id="addToCartModal_{{ $product->id }}" tabindex="-1" role="dialog"
          aria-labelledby="exampleModalLabel" aria-hidden="true">
          <div class="modal-dialog modal-dialog-centered" role="document">
              <form id="form-{{ $product->id }}" class="mb-2">
@@ -41,10 +41,10 @@
                                      <h4>Color</h4>
                                  </div>
                                  @foreach (json_decode($product->colors) as $key => $color)
-                                     <div class="col-md-3">
+                                     <div class="col">
                                          <div class="v-color-box">
                                              <input type="radio" id="{{ $product->id }}-color-{{ $key }}"
-                                                 checked name="color" value="{{ $color }}"
+                                                  name="color" value="{{ $color }}"
                                                  @if ($key == 0) checked @endif>
                                              <label style="background: {{ $color }}"
                                                  for="{{ $product->id }}-color-{{ $key }}"
@@ -62,12 +62,12 @@
                                          <h4 style="font-size: 18px; margin:0;">{{ $choice->title }}</h4>
                                      </div>
                                      @foreach ($choice->options as $key => $option)
-                                         <div class="col-md-4">
+                                         <div class="col">
                                              <div class="v-size-box">
-                                                 <input type="radio" id="{{ $choice->name }}-{{ $option }}"
-                                                     checked name="{{ $choice->name }}" value="{{ $option }}"
+                                                 <input type="radio" id="{{ $product->id }}-size-{{ $key }}"
+                                                      name="{{ $choice->name }}" value="{{ $option }}"
                                                      @if ($key == 0) checked @endif>
-                                                 <label for="{{ $choice->name }}-{{ $option }}"
+                                                 <label for="{{ $product->id }}-size-{{ $key }}"
                                                      class="size-label">{{ $option }}</label>
                                              </div>
                                          </div>

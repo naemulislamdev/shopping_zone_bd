@@ -1,5 +1,5 @@
-<div class="product-box">
-    <div class="product-image2">
+<div class="product-box product-box-col-3" data-category="category">
+    <div class="product-image2 product-image2-col-3" data-category="category">
         @php($decimal_point_settings = \App\CPU\Helpers::get_business_settings('decimal_point_settings'))
         @if ($product->discount > 0)
             <div class="discount-box float-end">

@@ -13,7 +13,7 @@
     <meta property="twitter:description" content="{!! substr($web_config['about']->value, 0, 100) !!}">
 @endpush
 @section('content')
-@php $banner=\App\Model\Banner::inRandomOrder()->where(['published'=>1,'banner_type'=>'Popup Banner'])->first(); @endphp
+{{-- @php $banner=\App\Model\Banner::inRandomOrder()->where(['published'=>1,'banner_type'=>'Popup Banner'])->first(); @endphp
 @if(isset($banner))
     <div class="overlay"></div>
 <div class="popup">
@@ -28,7 +28,8 @@
         </a>
     </div>
 </div>
-@endif
+@endif --}}
+@include('layouts.front-end.partials._modals')
     <!------start  header main slider-->
     @include('frontend.layouts.include.slider')
     <section class="category-section my-4">
@@ -43,7 +44,7 @@
                                     <h1>Discover our products</h1>
                                 </div>
                                 <div class="tp-right-btn">
-                                    <a href="#">Shop all products <i class="fa fa-arrow-right"></i></a>
+                                    <a href="{{ route('shop') }}">Shop all products <i class="fa fa-arrow-right"></i></a>
                                 </div>
                             </div>
                         </div>
@@ -127,10 +128,10 @@
                     <!-- Your product columns go here -->
                     @foreach ($featured_products as $product)
                         <div class="col-md-3 col-sm-6 product-column" data-category="category1">
-                            <div class="product-box">
+                            <div class="product-box product-box-col-3" data-category="category1">
                                 <input type="hidden" name="quantity" value="{{ $product->minimum_order_qty ?? 1 }}"
                                     min="{{ $product->minimum_order_qty ?? 1 }}" max="100">
-                                <div class="product-image2">
+                                <div class="product-image2 product-image2-col-3" data-category="category1">
                                     @if ($product->discount > 0)
                                         <div class="discount-box float-end">
                                             <span>
@@ -153,7 +154,7 @@
                                                     class="fa fa-eye"></i></a></li>
 
                                         <li><a style="cursor: pointer" data-toggle="modal"
-                                                data-target="#addToCartModal_{{ $product->id }}"data-tip="Add to Cart"><i
+                                                data-target="#addToCartModal_{{ $product->id }}" data-tip="Add to Cart"><i
                                                     class="fa fa-shopping-cart"></i></a>
                                         </li>
                                     </ul>
@@ -174,8 +175,7 @@
                             </div>
                         </div>
                         <!-- AddToCart Modal -->
-                        <div class="modal fade" id="addToCartModal_{{ $product->id }}" tabindex="-1" role="dialog"
-                            data-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal fade" id="addToCartModal_{{ $product->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered" role="document">
                                 <form id="form-{{ $product->id }}" class="mb-2">
                                     @csrf
@@ -207,11 +207,11 @@
                                                         <h4>Color</h4>
                                                     </div>
                                                     @foreach (json_decode($product->colors) as $key => $color)
-                                                        <div class="col-md-3">
+                                                        <div class="col">
                                                             <div class="v-color-box">
                                                                 <input type="radio"
                                                                     id="{{ $product->id }}-color-{{ $key }}"
-                                                                    checked name="color" value="{{ $color }}"
+                                                                     name="color" value="{{ $color }}"
                                                                     @if ($key == 0) checked @endif>
                                                                 <label style="background: {{ $color }}"
                                                                     for="{{ $product->id }}-color-{{ $key }}"
@@ -229,8 +229,8 @@
                                                             <h4 style="font-size: 18px; margin:0;">{{ $choice->title }}
                                                             </h4>
                                                         </div>
-                                                        @foreach ($choice->options as $key => $option)
-                                                            <div class="col-md-4">
+                                                            @foreach ($choice->options as $key => $option)
+                                                            <div class="col">
                                                                 <div class="v-size-box">
                                                                     <input type="radio" id="{{ $product->id }}-size-{{ $key }}"
                                                                          name="{{ $choice->name }}" value="{{ $option }}"
@@ -339,8 +339,8 @@
                     @foreach ($category['products'] as $key => $product)
                         @if ($key < 4)
                             <div class="col-md-3 col-sm-6 product-column" data-category="category_{{ $category->id }}">
-                                <div class="product-box">
-                                    <div class="product-image2">
+                                <div class="product-box product-box-col-3" data-category="category_{{ $category->id }}">
+                                    <div class="product-image2 product-image2-col-3" data-category="category_{{ $category->id }}">
                                         @if ($product->discount > 0)
                                             <div class="discount-box float-end">
                                                 <span>
@@ -385,8 +385,7 @@
                                 </div>
                             </div>
                             <!-- AddToCart Modal -->
-                        <div class="modal fade" id="addToCartModal_{{ $product->id }}" tabindex="-1" role="dialog"
-                            data-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal fade" id="addToCartModal_{{ $product->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered" role="document">
                                 <form id="form-{{ $product->id }}" class="mb-2">
                                     @csrf
@@ -418,7 +417,7 @@
                                                         <h4>Color</h4>
                                                     </div>
                                                     @foreach (json_decode($product->colors) as $key => $color)
-                                                        <div class="col-md-3">
+                                                        <div class="col">
                                                             <div class="v-color-box">
                                                                 <input type="radio"
                                                                     id="{{ $product->id }}-color-{{ $key }}"
@@ -441,14 +440,14 @@
                                                             </h4>
                                                         </div>
                                                         @foreach ($choice->options as $key => $option)
-                                                            <div class="col-md-4">
-                                                                <div class="v-size-box">
-                                                                    <input type="radio" id="{{ $product->id }}-size-{{ $key }}"
-                                                                         name="{{ $choice->name }}" value="{{ $option }}"
-                                                                        @if ($key == 0) checked @endif>
-                                                                    <label for="{{ $product->id }}-size-{{ $key }}"
-                                                                        class="size-label">{{ $option }}</label>
-                                                                </div>
+                                                            <div class="col">
+                                                                    <div class="v-size-box">
+                                                                        <input type="radio" id="{{ $product->id }}-size-{{ $key }}"
+                                                                             name="{{ $choice->name }}" value="{{ $option }}"
+                                                                            @if ($key == 0) checked @endif>
+                                                                        <label for="{{ $product->id }}-size-{{ $key }}"
+                                                                            class="size-label">{{ $option }}</label>
+                                                                    </div>
                                                             </div>
                                                         @endforeach
                                                     </div>
@@ -649,14 +648,8 @@
 </script>
 <script>
     $(document).ready(function() {
-        // Show the popup when the window has fully loaded
-        $(window).on('load', function() {
-            $('.overlay, .popup').fadeIn('slow');
-        });
-
-        // Close the popup smoothly
-        $('.popup-close, .overlay').on('click', function() {
-            $('.popup, .overlay').fadeOut('slow');
+        $('#close-pModal').on('click',function(){
+            $('#popup-modal').modal('hide');
         });
     });
 </script>

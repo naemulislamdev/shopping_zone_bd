@@ -59,7 +59,7 @@ Route::group(['namespace' => 'Web','middleware'=>['maintenance_mode']], function
     Route::get('privacy-policy', 'WebController@privacy_policy')->name('privacy-policy');
 
     Route::get('/category/{slug}', 'WebController@videoShopping')->name('video_shopping');
-    Route::get('/campain', 'WebController@campaing_products')->name('campain');
+    Route::get('/campaign', 'WebController@campaing_products')->name('campain');
     Route::get('/product/{slug}', 'WebController@product')->name('product');
     Route::get('products', 'WebController@products')->name('products');
     Route::get('orderDetails', 'WebController@orderdetails')->name('orderdetails');
