@@ -46,6 +46,10 @@ class Order extends Model
     {
         return $this->belongsTo(ShippingMethod::class, 'shipping_method_id');
     }
+    public function socialpage()
+    {
+        return $this->belongsTo(SocialPage::class, 'social_page_id');
+    }
 
     public function shippingAddress()
     {

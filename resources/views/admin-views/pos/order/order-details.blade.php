@@ -79,7 +79,7 @@
                             </span>
                         @endif
 
-                        
+
                     </div>
                     <div class="col-md-6 mt-2">
                         <a class="text-body mr-3" target="_blank"
@@ -88,7 +88,7 @@
                         </a>
                     </div>
 
-                    
+
                     <!-- End Unfold -->
                 </div>
             </div>
@@ -112,7 +112,12 @@
                             </div>
 
                             <div class="col-6 pt-2">
-                                
+                                <h6 class="" style="color: #8a8a8a;">
+                                   page :  {{$order->socialpage['name']}}
+                                </h6>
+                                 <h6 class="" style="color: #8a8a8a;">
+                                   Courier :  {{$order['delivery_service_name']}} ( <small>{{$order->shipping['title']}} {{$order->shipping['duration']}}</small> )
+                                </h6>
                             </div>
                             <div class="col-6 pt-2">
                                 <div class="text-right">
@@ -175,7 +180,7 @@
                         @foreach($order->details as $key=>$detail)
 
                             @if($detail->product)
-                                
+
                             <!-- Media -->
                                 <div class="media">
                                     <div class="avatar avatar-xl mr-3">
@@ -236,7 +241,7 @@
                             @php($sellerId=$detail->seller_id)
                         @endforeach
                         @php($shipping=$order['shipping_cost'])
-                        
+
                         <?php
                             if ($order['extra_discount_type'] == 'percent') {
                                 $extra_discount = ($total_product_price / 100) * $order['extra_discount'];
@@ -250,7 +255,7 @@
                         <div class="row justify-content-md-end mb-3">
                             <div class="col-md-9 col-lg-8">
                                 <dl class="row text-sm-right">
-                                    
+
                                     <dt class="col-sm-6">{{\App\CPU\translate('extra_discount')}}</dt>
                                     <dd class="col-sm-6 border-bottom">
                                         <strong>- {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($extra_discount))}}</strong>
@@ -259,6 +264,10 @@
                                     <dt class="col-sm-6">{{\App\CPU\translate('coupon_discount')}}</dt>
                                     <dd class="col-sm-6 border-bottom">
                                         <strong>- {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($coupon_discount))}}</strong>
+                                    </dd>
+                                    <dt class="col-sm-6">Shipping Cost</dt>
+                                    <dd class="col-sm-6 border-bottom">
+                                        <strong>+ {{\App\CPU\Helpers::currency_converter(round($order->shipping_cost,2))}}</strong>
                                     </dd>
 
                                     <dt class="col-sm-6">{{\App\CPU\translate('Total')}}</dt>
@@ -338,7 +347,7 @@
                             </ul>
 
                             <hr>
-                            
+
                         </div>
                     @else
                         <div class="card-body">
@@ -538,5 +547,5 @@
             });
         }
     </script>
-    
+
 @endpush

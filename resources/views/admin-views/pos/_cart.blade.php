@@ -284,7 +284,7 @@
                                     readonly>
                         </div>
                         <div class="form-group col-6">
-                            <label class="input-label" for="">{{\App\CPU\translate('type')}}</label>
+                            <label class="input-label" for="">Payment {{\App\CPU\translate('type')}}</label>
                             <select name="type" class="form-control">
                                 <option selected disabled>Select Payment Type</option>
                             @foreach (\App\Model\PosPaymentType::where(['status' => 1])->get() as $value)
@@ -295,12 +295,23 @@
                             </select>
 
                         </div>
-                        <div class="form-group col-12">
+                        <div class="form-group col-6">
                             <label class="input-label" for="courier">Courier</label>
                             <select class="form-control" id="courier" name="courier">
                             <option selected disabled>Select Courier</option>
                             @foreach (\App\Model\Courier::where(['status' => 1])->get() as $value)
                                 <option value="{{ $value['name'] }}">
+                                    {{ $value['name'] }}
+                                </option>
+                            @endforeach
+                        </select>
+                        </div>
+                        <div class="form-group col-6">
+                            <label class="input-label" for="social_page_id">Social Page</label>
+                            <select class="form-control" id="social_page_id" name="social_page_id">
+                            <option selected disabled>Select Page</option>
+                            @foreach (\App\Model\SocialPage::where(['status' => 1])->get() as $value)
+                                <option value="{{ $value['id'] }}">
                                     {{ $value['name'] }}
                                 </option>
                             @endforeach
