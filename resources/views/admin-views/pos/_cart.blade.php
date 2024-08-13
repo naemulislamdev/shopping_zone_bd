@@ -165,7 +165,7 @@
 
             <div class="col-12 d-flex justify-content-between">
                 <dt  class="col-sm-6">{{\App\CPU\translate('total')}} : </dt>
-                <dd class="col-sm-6 text-right h4 b">{{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency(round($total+$total_tax_amount-$coupon_discount, 2)))}}</dd>
+                <dd class="col-sm-6 text-right h4 b">{{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency(round($total+$total_tax_amount+$total_shipping_cost-$coupon_discount, 2)))}}</dd>
             </div>
         </dl>
         <div class="row">
@@ -277,18 +277,34 @@
                 <div class="modal-body">
                     <form action="{{route('admin.pos.order')}}" id='order_place' method="post" class="row">
                         @csrf
-                        <div class="form-group col-12">
+                        <div class="form-group col-6">
                             <label class="input-label" for="">{{\App\CPU\translate('amount')}}({{\App\CPU\currency_symbol()}})</label>
                             <input type="number" class="form-control" name="amount" min="0" step="0.01"
-                                    value="{{\App\CPU\BackEndHelper::usd_to_currency($total+$total_tax_amount-$coupon_discount)}}"
+                                    value="{{\App\CPU\BackEndHelper::usd_to_currency($total+$total_tax_amount+$total_shipping_cost-$coupon_discount)}}"
                                     readonly>
                         </div>
-                        <div class="form-group col-12">
+                        <div class="form-group col-6">
                             <label class="input-label" for="">{{\App\CPU\translate('type')}}</label>
                             <select name="type" class="form-control">
-                                <option value="cash">{{\App\CPU\translate('cash')}}</option>
-                                <option value="card">{{\App\CPU\translate('card')}}</option>
+                                <option selected disabled>Select Payment Type</option>
+                            @foreach (\App\Model\PosPaymentType::where(['status' => 1])->get() as $value)
+                                <option value="{{ $value['name'] }}">
+                                    {{ $value['name'] }}
+                                </option>
+                            @endforeach
                             </select>
+
+                        </div>
+                        <div class="form-group col-12">
+                            <label class="input-label" for="courier">Courier</label>
+                            <select class="form-control" id="courier" name="courier">
+                            <option selected disabled>Select Courier</option>
+                            @foreach (\App\Model\Courier::where(['status' => 1])->get() as $value)
+                                <option value="{{ $value['name'] }}">
+                                    {{ $value['name'] }}
+                                </option>
+                            @endforeach
+                        </select>
                         </div>
                         <div class="form-group col-12">
                             <button class="btn btn-primary" id="order_complete" type="submit">{{\App\CPU\translate('submit')}}</button>

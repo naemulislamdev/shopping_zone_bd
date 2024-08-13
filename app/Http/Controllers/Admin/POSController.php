@@ -658,6 +658,7 @@ class POSController extends Controller
     }
     public function place_order(Request $request)
     {
+        // dd( $request->all());
         $cart_id = session('current_user');
         $user_id = 0;
         $user_type = 'wc';
@@ -762,10 +763,13 @@ class POSController extends Controller
             'seller_is' => 'admin',
             'checked' =>1,
             'payment_method' => $request->type,
+            'courier' => $request->courier,
             'order_type' => 'POS',
             'extra_discount' =>$cart['ext_discount']??0,
             'extra_discount_type' => $cart['ext_discount_type']??null,
             'order_amount' => BackEndHelper::currency_to_usd($request->amount),
+            'shipping_method_id' => session('shipping_method_id'),
+            'shipping_cost' => session('shipping_cost'),
             'discount_amount' => $cart['coupon_discount']??0,
             'coupon_code' => $cart['coupon_code']??null,
             'created_at' => now(),
@@ -774,6 +778,8 @@ class POSController extends Controller
         DB::table('orders')->insertGetId($or);
 
         session()->forget($cart_id);
+        session()->forget(session('shipping_method_id'));
+        session()->forget(session('shipping_cost'));
         session(['last_order' => $order_id]);
         Toastr::success(\App\CPU\translate('order_placed_successfully'));
         return back();

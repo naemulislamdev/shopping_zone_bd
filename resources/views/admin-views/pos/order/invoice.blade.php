@@ -26,7 +26,7 @@
                 @if ($order->customer->id !=0)
                     <h5>{{\App\CPU\translate('Phone')}} : {{$order->customer['phone']}}</h5>
                 @endif
-                
+
             </div>
         @endif
     </div>
@@ -51,7 +51,7 @@
         @php($coupon_discount=0)
         @foreach($order->details as $detail)
             @if($detail->product)
-                
+
                 <tr>
                     <td class="">
                         {{$detail['qty']}}
@@ -69,7 +69,7 @@
                             @endforeach
                         @endif
 
-                    
+
 
                         {{\App\CPU\translate('Discount')}} : {{\App\CPU\Helpers::currency_converter(round($detail['discount'],2))}}
                     </td>
@@ -82,15 +82,15 @@
                 @php($sub_total+=$amount)
                 @php($total_product_price+=$product_price)
                 @php($total_tax+=$detail['tax'])
-                
+
             @endif
         @endforeach
         </tbody>
     </table>
     <span>---------------------------------------------------------------------------------------</span>
     <?php
-    
-        
+
+
         if ($order['extra_discount_type'] == 'percent') {
             $ext_discount = ($total_product_price / 100) * $order['extra_discount'];
         } else {
@@ -107,24 +107,33 @@
                 <dd class="col-5">{{\App\CPU\Helpers::currency_converter(round($sub_total,2))}}</dd>
                 <dt class="col-7">{{\App\CPU\translate('Tax')}} / {{\App\CPU\translate('VAT')}}:</dt>
                 <dd class="col-5">{{\App\CPU\Helpers::currency_converter(round($total_tax,2))}}</dd>
-                
+
                 <dt class="col-7">{{\App\CPU\translate('Subtotal')}}:</dt>
                 <dd class="col-5">{{\App\CPU\Helpers::currency_converter(round($sub_total+$total_tax,2))}}</dd>
-                
+
                 <dt class="col-7">{{\App\CPU\translate('extra_discount')}}:</dt>
                 <dd class="col-5">{{\App\CPU\Helpers::currency_converter(round($ext_discount,2))}}</dd>
 
                 <dt class="col-7" >{{\App\CPU\translate('coupon_discount')}}:</dt>
                 <dd class="col-5">{{\App\CPU\Helpers::currency_converter(round($coupon_discount,2))}}</dd>
-                
+                <dt class="col-7">Shipping Cost:</dt>
+                <dd class="col-5">{{\App\CPU\Helpers::currency_converter(round($order->shipping_cost,2))}}</dd>
+
                 <dt class="col-7" style="font-size: 20px">{{\App\CPU\translate('Total')}}:</dt>
                 <dd class="col-5" style="font-size: 20px">{{\App\CPU\Helpers::currency_converter(round($order->order_amount,2))}}</dd>
             </dl>
         </div>
     </div>
-    <div class="d-flex flex-row justify-content-between border-top">
-        <span>{{\App\CPU\translate('Paid_by')}}: {{\App\CPU\translate($order->payment_method)}}</span>
+
+        <div class="d-flex flex-row justify-content-between border-top">
+            <span>{{\App\CPU\translate('Paid_by')}}: {{\App\CPU\translate($order->payment_method)}}</span>
+        </div>
+
+
+        <div class="d-flex flex-row justify-content-between border-top">
+        <span>Courier : {{$order['courier']}} ( <small>{{$order->shipping['title']}} {{$order->shipping['duration']}}</small> )</span>
     </div>
+
     <span>---------------------------------------------------------------------------------------</span>
     <h5 class="text-center pt-3">
         """{{\App\CPU\translate('THANK YOU')}}"""

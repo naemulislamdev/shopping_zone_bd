@@ -83,13 +83,13 @@
                                 class="nav-subtitle">{{\App\CPU\translate('pos')}} {{\App\CPU\translate('system')}}</small>
                             <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                         </li>
-                        <li class="navbar-vertical-aside-has-menu {{Request::is('admin/pos/*')?'active':''}}">
+                        <li class="navbar-vertical-aside-has-menu {{Request::is('admin/pos/*')?'active':''}} {{Request::is('admin/pospaymenttype/*')?'active':''}}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:">
                                 <i class="tio-shopping-basket-add nav-icon"></i>
                                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{\App\CPU\translate('POS')}}</span>
                             </a>
                             <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
-                                style="display: {{Request::is('admin/pos/*')?'block':'none'}}">
+                                style="display: {{Request::is('admin/pos/*')?'block':'none'}} {{Request::is('admin/pospaymenttype/*')?'block':'none'}}">
                                 <li class="nav-item {{Request::is('admin/pos/')?'active':''}}">
                                     <a class="nav-link " href="{{route('admin.pos.index')}}"
                                     title="{{\App\CPU\translate('pos')}}">
@@ -108,6 +108,15 @@
                                     </span>
                                     </a>
                                 </li>
+                                <li class="navbar-vertical-aside-has-menu {{Request::is('admin/pospaymenttype*')?'active':''}}">
+                                    <a class="js-navbar-vertical-aside-menu-link nav-link"
+                                       href="{{route('admin.pospaymenttype.view')}}">
+                                        <i class="tio-receipt-outlined nav-icon"></i>
+                                        <span
+                                            class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Payment Method</span>
+                                    </a>
+                                </li>
+
                             </ul>
                         </li>
                        @endif
@@ -630,6 +639,38 @@
 
                                 </ul>
                             </li>
+                            {{-- courier start --}}
+                            <li class="navbar-vertical-aside-has-menu {{Request::is('admin/couriers*')?'active':''}}">
+                                <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle"
+                                   href="javascript:">
+                                    <i class="tio-shop-outlined nav-icon"></i>
+                                    <span
+                                        class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Couriers</span>
+                                </a>
+                                <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
+                                    style="display: {{Request::is('admin/couriers*')?'block':'none'}}">
+                                    <li class="nav-item {{Request::is('admin/couriers/create')?'active':''}}">
+                                        <a class="nav-link"
+                                           href="{{route('admin.couriers.create')}}">
+                                            <span class="tio-circle nav-indicator-icon"></span>
+                                            <span class="text-truncate">
+                                                Add New
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item {{Request::is('admin/couriers/create')?'active':''}}">
+                                        <a class="nav-link"
+                                           href="{{route('admin.couriers.courier-list')}}">
+                                            <span class="tio-circle nav-indicator-icon"></span>
+                                            <span class="text-truncate">
+                                                {{\App\CPU\translate('list')}}
+                                            </span>
+                                        </a>
+                                    </li>
+
+                                </ul>
+                            </li>
+                            {{-- courier end --}}
 
 
                             {{-- Socail Page start --}}
