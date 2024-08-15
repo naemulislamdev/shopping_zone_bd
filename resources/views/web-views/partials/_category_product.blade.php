@@ -32,11 +32,15 @@
                 href="{{ route('product', $product->slug) }}">{{ Str::limit($product['name'], 23) }}</a>
         </h3>
         <div class="price d-flex justify-content-center align-content-center">
+            @if ($product->discount > 0)
             <span
                 class="mr-2">{{ \App\CPU\Helpers::currency_converter(
                     $product->unit_price - \App\CPU\Helpers::get_product_discount($product, $product->unit_price),
                 ) }}</span>
             <del>{{ \App\CPU\Helpers::currency_converter($product->unit_price) }}</del>
+            @else
+            <span>{{ \App\CPU\Helpers::currency_converter($product->unit_price) }}</span>
+            @endif
         </div>
     </div>
 </div>

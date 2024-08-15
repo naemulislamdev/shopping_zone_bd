@@ -6,9 +6,15 @@ use App\CPU\CartManager;
 use App\CPU\Helpers;
 use App\Http\Controllers\Controller;
 use App\Model\CartShipping;
+use App\Model\Order;
+use App\Model\Product;
+use App\Model\ShippingAddress;
 use App\Model\ShippingMethod;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Brian2694\Toastr\Facades\Toastr;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class SystemController extends Controller
@@ -55,7 +61,7 @@ class SystemController extends Controller
             session()->put('shipping_method_id', $request['id']);
 
 
-          $shipping_cost = ShippingMethod::find($request['id'])->cost;
+            $shipping_cost = ShippingMethod::find($request['id'])->cost;
 
             $request->session()->put('shipping_cost', $shipping_cost);
 
@@ -89,7 +95,7 @@ class SystemController extends Controller
 
         if (isset($shipping['save_address']) && $shipping['save_address'] == 'on') {
 
-            if ($shipping['contact_person_name'] == null || $shipping['address'] == null || $shipping['city'] == null ) {
+            if ($shipping['contact_person_name'] == null || $shipping['address'] == null || $shipping['city'] == null) {
                 return response()->json([
                     'errors' => ['']
                 ], 403);
@@ -109,10 +115,9 @@ class SystemController extends Controller
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
-
         } else if ($shipping['shipping_method_id'] == 0) {
 
-            if ($shipping['contact_person_name'] == null || $shipping['address'] == null || $shipping['city'] == null ) {
+            if ($shipping['contact_person_name'] == null || $shipping['address'] == null || $shipping['city'] == null) {
                 return response()->json([
                     'errors' => ['']
                 ], 403);
@@ -141,7 +146,7 @@ class SystemController extends Controller
 
             if (isset($billing['save_address_billing']) && $billing['save_address_billing'] == 'on') {
 
-                if ($billing['billing_contact_person_name'] == null || $billing['billing_address'] == null || $billing['billing_city'] == null ) {
+                if ($billing['billing_contact_person_name'] == null || $billing['billing_address'] == null || $billing['billing_city'] == null) {
                     return response()->json([
                         'errors' => ['']
                     ], 403);
@@ -161,11 +166,9 @@ class SystemController extends Controller
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
-
-
             } else if ($billing['billing_method_id'] == 0) {
 
-                if ($billing['billing_contact_person_name'] == null || $billing['billing_address'] == null || $billing['billing_city'] == null ) {
+                if ($billing['billing_contact_person_name'] == null || $billing['billing_address'] == null || $billing['billing_city'] == null) {
                     return response()->json([
                         'errors' => ['']
                     ], 403);
@@ -197,5 +200,141 @@ class SystemController extends Controller
 
         return response()->json([], 200);
     }
+    public function productCheckoutOrder(Request $request)
+    {
+        // dd($request->all());
+        $this->validate($request, [
+            'name' => 'required|string',
+            'email' => 'required|email',
+            'address' => 'required|string',
+            'phone' => 'required|string',
+            'payment_method' => 'required|in:cash_on_delivery,online_payment'
+        ]);
 
+        $oldCustomer = User::where('phone', $request->phone)->first();
+        $remember = true;
+        $email = $request->phone . '_bd@gmail.com';
+        if ($request->email) {
+            $email = $request->email;
+        }
+        $password = bcrypt($request->phone);
+        if (!$oldCustomer) {
+            DB::table('users')->insert([
+                'f_name' => $request->name,
+                'l_name' => 'bd' . rand(),
+                'email' => $email,
+                'phone' => $request->phone,
+                'password' => $password
+            ]);
+        }
+        $authUser = auth('customer')->attempt(['phone' => $request->phone, 'password' => $request->phone], $remember);
+
+        if ($authUser) {
+            $shippingAddress = new ShippingAddress();
+            $shippingAddress->customer_id = auth('customer')->id();
+            $shippingAddress->contact_person_name = $request->name;
+            $shippingAddress->address = $request->address;
+            $shippingAddress->city = 'city';
+            $shippingAddress->phone = $request->phone;
+            $shippingAddress->created_at = now();
+            $shippingAddress->updated_at = now();
+            $shippingAddress->save();
+
+
+            ///order table code
+            $discount = session()->has('coupon_discount') ? session('coupon_discount') : 0;
+            $or = [
+                'id' => 100000 + Order::all()->count() + 1,
+                'customer_id' => auth('customer')->id(),
+                'customer_type' => 'customer',
+                'payment_status' => 'unpaid',
+                'order_status' => 'pending',
+                'payment_method' => $request->payment_method,
+                'transaction_ref' => null,
+                'discount_amount' => $discount,
+                'discount_type' => $discount == 0 ? null : 'coupon_discount',
+                'order_amount' => CartManager::cart_grand_total(session('cart')) - $discount,
+                'shipping_address' => $shippingAddress->id,
+                'created_at' => now(),
+                'updated_at' => now()
+            ];
+
+            $order_id = DB::table('orders')->insertGetId($or);
+
+            foreach (session('cart') as $c) {
+                $product = Product::where(['id' => $c['id']])->first();
+                $or_d = [
+                    'order_id' => $order_id,
+                    'product_id' => $c['id'],
+                    'seller_id' => $product->added_by == 'seller' ? $product->user_id : '0',
+                    'product_details' => $product,
+                    'qty' => $c['quantity'],
+                    'price' => $c['price'],
+                    'tax' => $c['tax'] * $c['quantity'],
+                    'discount' => $c['discount'] * $c['quantity'],
+                    'discount_type' => 'discount_on_product',
+                    'variant' => $c['variant'],
+                    'variation' => json_encode($c['variations']),
+                    'delivery_status' => 'pending',
+                    'shipping_method_id' => $c['shipping_method_id'],
+                    'payment_status' => 'unpaid',
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ];
+
+                if ($c['variant'] != null) {
+                    $type = $c['variant'];
+                    $var_store = [];
+                    foreach (json_decode($product['variation'], true) as $var) {
+                        if ($type == $var['type']) {
+                            $var['qty'] -= $c['quantity'];
+                        }
+                        array_push($var_store, $var);
+                    }
+                    Product::where(['id' => $product['id']])->update([
+                        'variation' => json_encode($var_store),
+                    ]);
+                }
+
+                Product::where(['id' => $product['id']])->update([
+                    'current_stock' => $product['current_stock'] - $c['quantity']
+                ]);
+
+                DB::table('order_details')->insert($or_d);
+            }
+
+            try {
+                $fcm_token = User::where(['id' => auth('customer')->id()])->first()->cm_firebase_token;
+                $value = \App\CPU\Helpers::order_status_update_message('pending');
+                if ($value) {
+                    $data = [
+                        'title' => 'Order',
+                        'description' => $value,
+                        'order_id' => $order_id,
+                        'image' => '',
+                    ];
+                    Helpers::send_push_notif_to_device($fcm_token, $data);
+                }
+            } catch (\Exception $e) {
+                Toastr::error('FCM token config issue.');
+            }
+
+            try {
+                Mail::to(auth('customer')->user()->email)->send(new \App\Mail\OrderPlaced($order_id));
+            } catch (\Exception $mail_exception) {
+                Toastr::error('Invalid mail or configuration.');
+            }
+
+            session()->forget('cart');
+            session()->forget('coupon_code');
+            session()->forget('coupon_discount');
+            session()->forget('payment_method');
+            session()->forget('customer_info');
+            session()->forget('shipping_method_id');
+
+            return view('web-views.checkout-complete', compact('order_id'));
+        } else {
+            return "something went wrong please try again";
+        }
+    }
 }

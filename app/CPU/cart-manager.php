@@ -145,24 +145,22 @@ class CartManager
         return $total;
     }
 
-    public static function cart_grand_total($cart_group_id = null)
+    public static function cart_grand_total($cart) // needed
     {
-        $cart = CartManager::get_cart($cart_group_id);
-        $shipping_cost = CartManager::get_shipping_cost($cart_group_id);
         $total = 0;
         if (!empty($cart)) {
             foreach ($cart as $item) {
                 $product_subtotal = ($item['price'] * $item['quantity'])
                     + ($item['tax'] * $item['quantity'])
-                    - $item['discount'] * $item['quantity'];
+                    + $item['shipping_cost']
+                    - $item['discount']* $item['quantity'];
                 $total += $product_subtotal;
             }
-            $total += $shipping_cost;
         }
         return $total;
     }
 
-    public static function cart_clean($request = null)
+    public static function cart_clean($request = null) // no need
     {
         $cart_ids = CartManager::get_cart_group_ids($request);
         CartShipping::whereIn('cart_group_id', $cart_ids)->delete();
@@ -178,7 +176,7 @@ class CartManager
         session()->forget('order_note');
     }
 
-    public static function add_to_cart($request)
+    public static function add_to_cart($request) //no need
     {
         $str = '';
         $variations = [];

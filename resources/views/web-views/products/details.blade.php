@@ -163,7 +163,7 @@
                 <div class="col-md-5 mb-3">
                     <div class="p-image">
                         <div class="row mb-2">
-                            <div class="col-md-7 mx-auto">
+                            <div class="col-md-9 mx-auto">
                                 <div class="main-image mb-3 float-right" id="img-zoom">
                                     <img id="main-image"
                                         src="{{ \App\CPU\ProductManager::product_image_path('thumbnail') }}/{{ $product['thumbnail'] }}"
@@ -329,7 +329,7 @@
                                                         aria-controls="description"><i class="fa fa-plus"></i></span>
                                                 </div>
 
-                                                <div id="description" class="collapse"
+                                                <div id="description" class="collapse show"
                                                     aria-labelledby="productDescription" data-parent="#accordionExample">
                                                     <div class="card-body">
                                                         <p>

@@ -57,11 +57,11 @@
                             </li>
                             <li><a href="{{ route('shop') }}">Shop</i></a>
                             </li>
-                            <li><a href="{{ route('video_shopping','video-shopping') }}">video Shopping</i></a>
+                            <li><a href="{{ route('video_shopping','video-shopping') }}">video shopping</i></a>
                             </li>
                             <li><a href="{{ route('campain')}}">Campaign</i></a>
                             </li>
-                            <li><a href="#!">Selling product</i></a>
+                            <li><a href="{{ route('selling.product')}}">Selling product</i></a>
                             </li>
                             <li><a href="{{ route('outlets') }}">Our outlets</i></a></li>
                         </ul>

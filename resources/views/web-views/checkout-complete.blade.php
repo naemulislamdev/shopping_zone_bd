@@ -7,81 +7,17 @@
         @import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
 
         body {
-            font-family: 'Montserrat', sans-serif
+            font-family: 'Montserrat', sans-serif;
         }
 
         .card {
-            border: none
-        }
-
-        .totals tr td {
-            font-size: 13px
-        }
-
-        .footer span {
-            font-size: 12px
-        }
-
-        .product-qty span {
-            font-size: 14px;
-            color: #6A6A6A;
-        }
-
-        .spanTr {
-            color: {{$web_config['primary_color']}};
-            font-weight: 700;
-
-        }
-
-        .spandHeadO {
-            color: #030303;
-            font-weight: 500;
-            font-size: 20px;
-
-        }
-
-        .font-name {
-            font-weight: 600;
-            font-size: 13px;
-        }
-
-        .amount {
-            font-size: 17px;
-            color: {{$web_config['primary_color']}};
-        }
-
-        @media (max-width: 600px) {
-            .orderId {
-                margin- {{Session::get('direction') === "rtl" ? 'left' : 'right'}}: 91px;
-            }
-
-            .p-5 {
-                padding: 2% !important;
-            }
-
-            .spanTr {
-
-                font-weight: 400 !important;
-                font-size: 12px;
-            }
-
-            .spandHeadO {
-
-                font-weight: 300;
-                font-size: 12px;
-
-            }
-
-            .table th, .table td {
-                padding: 5px;
-            }
+            border: none;
         }
     </style>
 @endpush
 
 @section('content')
-    <div class="container mt-5 mb-5 rtl"
-         style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};">
+    <div class="container mt-5 mb-5">
         <div class="row d-flex justify-content-center">
             <div class="col-md-10 col-lg-10">
                 <div class="card">
@@ -111,10 +47,9 @@
                                         {{\App\CPU\translate('go_to_shopping')}}
                                     </a>
                                 </div>
-
                                 <div class="col-6">
                                     <a href="{{route('account-oder')}}"
-                                       class="btn btn-secondary pull-{{Session::get('direction') === "rtl" ? 'left' : 'right'}}">
+                                       class="btn btn-secondary pull-right">
                                         {{\App\CPU\translate('check_orders')}}
                                     </a>
                                 </div>
@@ -127,6 +62,3 @@
     </div>
 @endsection
 
-@push('script')
-
-@endpush

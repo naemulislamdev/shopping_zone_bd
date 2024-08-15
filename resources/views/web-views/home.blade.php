@@ -13,25 +13,10 @@
     <meta property="twitter:description" content="{!! substr($web_config['about']->value, 0, 100) !!}">
 @endpush
 @section('content')
-{{-- @php $banner=\App\Model\Banner::inRandomOrder()->where(['published'=>1,'banner_type'=>'Popup Banner'])->first(); @endphp
-@if(isset($banner))
-    <div class="overlay"></div>
-<div class="popup">
-    <div class="popup-header">
-        <div>Announcement</div>
-        <div class="popup-close">&times;</div>
-    </div>
-    <div class="popup-body">
-        <a href="{{$banner['url']}}">
-            <img onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
-        src="{{asset('storage/app/public/banner')}}/{{$banner['photo']}}" class="img-fluid" alt="Banner Image">
-        </a>
-    </div>
-</div>
-@endif --}}
+
 @include('layouts.front-end.partials._modals')
     <!------start  header main slider-->
-    @include('frontend.layouts.include.slider')
+    @include('layouts.front-end.partials.slider')
     <section class="category-section my-4">
         <div class="container">
             <div class="row">
@@ -165,11 +150,15 @@
                                             href="{{ route('product', $product->slug) }}">{{ Str::limit($product['name'], 23) }}</a>
                                     </h3>
                                     <div class="price d-flex justify-content-center align-content-center">
+                                        @if($product->discount > 0)
                                         <span
                                             class="mr-2">{{ \App\CPU\Helpers::currency_converter(
                                                 $product->unit_price - \App\CPU\Helpers::get_product_discount($product, $product->unit_price),
                                             ) }}</span>
                                         <del>{{ \App\CPU\Helpers::currency_converter($product->unit_price) }}</del>
+                                        @else
+                                        <span>{{\App\CPU\Helpers::currency_converter($product->unit_price) }}</span>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -375,11 +364,15 @@
                                             <a href="{{ route('product', $product->slug) }}">{{ Str::limit($product['name'], 23) }}</a>
                                         </h3>
                                         <div class="price d-flex justify-content-center align-content-center">
-                                            <span
-                                                class="mr-2">{{ \App\CPU\Helpers::currency_converter(
-                                                    $product->unit_price - \App\CPU\Helpers::get_product_discount($product, $product->unit_price),
-                                                ) }}</span>
-                                            <del>{{ \App\CPU\Helpers::currency_converter($product->unit_price) }}</del>
+                                            @if($product->discount > 0)
+                                        <span
+                                            class="mr-2">{{ \App\CPU\Helpers::currency_converter(
+                                                $product->unit_price - \App\CPU\Helpers::get_product_discount($product, $product->unit_price),
+                                            ) }}</span>
+                                        <del>{{ \App\CPU\Helpers::currency_converter($product->unit_price) }}</del>
+                                        @else
+                                        <span>{{\App\CPU\Helpers::currency_converter($product->unit_price) }}</span>
+                                        @endif
                                         </div>
                                     </div>
                                 </div>
