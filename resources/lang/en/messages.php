@@ -1712,4 +1712,6 @@
   'Nagad' => 'Nagad',
   'Bkash' => 'Bkash',
   'Cash On Delevery' => 'Cash On Delevery',
+  'email_not_found' => 'Email not found',
+  'name_not_found' => 'Name not found',
 );

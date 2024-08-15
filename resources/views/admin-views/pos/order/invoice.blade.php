@@ -1,9 +1,7 @@
 <div style="width:410px;">
     <div class="text-center pt-4 mb-3">
         <h2 style="line-height: 1">{{\App\Model\BusinessSetting::where(['type'=>'company_name'])->first()->value}}</h2>
-        {{-- <h5 style="font-size: 20px;font-weight: lighter;line-height: 1">
-            {{\App\Model\BusinessSetting::where(['type'=>'address'])->first()->value}}
-        </h5> --}}
+
         <h5 style="font-size: 16px;font-weight: lighter;line-height: 1">
             {{\App\CPU\translate('Phone')}}
             : {{\App\Model\BusinessSetting::where(['type'=>'company_phone'])->first()->value}}
@@ -14,6 +12,7 @@
     <div class="row mt-3">
         <div class="col-6">
             <h5>{{\App\CPU\translate('Order ID')}} : {{$order['id']}}</h5>
+            <h5>Page : {{$order->socialpage['name']}}</h5>
         </div>
         <div class="col-6">
             <h5 style="font-weight: lighter">
@@ -131,7 +130,7 @@
 
 
         <div class="d-flex flex-row justify-content-between border-top">
-        <span>Courier : {{$order['courier']}} ( <small>{{$order->shipping['title']}} {{$order->shipping['duration']}}</small> )</span>
+        <span>Courier : {{$order['delivery_service_name']}} ( <small>{{$order->shipping['title']}} {{$order->shipping['duration']}}</small> )</span>
     </div>
 
     <span>---------------------------------------------------------------------------------------</span>

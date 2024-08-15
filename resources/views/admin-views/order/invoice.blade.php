@@ -418,7 +418,7 @@
                                 <strong style="color: #030303; ">{{date('d-m-Y h:i:s a',strtotime($order['created_at']))}}</strong>
                              </span>
                         </p>
-                        
+
                     </div>
                 </td>
                 <td valign="top" style="text-align: right">
@@ -459,7 +459,7 @@
                             <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->billingAddress ? $order->billingAddress['phone'] : ""}}</p>
                             <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->billingAddress ? $order->billingAddress['address'] : ""}}</p>
                             <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->billingAddress ? $order->billingAddress['city'] : ""}} {{$order->billingAddress ? $order->billingAddress['zip'] : ""}}</p>
-                            
+
                         </div>
                     </td>
                 @endif
@@ -527,26 +527,29 @@
     </div>
 </div>
 <?php
-    
-        
+
+
         if ($order['extra_discount_type'] == 'percent') {
             $ext_discount = ($sub_total / 100) * $order['extra_discount'];
         } else {
             $ext_discount = $order['extra_discount'];
         }
-        
+
     ?>
 @php($shipping=$order['shipping_cost'])
 <div class="content-position-y" style=" display:block; height:auto !important;margin-top: 10px">
     <table style="width: 100%;">
         <tr>
-            <th style="text-align: left; vertical-align: text-top; width:30%;">
+            <th style="text-align: left; vertical-align: text-top; width:40%;">
+                <h3>Social Page : {{$order->socialpage['name']}}</h3>
+                <hr>
                 <h4 style="color: #130505 !important; margin:0px;">{{\App\CPU\translate('payment_details')}}</h4>
-                <p style="color: #414141 !important ; padding-top:5px;">{{$order->payment_status}}
+                <p style="color: #414141 !important ; padding-top:5px;">Payment Status : {{$order->payment_status}}
                     , {{date('y-m-d',strtotime($order['created_at']))}}</p>
-                
-                
-                @if ($order->delivery_type !=null)
+
+                    <p style="color: #414141 !important ; padding-top:5px;">
+                        , {{\App\CPU\translate('Paid_by')}}: {{\App\CPU\translate($order->payment_method)}}</p>
+                @if ($order->delivery_type !=NULL)
                     <h4 style="color: #130505 !important; margin:0px;text-transform: capitalize;">{{\App\CPU\translate('delivery_info')}} </h4>
                     @if ($order->delivery_type == 'self_delivery')
                         <p style="color: #414141 !important ; padding-top:5px;">
@@ -574,10 +577,15 @@
                     </p>
                     @endif
                 @endif
-                
+                @if($order->order_type=='POS')
+                <span>
+                    Courier : {{$order->delivery_service_name}}
+                </span>
+                @endif
+
             </th>
-            
-            <th style="text-align: right;width:70%;">
+
+            <th style="text-align: right;width:60%;">
                 <table style="width: 96%;margin-left:31%; display: inline " class="text-right sm-padding strong bs-0">
                     <tbody>
 
@@ -616,6 +624,11 @@
                         <th class="gry-color text-left"><b>Advance ( {{$order->advance_payment_method}} )</b></th>
                         <td>
                             - {{\App\CPU\BackEndHelper::set_symbol($order->advance_amount)}} </td>
+                    </tr>
+                    <tr class="border-bottom">
+                        <th class="gry-color text-left"><b>Shipping Cost </b></th>
+                        <td>
+                            + {{\App\CPU\Helpers::currency_converter(round($order->shipping_cost,2))}} </td>
                     </tr>
                     <tr class="bg-primary" style="background-color: #2D7BFF">
                         <th class="text-left"><b >{{\App\CPU\translate('total')}}</b></th>
