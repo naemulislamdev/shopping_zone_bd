@@ -65,6 +65,6 @@
     </div>
 @endsection
 
-@push('script')
+@push('scripts')
     <script src="{{asset('public/assets/front-end')}}/vendor/nouislider/distribute/nouislider.min.js"></script>
 @endpush

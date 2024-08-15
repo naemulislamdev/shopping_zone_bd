@@ -139,6 +139,11 @@ class WebController extends Controller
         $shop_products = Product::with(['reviews'])->active()->orderBy('id', 'desc')->get();
         return view('web-views.products.all_products', compact('shop_products'));
     }
+    public function sellingProducts()
+    {
+        $selling_products = Product::with(['reviews'])->active()->orderBy('id', 'desc')->get();
+        return view('web-views.products.selling_products', compact('selling_products'));
+    }
     //outlets function
     public function outlets()
     {

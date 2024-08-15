@@ -69,20 +69,37 @@
                         <h4>Shipping Address</h4>
                     </div>
                     <div class="card-body">
-                        <form>
+                        <form action="{{ route('customer.product.checkout.order')}}" method="POST">
+                            @csrf
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <div class="form-group">
-                                        <label>Name:</label>
+                                        <label>Name <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control"
-                                            placeholder="Enter your name">
+                                            placeholder="Enter your name" name="name" value="{{ old('name')}}">
+                                            @error('name')
+                                            <span class="text-danger">{{$message}}</span>
+                                            @enderror
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <div class="form-group">
-                                        <label>Phone:</label>
+                                        <label>Phone <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control"
-                                            placeholder="Enter your phone">
+                                            placeholder="Enter your phone" name="phone" value="{{ old('phone')}}">
+                                            @error('phone')
+                                            <span class="text-danger">{{$message}}</span>
+                                            @enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <div class="form-group">
+                                        <label>Email <span class="text-danger">*</span></label>
+                                        <input type="email" class="form-control"
+                                            placeholder="Enter your email" name="email" value="{{ old('email')}}">
+                                            @error('email')
+                                            <span class="text-danger">{{$message}}</span>
+                                            @enderror
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -102,15 +119,18 @@
                                     <div class="form-group">
                                         <label>Choose Payment Method</label>
                                         <select class="form-control" name="payment_method">
-                                            <option value="cach on delevery">Cach on delevery</option>
-                                            <option>online payment</option>
+                                            <option value="cash_on_delivery">Cach on delevery</option>
+                                            <option value="online_payment">online payment</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-md-12 mb-3">
                                     <div class="form-group">
-                                        <label>Shipping Address:</label>
-                                        <textarea class="form-control" placeholder="Enter your shipping address"></textarea>
+                                        <label>Shipping Address <span class="text-danger">*</span></label>
+                                        <textarea class="form-control" placeholder="Enter your shipping address" name="address">{{old('address')}}</textarea>
+                                        @error('address')
+                                            <span class="text-danger">{{$message}}</span>
+                                            @enderror
                                     </div>
                                 </div>
                             </div>

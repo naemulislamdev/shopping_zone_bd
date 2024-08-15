@@ -25,6 +25,7 @@ Route::group(['namespace' => 'Web','middleware'=>['maintenance_mode']], function
         Route::get('/shop', 'shop')->name('shop');
         Route::get('/outlets', 'outlets')->name('outlets');
         Route::get('/shop-cart', 'shop_cart')->name('shop-cart');
+        Route::get('/selling-product', 'sellingProducts')->name('selling.product');
     });
 
     Route::get('quick-view', 'WebController@quick_view')->name('quick-view');

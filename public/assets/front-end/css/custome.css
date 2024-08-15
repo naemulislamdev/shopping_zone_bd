@@ -771,6 +771,7 @@ header.scrolled .header-icon > a > .fa {
   position: absolute;
   top: 17px;
   right: 10px;
+  z-index: 999;
 }
 .product-image2 > .discount-box > span {
   background: #f26d21;
