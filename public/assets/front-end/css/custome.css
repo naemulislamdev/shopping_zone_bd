@@ -213,17 +213,39 @@ header.scrolled .menu-area a {
 }
 
 .dropdown-menu1 {
-  position: absolute;
-  background: #fff;
-  width: 250px;
-  opacity: 0;
-  visibility: hidden;
-  transform: scaleY(0);
-  transform-origin: top;
-  transition: 0.4s;
-  box-shadow: var(--shadow);
-  border-top: var(--border);
-  top: 58px;
+    position: absolute;
+    background: #fff;
+    width: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: 0.4s;
+    box-shadow: var(--shadow);
+    border-top: var(--border);
+    top: 58px;
+    padding: 13px 10px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+.m-category-box{}
+.m-category-box > a {
+    color: var(--primary-color);
+    font-weight: 700;
+    font-size: 17px;
+}
+.s-category > a {
+    color: #000;
+    font-weight: 700;
+    font-size: 14px;
+}
+.m-category-box > a > img{
+    width: 50px;
+    height: 80px;
+    border-radius: 12px;
+}
+.m-category-box > a > .fa{
+    margin-top: 28px !important;
 }
 
 .dropdown-menu1 ul {
@@ -232,7 +254,7 @@ header.scrolled .menu-area a {
 }
 
 .dropdown-menu1 ul li {
-  list-style: none;
+    list-style: revert;
 }
 
 .dropdown-menu1 ul li a {
@@ -252,50 +274,6 @@ header.scrolled .menu-area a {
 }
 
 .dd-btn1:hover .dropdown-menu1 {
-  opacity: 1;
-  visibility: visible;
-  transform: scaleY(1);
-}
-
-.dropdown-menu2 {
-  position: absolute;
-  left: 100%;
-  top: 0;
-  background: #fff;
-  width: 220px;
-  opacity: 0;
-  visibility: hidden;
-  transform: scaleY(0);
-  transform-origin: top;
-  transition: 0.4s;
-}
-
-.dd-btn2 {
-  position: relative;
-}
-
-.dd-btn2:hover .dropdown-menu2 {
-  opacity: 1;
-  visibility: visible;
-  transform: scaleY(1);
-}
-
-.dd-btn3 {
-  position: relative;
-}
-.dropdown-menu3 {
-  position: absolute;
-  left: 100%;
-  top: 0;
-  background: #fff;
-  width: 220px;
-  opacity: 0;
-  visibility: hidden;
-  transform: scaleY(0);
-  transform-origin: top;
-  transition: 0.4s;
-}
-.dd-btn3:hover .dropdown-menu3 {
   opacity: 1;
   visibility: visible;
   transform: scaleY(1);
@@ -854,6 +832,20 @@ header.scrolled .header-icon > a > .fa {
     height: 100% !important;
     object-fit: cover;
     position: absolute;
+}
+.product-image2 > a > img{
+    position: relative;
+}
+.product-image2 > .v-play-box{
+    position: absolute;
+    top: 50%;
+    left: 40%;
+    transform: translateY(-50%);
+    z-index: 999;
+}
+.product-image2 > .v-play-box > a > svg{
+    color: #f26d21;
+  font-size: 17px;
 }
 
 .product-box .price> span {

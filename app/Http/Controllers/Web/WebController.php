@@ -522,7 +522,22 @@ class WebController extends Controller
             $relatedProducts = Product::with(['reviews'])->active()->where('category_ids', $product->category_ids)->where('id', '!=', $product->id)->limit(12)->get();
             $deal_of_the_day = DealOfTheDay::where('product_id', $product->id)->where('status', 1)->first();
 
-            return view('web-views.products.details', compact('product', 'countWishlist', 'countOrder', 'relatedProducts', 'deal_of_the_day'));
+
+            $categories = Category::all();
+            if ($categories) {
+                foreach ($categories as $category) {
+                    foreach (json_decode($product['category_ids'], true) as $signleCategory) {
+
+                        if ($category['id'] == $signleCategory['id']) {
+                            $categorySlug = $category['slug'];
+                        }
+                    }
+                }
+            }
+
+
+
+            return view('web-views.products.details', compact('product','categorySlug', 'countWishlist', 'countOrder', 'relatedProducts', 'deal_of_the_day'));
         }
 
         Toastr::error(translate('not_found'));
@@ -700,9 +715,9 @@ class WebController extends Controller
                     }
                 }
             }
-            $allProducts = $porduct_data->whereIn('id', $product_ids)->get();
+            $videoProducts = $porduct_data->whereIn('id', $product_ids)->get();
             $categoryName = $signleCategory['name'];
-            return view('web-views.video_shopping', compact('allProducts', 'categoryName'));
+            return view('web-views.video_shopping', compact('videoProducts', 'categoryName'));
         } else {
             Toastr::warning(translate('not_found'));
             return redirect('/');
