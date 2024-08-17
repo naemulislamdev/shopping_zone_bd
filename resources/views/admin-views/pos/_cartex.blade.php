@@ -153,8 +153,7 @@
                 </dt>
                 <dd class="col-sm-6 text-right">
 
-                    {{ \App\CPU\Helpers::currency_converter(@$total_shipping_cost) }}
-
+                   + {{ \App\CPU\Helpers::currency_converter(@$total_shipping_cost) }}
 
                 </dd>
             </div>
@@ -165,12 +164,12 @@
             </div>
             <div class="col-12 d-flex justify-content-between">
                 <dt  class="col-sm-6">Product Return Price : </dt>
-                <dd class="col-sm-6 text-right">{{\App\CPU\BackEndHelper::set_symbol(round(session('previousOrderAmount'),2))}}</dd>
+                <dd class="col-sm-6 text-right">-{{\App\CPU\BackEndHelper::set_symbol(round(session('previousOrderAmount'),2))}}</dd>
             </div>
 
             <div class="col-12 d-flex justify-content-between">
                 <dt  class="col-sm-6">{{\App\CPU\translate('total')}} : </dt>
-                <dd class="col-sm-6 text-right h4 b">{{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency(round($total+$total_tax_amount+$total_shipping_cost-$coupon_discount, 2)))}}</dd>
+                <dd class="col-sm-6 text-right h4 b">{{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency(round($total+$total_tax_amount+$total_shipping_cost-$coupon_discount, 2))-session('previousOrderAmount'))}}</dd>
             </div>
         </dl>
         <div class="row">
@@ -280,13 +279,14 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{route('admin.pos.order')}}" id='order_place' method="post" class="row">
+                    <form action="{{route('admin.pos.exchange-order')}}" id='order_place' method="post" class="row">
                         @csrf
                         <div class="form-group col-6">
                             <label class="input-label" for="">{{\App\CPU\translate('amount')}}({{\App\CPU\currency_symbol()}})</label>
                             <input type="number" class="form-control" name="amount" min="0" step="0.01"
-                                    value="{{\App\CPU\BackEndHelper::usd_to_currency($total+$total_tax_amount+$total_shipping_cost-$coupon_discount)}}"
+                                    value="{{(\App\CPU\BackEndHelper::usd_to_currency($total+$total_tax_amount+$total_shipping_cost-$coupon_discount)-session('previousOrderAmount'))}}"
                                     readonly>
+                                    <input type="hidden" name="previous_order_id" value="{{session('previous_order_id')}}">
                         </div>
                         <div class="form-group col-6">
                             <label class="input-label" for="">Payment {{\App\CPU\translate('type')}}</label>

@@ -536,6 +536,7 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
         //pos management
         Route::group(['prefix' => 'pos', 'as' => 'pos.','middleware'=>['module:pos_management']], function () {
             Route::get('/', 'POSController@index')->name('index');
+            Route::get('exchange/{id}', 'POSController@posExchange')->name('exchange');
             Route::get('quick-view', 'POSController@quick_view')->name('quick-view');
             Route::post('variant_price', 'POSController@variant_price')->name('variant_price');
             Route::post('add-to-cart', 'POSController@addToCart')->name('add-to-cart');
@@ -547,6 +548,7 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
             Route::post('discount', 'POSController@update_discount')->name('discount');
             Route::get('customers', 'POSController@get_customers')->name('customers');
             Route::post('order', 'POSController@place_order')->name('order');
+            Route::post('exchange-order', 'POSController@exchange_place_order')->name('exchange-order');
             Route::get('orders', 'POSController@order_list')->name('orders');
             Route::get('order-details/{id}', 'POSController@order_details')->name('order-details');
             Route::get('invoice/{id}', 'POSController@generate_invoice');
@@ -561,6 +563,7 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
             Route::post('remove-discount','POSController@remove_discount')->name('remove-discount');
             Route::get('clear-cart-ids','POSController@clear_cart_ids')->name('clear-cart-ids');
             Route::get('get-cart-ids','POSController@get_cart_ids')->name('get-cart-ids');
+            Route::get('exchange-get-cart-ids','POSController@exchange_get_cart_ids')->name('exchange-get-cart-ids');
 
             Route::post('customer-store', 'POSController@customer_store')->name('customer-store');
         });

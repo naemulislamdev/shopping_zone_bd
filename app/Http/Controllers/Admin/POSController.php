@@ -10,6 +10,7 @@ use App\Model\Product;
 use App\Model\Color;
 use Brian2694\Toastr\Facades\Toastr;
 use App\Model\Order;
+use App\Model\OrderExchange;
 use App\Model\Coupon;
 use App\User;
 use App\Model\OrderDetail;
@@ -122,6 +123,54 @@ class POSController extends Controller
         }
 
         return view('admin-views.pos.index',compact('categories','cart_id','category','keyword','products'));
+    }
+
+    public function posExchange(Request $request,$id)
+    {
+        $order = Order::with('details', 'shipping')->where(['id' => $id])->first();
+        $pOrderAmount = \App\CPU\BackEndHelper::usd_to_currency($order->order_amount);
+        $pShippingAmount = \App\CPU\BackEndHelper::usd_to_currency($order->shipping_cost);
+// dd($pOrderAmount);
+        $pOrderAmount = ($pOrderAmount-$pShippingAmount);
+
+        session()->put('previousOrderAmount',$pOrderAmount);
+        session()->put('previousShippingCharge',$pShippingAmount);
+        session()->put('previous_order_id',$id);
+
+        $category = $request->query('category_id', 0);
+        $keyword = $request->query('search', false);
+        $categories = Category::where('position',0)->latest()->get();
+
+        $key = explode(' ', $keyword);
+        $products = Product::where('added_by','admin')->where('status',1)
+            ->when($request->has('category_id') && $request['category_id'] != 0, function ($query) use ($request) {
+                $query->whereJsonContains('category_ids', [['id' => (string)$request['category_id']]]);
+            })
+            ->when($keyword, function ($query) use ($key) {
+                return $query->where(function ($q) use ($key) {
+                    foreach ($key as $value) {
+                        $q->orWhere('name', 'like', "%{$value}%");
+                    }
+                });
+            })
+            ->latest()->paginate(Helpers::pagination_limit());
+
+        $cart_id = 'wc-'.rand(10,1000);
+
+        if(!session()->has('current_user')){
+            session()->put('current_user',$cart_id);
+        }
+
+        if(!session()->has('cart_name'))
+        {
+            if(!in_array($cart_id,session('cart_name')??[]))
+            {
+                session()->push('cart_name', $cart_id);
+            }
+        }
+        // dd($order->details);
+
+        return view('admin-views.pos.posexchange',compact('categories','cart_id','category','keyword','products','order'));
     }
     public function search_product(Request $request)
     {
@@ -779,12 +828,148 @@ class POSController extends Controller
         DB::table('orders')->insertGetId($or);
 
         session()->forget($cart_id);
-        session()->forget(session('shipping_method_id'));
-        session()->forget(session('shipping_cost'));
+        session()->forget(session(['shipping_cost','shipping_method_id']));
         session(['last_order' => $order_id]);
         Toastr::success(\App\CPU\translate('order_placed_successfully'));
         return back();
     }
+
+    public function exchange_place_order(Request $request)
+    {
+
+        $cart_id = session('current_user');
+        $user_id = 0;
+        $user_type = 'wc';
+        if(Str::contains(session('current_user'), 'sc'))
+        {
+            $user_id = explode('-',session('current_user'))[1];
+            $user_type = 'sc';
+        }
+        if (session()->has($cart_id)) {
+            if (count(session()->get($cart_id)) < 1) {
+                Toastr::error(\App\CPU\translate('cart_empty_warning'));
+                return back();
+            }
+        } else {
+            Toastr::error(\App\CPU\translate('cart_empty_warning'));
+            return back();
+        }
+        $previousOrderId = session('previous_order_id');
+        $previousOrder = Order::find($previousOrderId);
+        $previousOrder->order_status = 'exchange';
+        $previousOrder->save();
+        // dd( $previousOrder);
+
+        $cart = session($cart_id);
+
+        $total_tax_amount = 0;
+        $product_price = 0;
+        $order_details = [];
+
+        $order_id = OrderExchange::all()->count() + 1;
+        if (OrderExchange::find($order_id)) {
+            $order_id = OrderExchange::orderBy('id', 'DESC')->first()->id + 1;
+        }
+
+        $product_subtotal = 0;
+        foreach($cart as $c)
+        {
+            if(is_array($c))
+            {
+                $discount_on_product = 0;
+                $product_subtotal = ($c['price']) * $c['quantity'];
+                $discount_on_product += ($c['discount'] * $c['quantity']);
+
+                $product = Product::find($c['id']);
+                if($product)
+                {
+                    $price = $c['price'];
+
+                    //$product = Helpers::product_data_formatting($product);
+                    $or_d = [
+                        'order_id' => $order_id,
+                        'product_id' => $c['id'],
+                        'product_details' => $product,
+                        'qty' => $c['quantity'],
+                        'price' => $price,
+                        'seller_id' => $product['user_id'],
+                        'tax' => Helpers::tax_calculation($price, $product['tax'], $product['tax_type'])*$c['quantity'],
+                        'discount' => $c['discount']*$c['quantity'],
+                        'discount_type' => 'discount_on_product',
+                        'delivery_status' => 'delivered',
+                        'payment_status' => 'paid',
+                        'variation' => $c['variations'],
+                        'variant' => $c['variant'],
+                        'variation' => json_encode($c['variations']),
+                        'created_at' => now(),
+                        'updated_at' => now()
+                    ];
+                    $total_tax_amount += $or_d['tax'] * $c['quantity'];
+                    $product_price += $product_subtotal - $discount_on_product;
+                    $order_details[] = $or_d;
+
+                    if ($c['variant'] != null) {
+                        $type = $c['variant'];
+                        $var_store = [];
+
+                        foreach (json_decode($product['variation'],true) as $var) {
+                            if ($type == $var['type']) {
+                                $var['qty'] -= $c['quantity'];
+                            }
+                            array_push($var_store, $var);
+                        }
+                        Product::where(['id' => $product['id']])->update([
+                            'variation' => json_encode($var_store),
+                        ]);
+                    }
+
+                    Product::where(['id' => $product['id']])->update([
+                        'current_stock' => $product['current_stock'] - $c['quantity']
+                    ]);
+
+                    DB::table('order_exchange_details')->insert($or_d);
+                }
+            }
+        }
+
+        $total_price = $product_price;
+        if (isset($cart['ext_discount'])) {
+            $extra_discount = $cart['ext_discount_type'] == 'percent' && $cart['ext_discount'] > 0 ? (($total_price * $cart['ext_discount']) / 100) : $cart['ext_discount'];
+            $total_price -= $extra_discount;
+        }
+        $or = [
+            'id' => $order_id,
+            'previous_order_id' => $previousOrderId,
+            'customer_id' => $user_id,
+            'customer_type' => 'customer',
+            'payment_status' => 'paid',
+            'order_status' => 'delivered',
+            'seller_id' => auth('admin')->id(),
+            'seller_is' => 'admin',
+            'checked' =>1,
+            'payment_method' => $request->type,
+            'delivery_service_name' => $request->courier,
+            'social_page_id' => $request->social_page_id,
+            'order_type' => 'POS',
+            'extra_discount' =>$cart['ext_discount']??0,
+            'extra_discount_type' => $cart['ext_discount_type']??null,
+            'order_amount' => BackEndHelper::currency_to_usd($request->amount),
+            'shipping_method_id' => session('shipping_method_id'),
+            'shipping_cost' => session('shipping_cost'),
+            'discount_amount' => $cart['coupon_discount']??0,
+            'coupon_code' => $cart['coupon_code']??null,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ];
+        DB::table('order_exchanges')->insertGetId($or);
+
+        session()->forget($cart_id);
+        session()->forget(session(['shipping_cost','shipping_method_id']));
+        session(['last_order' => $order_id]);
+        Toastr::success(\App\CPU\translate('order_placed_successfully'));
+        return back();
+    }
+
     public function store_keys(Request $request)
     {
         session()->put($request['key'], $request['value']);
@@ -821,6 +1006,39 @@ class POSController extends Controller
             'current_user'=>session('current_user'),'cart_nam'=>session('cart_name')??'',
             'current_customer'=>$current_customer,
             'view'=> view('admin-views.pos._cart',compact('cart_id'))->render()]);
+    }
+
+    public function exchange_get_cart_ids(Request $request)
+    {
+        $cart_id = session('current_user');
+        $user_id = 0;
+        $user_type = 'wc';
+        if(Str::contains(session('current_user'), 'sc'))
+        {
+            $user_id = explode('-',session('current_user'))[1];
+            $user_type = 'sc';
+        }
+        $cart = session($cart_id);
+        $cart_keeper = [];
+        if (session()->has($cart_id) && count($cart) > 0) {
+            foreach ($cart as $cartItem) {
+                array_push($cart_keeper, $cartItem);
+            }
+        }
+        session()->put(session('current_user') , $cart_keeper);
+        $user_id = explode('-',session('current_user'))[1];
+        $current_customer ='';
+        if(explode('-',session('current_user'))[0]=='wc')
+        {
+            $current_customer = 'Walking Customer';
+        }else{
+            $current =User::where('id',$user_id)->first();
+            $current_customer = $current->f_name.' '.$current->l_name. ' (' .$current->phone.')';
+        }
+        return response()->json([
+            'current_user'=>session('current_user'),'cart_nam'=>session('cart_name')??'',
+            'current_customer'=>$current_customer,
+            'view'=> view('admin-views.pos._cartex',compact('cart_id'))->render()]);
     }
     public function clear_cart_ids()
     {
