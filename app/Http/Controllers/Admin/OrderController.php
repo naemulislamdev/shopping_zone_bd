@@ -11,7 +11,8 @@ use App\Model\AdminWallet;
 use App\Model\BusinessSetting;
 use App\Model\DeliveryMan;
 use App\Model\Order;
-use App\Model\OrderDetail;
+use App\Model\OrderExchange;
+use App\Model\OrderExchangeDetail;
 use App\Model\OrderTransaction;
 use App\Model\OrderHistory;
 use App\Model\Product;
@@ -33,9 +34,9 @@ use Rap2hpoutre\FastExcel\FastExcel;
 
 class OrderController extends Controller
 {
-    
-    
-    
+
+
+
     public function list(Request $request, $status)
     {
         $search = $request['search'];
@@ -97,28 +98,28 @@ class OrderController extends Controller
         $orders = $orders->where('order_type','default_type')->orderBy('id','desc')->paginate(500)->appends(['search'=>$request['search'],'from'=>$request['from'],'to'=>$request['to']]);
         return view('admin-views.order.list', compact('orders', 'search','from','to','status'));
     }
-    
-    
-    
+
+
+
      public function detailsProduct($id)
     {
         $detailsProduct = OrderDetail::findOrFail($id);
         // dd($order);
         return view('admin-views.order.order-details', compact('detailsProduct'));
     }
-    
-    
+
+
     public function ordersPrice(Request $request){
-   
+
           $admin = Admin::find(auth('admin')->id());
         //  var_dump($orderDetailsInfo);
         //  exit();
           if($request->discount || $request->qty){
-              
+
         $orderDetailsInfo = OrderDetail::findOrFail($request->id);
         $product = json_decode($orderDetailsInfo->product_details);
         $productName = $product->name;
-         
+
          $oldPrice = ($orderDetailsInfo->price*$orderDetailsInfo->qty)-$orderDetailsInfo->discount;
          $newPrice = ($orderDetailsInfo->price*$request->qty)-BackEndHelper::currency_to_usd($request->discount);
          $discount = $request->discount-$orderDetailsInfo->discount;
@@ -136,40 +137,40 @@ class OrderController extends Controller
              'order'=> $productName,
             'discount' => $discount,
         );
-         
+
          $orderHistory = new OrderHistory;
          $orderHistory->order_id = $orderDetailsInfo->order_id;
          $orderHistory->created_by = $admin->name;
          $orderHistory->details = json_encode($data);
          $orderHistory->save();
-         
+
          Toastr::success('Product Discount Update successfully!');
-              
+
           }
         else{
-              
-              
+
+
               $orderInfo = Order::findOrFail($request->id);
               $orderInfo->shipping_amount = $request->shipping_amount;
                $data = array(
              'order'=> "Update Shipping Amount ".$request->shipping_amount,
             'discount' => "",
         );
-         
+
          $orderHistory = new OrderHistory;
          $orderHistory->order_id = $orderInfo->id;
          $orderHistory->created_by = $admin->name;
          $orderHistory->details = json_encode($data);
          $orderHistory->save();
-         Toastr::success('Shipping Amount Update successfully!');  
+         Toastr::success('Shipping Amount Update successfully!');
         }
-          
-        
+
+
           $orderInfo->save();
         return redirect()->back();
     }
-    
-    
+
+
     public function Individual(Request $request,$status)
     {
          $search = $request['search'];
@@ -227,13 +228,13 @@ class OrderController extends Controller
                     $dateQuery->whereDate('created_at', '>=',$from)
                                 ->whereDate('created_at', '<=',$to);
                     });
-                    
+
                      $OrderDetails=OrderDetail::with(['address','order'])->join('orders', 'orders.id', '=', 'order_details.order_id')->join('products', 'products.id', '=', 'order_details.product_id')->select('order_details.*','orders.customer_id','products.name','products.variation','products.purchase_price')->orderBy('id','desc')->paginate(Helpers::pagination_limit())->appends(['search'=>$request['search'],'from'=>$request['from'],'to'=>$request['to']]);
 
         $orders = $orders->where('order_type','default_type')->orderBy('id','desc')->paginate(Helpers::pagination_limit())->appends(['search'=>$request['search'],'from'=>$request['from'],'to'=>$request['to']]);
         // dd($OrderDetails);
         return view('admin-views.order.Individual', compact('orders','OrderDetails', 'search','from','to','status'));
-     
+
     }
 
     public function details($id)
@@ -388,7 +389,7 @@ class OrderController extends Controller
             return response()->json($data);
         }
     }
-    
+
     public function advance_payment(Request $request){
         $order = Order::findOrFail($request->id);
          $admin = Admin::findOrFail(auth('admin')->id());
@@ -401,7 +402,7 @@ class OrderController extends Controller
              'order'=> 'Method:'.$request->advance_payment_method.', Advance: '.$request->advance_payment,
             'discount' => 0,
         );
-         
+
          $orderHistory = new OrderHistory;
          $orderHistory->order_id = $order->id;
          $orderHistory->created_by = $admin->name;
@@ -412,9 +413,9 @@ class OrderController extends Controller
         else{
              Toastr::warning(\App\CPU\translate('Advance Amount Not Possible yet!!!'));
         }
-         
+
        return back();
-        
+
     }
 
     public function generate_invoice($id)
@@ -426,6 +427,22 @@ class OrderController extends Controller
         $data["order"] = $order;
         return view('admin-views.order.invoice', compact('order'));
         $pdf = PDF::loadView('admin-views.order.invoice', $data);
+        return $pdf->download($order->id . '.pdf');
+        // $mpdf_view = View::make('admin-views.order.invoice')->with('order', $order)->with('seller', $seller);
+        // Helpers::gen_mpdf($mpdf_view, 'order_invoice_', $order->id);
+    }
+
+    public function exchange_generate_invoice($id)
+    {
+        $order = OrderExchange::with('seller')->with('shipping')->with('exchangedetails')->where('id', $id)->first();
+        $previousOrder = Order::with('seller')->with('shipping')->with('details')->where('id', $order->previous_order_id)->first();
+        $seller = Seller::find($order->exchangedetails->first()->seller_id);
+        $data["email"] = $order->customer !=null?$order->customer["email"]:\App\CPU\translate('email_not_found');
+        $data["client_name"] = $order->customer !=null? $order->customer["f_name"] . ' ' . $order->customer["l_name"]:\App\CPU\translate('customer_not_found');
+        $data["order"] = $order;
+        $data["previousOrder"] = $previousOrder;
+        return view('admin-views.order.exchange-invoice', compact('order','previousOrder'));
+        $pdf = PDF::loadView('admin-views.order.exchange-invoice', $data);
         return $pdf->download($order->id . '.pdf');
         // $mpdf_view = View::make('admin-views.order.invoice')->with('order', $order)->with('seller', $seller);
         // Helpers::gen_mpdf($mpdf_view, 'order_invoice_', $order->id);
@@ -534,5 +551,5 @@ class OrderController extends Controller
 
 
     }
-    
+
 }

@@ -64,13 +64,13 @@
                                         <label class="input-label"
                                             for="{{ $lang }}_description">{{ \App\CPU\translate('description') }}
                                             ({{ strtoupper($lang) }})</label>
-                                        <textarea name="description[]" class="editor textarea" cols="30" rows="10">{{ old('details') }}</textarea>
+                                        <textarea name="description[]" class="editor" id="summernote" cols="30" rows="60">{{ old('details') }}</textarea>
                                     </div>
                                     <div class="form-group pt-4">
                                         <label class="input-label"
                                             for="{{ $lang }}_description">{{ \App\CPU\translate(' short description') }}
                                             ({{ strtoupper($lang) }})</label>
-                                        <textarea name="short_description" class="editor textarea" cols="30" rows="10">{{ old('short_description') }}</textarea>
+                                        <textarea name="short_description" class="editor" id="summernote1" cols="30" rows="30">{{ old('short_description') }}</textarea>
                                     </div>
                                 </div>
                             @endforeach
@@ -219,12 +219,14 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label class="control-label">{{ \App\CPU\translate('Unit price') }}</label>
+                                        <span class="text-danger">*</span>
                                         <input type="number" min="0" step="0.01"
                                             placeholder="{{ \App\CPU\translate('Unit price') }}" name="unit_price"
                                             value="{{ old('unit_price') }}" class="form-control" required>
                                     </div>
                                     <div class="col-md-6">
                                         <label class="control-label">{{ \App\CPU\translate('Purchase price') }}</label>
+                                        <span class="text-danger">*</span>
                                         <input type="number" min="0" step="0.01"
                                             placeholder="{{ \App\CPU\translate('Purchase price') }}"
                                             value="{{ old('purchase_price') }}" name="purchase_price"
@@ -243,6 +245,7 @@
 
                                     <div class="col-md-4">
                                         <label class="control-label">{{ \App\CPU\translate('Discount') }}</label>
+                                        <span class="text-danger">*</span>
                                         <input type="number" min="0" value="{{ old('discount') }}"
                                             step="0.01" placeholder="{{ \App\CPU\translate('Discount') }}"
                                             name="discount" class="form-control" required>
@@ -261,6 +264,7 @@
                                     <div class="col-md-3" id="quantity">
                                         <label class="control-label">{{ \App\CPU\translate('total') }}
                                             {{ \App\CPU\translate('Quantity') }}</label>
+                                            <span class="text-danger">*</span>
                                         <input type="number" min="0" value="0" step="1"
                                                placeholder="{{ \App\CPU\translate('Quantity') }}" name="current_stock"
                                                class="form-control" required>
@@ -296,7 +300,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                       <div class="card mt-2 rest-part">
                         <div class="card-header">
                             <h4>Product campaign Discount</h4>
@@ -310,7 +314,7 @@
                                 </tr>
                                 <tr>
                                   <td>
-                                   <input type="date" 
+                                   <input type="date"
                                             placeholder="start day" name="start_day[]"
                                             value="" class="form-control" required>
                                   </td>
@@ -341,7 +345,7 @@
 
                                 <div class="col-md-8 mb-4">
                                     <label class="control-label">{{ \App\CPU\translate('Meta Description') }}</label>
-                                    <textarea rows="10" type="text" name="meta_description" class="form-control"></textarea>
+                                    <textarea rows="10" type="text" id="summernote2" name="meta_description" class="form-control"></textarea>
                                 </div>
 
                                 <div class="col-md-4">
@@ -369,7 +373,7 @@
                                         class="form-control" required>
                                 </div>
 
-                                <div class="col-md-8">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label>{{ \App\CPU\translate('Upload product images') }}</label><small
                                             style="color: red">* ( {{ \App\CPU\translate('ratio') }} 1:1 )</small>
@@ -379,8 +383,17 @@
                                     </div>
 
                                 </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="name">Size Chart</label><small
+                                            style="color: red">* ( {{ \App\CPU\translate('ratio') }} 1:1 )</small>
+                                    </div>
+                                    <div style="max-width:200px;">
+                                        <div class="row" id="size_chart"></div>
+                                    </div>
+                                </div>
 
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="name">{{ \App\CPU\translate('Upload thumbnail') }}</label><small
                                             style="color: red">* ( {{ \App\CPU\translate('ratio') }} 1:1 )</small>
@@ -415,6 +428,41 @@
             $("#coba").spartanMultiImagePicker({
                 fieldName: 'images[]',
                 maxCount: 10,
+                rowHeight: 'auto',
+                groupClassName: 'col-6',
+                maxFileSize: '',
+                placeholderImage: {
+                    image: '{{ asset('public/assets/back-end/img/400x400/img2.jpg') }}',
+                    width: '100%',
+                },
+                dropFileLabel: "Drop Here",
+                onAddRow: function(index, file) {
+
+                },
+                onRenderedPreview: function(index) {
+
+                },
+                onRemoveRow: function(index) {
+
+                },
+                onExtensionErr: function(index, file) {
+                    toastr.error(
+                    '{{ \App\CPU\translate('Please only input png or jpg type file') }}', {
+                        CloseButton: true,
+                        ProgressBar: true
+                    });
+                },
+                onSizeErr: function(index, file) {
+                    toastr.error('{{ \App\CPU\translate('File size too big') }}', {
+                        CloseButton: true,
+                        ProgressBar: true
+                    });
+                }
+            });
+
+            $("#size_chart").spartanMultiImagePicker({
+                fieldName: 'size_chart',
+                maxCount: 1,
                 rowHeight: 'auto',
                 groupClassName: 'col-6',
                 maxFileSize: '',
@@ -650,7 +698,7 @@
                 confirmButtonText: 'Yes',
                 reverseButtons: true
             }).then((result) => {
-             
+
                 var formData = new FormData(document.getElementById('product_form'));
                 $.ajaxSetup({
                     headers: {
@@ -703,24 +751,27 @@
                 $(".rest-part").addClass('d-none');
             }
         })
-        
+
         function add_fields() {
           document.getElementById("myTable").insertRow(-1).innerHTML = '<tr><td><input type="date"  placeholder="start day" name="start_day[]" value="" class="form-control" required></td><td><input type="nubmer" placeholder="Discount" name="discountCam[]" value="" class="form-control" required> </td> </tr>';
         }
 
     </script>
 
-    {{-- ck editor --}}
-    <script src="{{ asset('/') }}vendor/ckeditor/ckeditor/ckeditor.js"></script>
-    <script src="{{ asset('/') }}vendor/ckeditor/ckeditor/adapters/jquery.js"></script>
+  <!-- include summernote css/js -->
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+
     <script>
-        $('.textarea').ckeditor({
-            contentsLangDirection: '{{ Session::get('direction') }}',
-        });
+      $(document).ready(function() {
+  $('#summernote').summernote();
+  $('#summernote1').summernote();
+  $('#summernote2').summernote();
+});
     </script>
 
     {{-- ck editor --}}
-   
+
 @endpush
 
- 
+

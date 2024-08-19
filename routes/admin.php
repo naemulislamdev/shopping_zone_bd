@@ -525,6 +525,7 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
             Route::post('advance-payment/{id}', 'OrderController@advance_payment')->name('advance-payment');
             Route::post('productStatus', 'OrderController@productStatus')->name('productStatus');
             Route::get('generate-invoice/{id}', 'OrderController@generate_invoice')->name('generate-invoice')->withoutMiddleware(['module:order_management']);
+            Route::get('exchange-generate-invoice/{id}', 'OrderController@exchange_generate_invoice')->name('exchange-generate-invoice')->withoutMiddleware(['module:order_management']);
             Route::get('inhouse-order-filter', 'OrderController@inhouse_order_filter')->name('inhouse-order-filter');
 
             Route::post('update-deliver-info','OrderController@update_deliver_info')->name('update-deliver-info');
@@ -550,7 +551,9 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
             Route::post('order', 'POSController@place_order')->name('order');
             Route::post('exchange-order', 'POSController@exchange_place_order')->name('exchange-order');
             Route::get('orders', 'POSController@order_list')->name('orders');
+            Route::get('exchange-orders', 'POSController@order_exchange_list')->name('exchange-orders');
             Route::get('order-details/{id}', 'POSController@order_details')->name('order-details');
+            Route::get('order-exchange-details/{id}', 'POSController@order_exchange_details')->name('order-exchange-details');
             Route::get('invoice/{id}', 'POSController@generate_invoice');
             Route::any('store-keys', 'POSController@store_keys')->name('store-keys');
             Route::get('search-products','POSController@search_product')->name('search-products');

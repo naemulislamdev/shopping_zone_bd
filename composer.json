@@ -12,7 +12,6 @@
         "aws/aws-sdk-php": "^3.209",
         "barryvdh/laravel-dompdf": "^2.0",
         "brian2694/laravel-toastr": "^5.56",
-        "ckeditor/ckeditor": "^4.17",
         "doctrine/dbal": "^3.2",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
