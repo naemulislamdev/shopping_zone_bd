@@ -52,6 +52,37 @@ class POSController extends Controller
         return view('admin-views.pos.order.list', compact('orders', 'search','from','to'));
     }
 
+    public function order_exchange_list(Request $request)
+    {
+        $search = $request['search'];
+        $from   = $request['from'];
+        $to     = $request['to'];
+
+        $key = $request['search'] ? explode(' ', $request['search']) : '';
+
+        $orders = OrderExchange::with(['customer'])
+                        ->where('order_type','EXCHANGE')
+                        ->where(['seller_is'=>'admin'])
+                        // ->where('order_status','delivered')
+                        ->when($request->has('search') && $search!=null,function ($q) use ($key) {
+                            $q->where(function($qq) use ($key){
+                                foreach ($key as $value) {
+                                    $qq->where('id', 'like', "%{$value}%")
+                                        ->orWhere('order_status', 'like', "%{$value}%")
+                                        ->orWhere('transaction_ref', 'like', "%{$value}%");
+                                }});
+                        })
+                        ->when(!empty($from) && !empty($to) , function($dateQuery) use($from, $to) {
+                            $dateQuery->whereDate('created_at', '>=',$from)
+                                ->whereDate('created_at', '<=',$to);
+                        })
+                        ->latest()
+                        ->paginate(Helpers::pagination_limit())
+                        ->appends(['search'=>$request['search'],'from'=>$request['from'],'to'=>$request['to']]);
+
+        return view('admin-views.pos.order.exchange-list', compact('orders', 'search','from','to'));
+    }
+
     public function bulk_export_data(Request $request)
     {
         $from   = $request['from'];
@@ -88,6 +119,16 @@ class POSController extends Controller
 
         return view('admin-views.pos.order.order-details', compact('order'));
     }
+
+    public function order_exchange_details($id)
+    {
+
+
+        $order = OrderExchange::with('exchangedetails', 'shipping', 'seller')->where(['id' => $id])->first();
+        $previousOrder = Order::with('details', 'shipping', 'seller')->where(['id' => $order->previous_order_id])->first();
+        return view('admin-views.pos.order.order-exchange-details', compact('order','previousOrder'));
+    }
+
     public function index(Request $request)
     {
         $category = $request->query('category_id', 0);
@@ -854,9 +895,9 @@ class POSController extends Controller
             Toastr::error(\App\CPU\translate('cart_empty_warning'));
             return back();
         }
-        $previousOrderId = session('previous_order_id');
+        $previousOrderId = $request->previous_order_id;
         $previousOrder = Order::find($previousOrderId);
-        $previousOrder->order_status = 'exchange';
+        $previousOrder->order_status = 'EXCHANGE';
         $previousOrder->save();
         // dd( $previousOrder);
 
@@ -950,7 +991,7 @@ class POSController extends Controller
             'payment_method' => $request->type,
             'delivery_service_name' => $request->courier,
             'social_page_id' => $request->social_page_id,
-            'order_type' => 'POS',
+            'order_type' => 'EXCHANGE',
             'extra_discount' =>$cart['ext_discount']??0,
             'extra_discount_type' => $cart['ext_discount_type']??null,
             'order_amount' => BackEndHelper::currency_to_usd($request->amount),
@@ -964,7 +1005,7 @@ class POSController extends Controller
         DB::table('order_exchanges')->insertGetId($or);
 
         session()->forget($cart_id);
-        session()->forget(session(['shipping_cost','shipping_method_id']));
+        session()->forget(session(['shipping_cost','shipping_method_id','previous_order_id']));
         session(['last_order' => $order_id]);
         Toastr::success(\App\CPU\translate('order_placed_successfully'));
         return back();

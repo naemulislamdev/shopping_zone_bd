@@ -2,6 +2,7 @@
 
 namespace App\Model;
 
+use App\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -23,9 +24,9 @@ class OrderExchange extends Model
         'seller_id'=>'integer'
     ];
 
-    public function details()
+    public function exchangedetails()
     {
-        return $this->hasMany(OrderDetail::class)->orderBy('seller_id', 'ASC');
+        return $this->hasMany(OrderExchangeDetail::class,'order_id')->orderBy('seller_id', 'ASC');
     }
 
     public function seller()
@@ -35,7 +36,7 @@ class OrderExchange extends Model
 
     public function sellerName()
     {
-        return $this->hasOne(OrderDetail::class);
+        return $this->hasOne(OrderExchangeDetail::class);
     }
 
     public function customer()
