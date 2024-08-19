@@ -14,6 +14,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Brian2694\Toastr\Facades\Toastr;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
@@ -205,29 +206,46 @@ class SystemController extends Controller
         // dd($request->all());
         $this->validate($request, [
             'name' => 'required|string',
-            'email' => 'required|email',
+            'email' => 'nullable|email',
             'address' => 'required|string',
             'phone' => 'required|string',
             'payment_method' => 'required|in:cash_on_delivery,online_payment'
         ]);
+        // Check if user is authenticated
+        if (auth('customer')->check()) {
+            $authUser = auth('customer')->user();
+        } else {
+            // Try to find the user by phone number
+            $oldCustomer = User::where('phone', $request->phone)->first();
+            $remember = true;
 
-        $oldCustomer = User::where('phone', $request->phone)->first();
-        $remember = true;
-        $email = $request->phone . '_bd@gmail.com';
-        if ($request->email) {
-            $email = $request->email;
+            if ($oldCustomer) {
+                // Old user but not authenticated, log them in
+                auth('customer')->login($oldCustomer, $remember);
+                $authUser = auth('customer')->user();
+            } else {
+                // New user, create an account and log them in
+                $email = $request->phone . '_bd@gmail.com';
+                if ($request->email) {
+                    $email = $request->email;
+                }
+
+                $password = bcrypt($request->phone);
+
+                // Create a new user
+                $newUser = User::create([
+                    'f_name' => $request->name,
+                    'l_name' => 'bd' . rand(),
+                    'email' => $email,
+                    'phone' => $request->phone,
+                    'password' => $password
+                ]);
+
+                // Log in the new user
+                auth('customer')->login($newUser, $remember);
+                $authUser = auth('customer')->user();
+            }
         }
-        $password = bcrypt($request->phone);
-        if (!$oldCustomer) {
-            DB::table('users')->insert([
-                'f_name' => $request->name,
-                'l_name' => 'bd' . rand(),
-                'email' => $email,
-                'phone' => $request->phone,
-                'password' => $password
-            ]);
-        }
-        $authUser = auth('customer')->attempt(['phone' => $request->phone, 'password' => $request->phone], $remember);
 
         if ($authUser) {
             $shippingAddress = new ShippingAddress();
@@ -239,7 +257,6 @@ class SystemController extends Controller
             $shippingAddress->created_at = now();
             $shippingAddress->updated_at = now();
             $shippingAddress->save();
-
 
             ///order table code
             $discount = session()->has('coupon_discount') ? session('coupon_discount') : 0;

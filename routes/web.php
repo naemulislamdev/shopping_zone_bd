@@ -26,6 +26,7 @@ Route::group(['namespace' => 'Web','middleware'=>['maintenance_mode']], function
         Route::get('/outlets', 'outlets')->name('outlets');
         Route::get('/shop-cart', 'shop_cart')->name('shop-cart');
         Route::get('/selling-product', 'sellingProducts')->name('selling.product');
+        Route::post('/client-review', 'clientReview')->name('client_review');
     });
 
     Route::get('quick-view', 'WebController@quick_view')->name('quick-view');
@@ -100,6 +101,7 @@ Route::group(['namespace' => 'Web','middleware'=>['maintenance_mode']], function
     Route::get('order-cancel/{id}', 'UserProfileController@order_cancel')->name('order-cancel');
     Route::post('ticket-submit', 'UserProfileController@ticket_submit')->name('ticket-submit');
     Route::get('account-delete/{id}','UserProfileController@account_delete')->name('account-delete');
+    Route::get('account-logout','UserProfileController@accountLogout')->name('account-logout');
     // Chatting start
     Route::get('chat-with-seller', 'ChattingController@chat_with_seller')->name('chat-with-seller');
     Route::get('messages', 'ChattingController@messages')->name('messages');

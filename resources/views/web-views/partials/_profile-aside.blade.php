@@ -170,7 +170,18 @@
                 </div>
             </div>
         </div>
-        
+        <div class="pb-0">
+            <!-- Filter by price-->
+            <div class=" sidebarL">
+                <h3 class="widget-title btnF" style="font-weight: 700;">
+                    <a class=""
+                       href="{{ route('account-logout') }}">{{\App\CPU\translate('Logout')}}</a></h3>
+                <div class="divider-role"
+                     style="border: 1px solid whitesmoke; margin-bottom: 14px;  margin-top: -6px;">
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 

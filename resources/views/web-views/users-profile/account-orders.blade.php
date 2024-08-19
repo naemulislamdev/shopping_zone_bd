@@ -136,15 +136,15 @@
                                     <td class="bodytr orderDate"><span class="">{{$order['created_at']}}</span></td>
                                     <td class="bodytr">
                                         @if($order['order_status']=='failed' || $order['order_status']=='canceled')
-                                            <span class="badge badge-danger text-capitalize">
+                                            <span class="btn btn-sm btn-danger">
                                                 {{\App\CPU\translate($order['order_status'])}}
                                             </span>
                                         @elseif($order['order_status']=='confirmed' || $order['order_status']=='processing' || $order['order_status']=='delivered')
-                                            <span class="badge badge-success text-capitalize">
+                                            <span class="btn btn-sm btn-success">
                                                 {{\App\CPU\translate($order['order_status'])}}
                                             </span>
                                         @else
-                                            <span class="badge badge-info text-capitalize">
+                                            <span class="btn btn-sm btn-info">
                                                 {{\App\CPU\translate($order['order_status'])}}
                                             </span>
                                         @endif
@@ -168,6 +168,12 @@
                                                 <i class="fa fa-trash"></i> {{\App\CPU\translate('cancel')}}
                                             </button>
                                         @endif
+                                        @if($order['order_status']=='confirmed')
+                                        <a href="{{ route('submit-review', $order->sellerName->id) }}"
+                                            class="btn btn-primary p-2">
+                                             <i class="fa fa-eye"></i> {{\App\CPU\translate('Weite a Review')}}
+                                         </a>
+                                         @endif
                                     </td>
                                 </tr>
                             @endforeach

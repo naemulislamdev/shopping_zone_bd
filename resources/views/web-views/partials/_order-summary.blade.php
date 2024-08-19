@@ -18,7 +18,6 @@
         @endif
         <tr class="summary-subtotal">
             <td>Subtotal:</td>
-            {{$sub_total}}
             <td>{{ \App\CPU\Helpers::currency_converter($sub_total) }}</td>
         </tr>
         <tr class="summary-shipping">

@@ -87,7 +87,12 @@ class UserProfileController extends Controller
         }else{
             Toastr::warning('access_denied!!');
         }
-        
+
+    }
+    public function accountLogout(){
+        auth()->guard('customer')->logout();
+        Toastr::info(translate('Logout _successfully!!'));
+        return redirect()->route('home');
     }
 
     public function account_address()
@@ -120,7 +125,7 @@ class UserProfileController extends Controller
         return back();
     }
     public function address_edit(Request $request,$id)
-    {   
+    {
         $shippingAddress = ShippingAddress::where('customer_id',auth('customer')->id())->find($id);
         if(isset($shippingAddress))
         {
@@ -305,7 +310,7 @@ class UserProfileController extends Controller
             $orderDetails = Order::where('id',$request['order_id'])->whereHas('details',function ($query) use($user_id){
                 $query->where('customer_id',$user_id);
             })->first();
-            
+
         }else{
             if($user->phone == $request->phone_number){
                 $orderDetails = Order::where('id',$request['order_id'])->whereHas('details',function ($query){
@@ -318,9 +323,9 @@ class UserProfileController extends Controller
                     $query->where('customer_id',auth('customer')->id());
                 })->first();
             }
-            
+
         }
-        
+
 
         if (isset($orderDetails)){
             return view('web-views.order-tracking', compact('orderDetails'));
@@ -365,14 +370,14 @@ class UserProfileController extends Controller
         if($loyalty_point_status == 1)
         {
             $loyalty_point = CustomerManager::count_loyalty_point_for_amount($id);
-    
+
             if($user->loyalty_point < $loyalty_point)
             {
                 Toastr::warning(translate('you have not sufficient loyalty point to refund this order!!'));
                 return back();
             }
         }
-        
+
         return view('web-views.users-profile.refund-request',compact('order_details'));
     }
     public function store_refund(Request $request)
@@ -381,17 +386,17 @@ class UserProfileController extends Controller
             'order_details_id' => 'required',
             'amount' => 'required',
             'refund_reason' => 'required'
-            
+
         ]);
         $order_details = OrderDetail::find($request->order_details_id);
         $user = auth('customer')->user();
 
-        
+
         $loyalty_point_status = Helpers::get_business_settings('loyalty_point_status');
         if($loyalty_point_status == 1)
         {
             $loyalty_point = CustomerManager::count_loyalty_point_for_amount($request->order_details_id);
-    
+
             if($user->loyalty_point < $loyalty_point)
             {
                 Toastr::warning(translate('you have not sufficient loyalty point to refund this order!!'));
@@ -441,11 +446,10 @@ class UserProfileController extends Controller
         return view('web-views.users-profile.refund-details',compact('order_details','refund'));
     }
 
-    public function submit_review(Request $request,$id)
+    public function submit_review($id)
     {
-    
         $order_details = OrderDetail::find($id);
         return view('web-views.users-profile.submit-review',compact('order_details'));
-    
+
     }
 }
