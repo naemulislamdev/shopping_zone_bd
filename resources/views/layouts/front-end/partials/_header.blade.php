@@ -17,26 +17,27 @@
 
                             <li class="dd-btn1"><a href="#"> Categories <i class="fa fa-angle-down"></i></a>
                                 <div class="dropdown-menu1">
-                                    <ul>
+                                    <div class="row">
                                         @foreach ($categories as $category)
-                                            <li class="dd-btn2"><a
-                                                    href="{{ route('products', ['id' => $category['id'], 'data_from' => 'category', 'page' => 1]) }}">
-                                                    <img src="{{ asset("storage/app/public/category/$category->icon") }}"
-                                                        onerror="this.src='{{ asset('public/assets/front-end/img/image-place-holder.png') }}'"
-                                                        style="width: 18px; height: 18px; ">
-                                                    {{ $category['name'] }} <i
-                                                        class="fa fa-angle-right float-right mt-1"></i></a>
+                                            <div class="col-md-4 mb-2">
+                                                <div class="m-category-box">
+                                                    <a
+                                                        href="{{ route('products', ['id' => $category['id'], 'data_from' => 'category', 'page' => 1]) }}">
+                                                        <img src="{{ asset("storage/app/public/category/$category->icon") }}"
+                                                            onerror="this.src='{{ asset('public/assets/front-end/img/image-place-holder.png') }}'">
+                                                        {{ $category['name'] }} <i
+                                                            class="fa fa-angle-right float-right mt-1"></i></a>
+                                                </div>
                                                 @if ($category->childes->count() > 0)
-                                                    <div class="dropdown-menu2">
-                                                        <ul class="w-nav-list level_3">
+                                                    <div class="s-category-box">
+                                                        <ul class="w-nav-list level_3 ml-4">
                                                             @foreach ($category['childes'] as $subCategory)
-                                                                <li class="dd-btn3"><a
+                                                                <li class="s-category"><a
                                                                         href="{{ route('products', ['id' => $subCategory['id'], 'data_from' => 'category', 'page' => 1]) }}">{{ $subCategory['name'] }}
-                                                                        <i
-                                                                            class="fa fa-angle-right float-right mt-1"></i></a>
+                                                                    </a>
                                                                     @if ($subCategory->childes->count() > 0)
-                                                                        <div class="dropdown-menu3">
-                                                                            <ul class="w-nav-list level_3">
+                                                                        <div class="dropdown-menuc">
+                                                                            <ul class="w-nav-list level_3 ml-3">
                                                                                 @foreach ($subCategory['childes'] as $subSubCategory)
                                                                                     <li><a
                                                                                             href="{{ route('products', ['id' => $subSubCategory['id'], 'data_from' => 'category', 'page' => 1]) }}">{{ $subSubCategory['name'] }}</a>
@@ -50,18 +51,18 @@
                                                         </ul>
                                                     </div>
                                                 @endif
-                                            </li>
+                                            </div>
                                         @endforeach
-                                    </ul>
+                                    </div>
                                 </div>
                             </li>
                             <li><a href="{{ route('shop') }}">Shop</i></a>
                             </li>
-                            <li><a href="{{ route('video_shopping','video-shopping') }}">video shopping</i></a>
+                            <li><a href="{{ route('video_shopping', 'video-shopping') }}">video shopping</i></a>
                             </li>
-                            <li><a href="{{ route('campain')}}">Campaign</i></a>
+                            <li><a href="{{ route('campain') }}">Campaign</i></a>
                             </li>
-                            <li><a href="{{ route('selling.product')}}">Selling product</i></a>
+                            <li><a href="{{ route('selling.product') }}">Selling product</i></a>
                             </li>
                             <li><a href="{{ route('outlets') }}">Our outlets</i></a></li>
                         </ul>
@@ -80,7 +81,7 @@
                     <a data-bs-toggle="offcanvas" href="#shoppingCartOffcanvas" role="button"
                         aria-controls="shoppingCartOffcanvas"><i class="fa fa-shopping-cart"
                             aria-hidden="true"></i><span class="badge badge-danger" id="total_cart_count">
-                                {{session()->has('cart') ? count(session()->get('cart')) : 0}}
+                            {{ session()->has('cart') ? count(session()->get('cart')) : 0 }}
                         </span></a>
                 </div>
             </div>
@@ -119,35 +120,49 @@
                     data-parent="#accordionExample">
                     <div class="card-body">
                         <ul>
-                            <li class="mega-dd-btn-2">
-                                <div class="menu-link d-flex justify-content-between">
-                                    <a href="{{ route('category') }}">Category</a>
-                                    <a data-toggle="collapse" type="button" data-target="#category"
-                                        aria-expanded="true"><i class="fa fa-plus"></i></a>
-                                </div>
-                                <div class="collapse" id="category">
-                                    <div class="card card-body">
-                                        <ul class="mega-item">
-                                            <li class="mega-dd-btn-2">
-                                                <div class="menu-link d-flex justify-content-between">
-                                                    <a href="#">Sub Category</a>
-                                                    <a type="button" data-toggle="collapse"
-                                                        data-target="#subCategory" aria-expanded="true"><i
-                                                            class="fa fa-plus"></i></a>
-                                                </div>
-                                                <div class="collapse" id="subCategory">
-                                                    <div class="card card-body">
-                                                        <ul class="mega-item">
-                                                            <li><a href="#">Face Makeup</a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        </ul>
+                            @foreach ($categories as $category)
+                                <li class="mega-dd-btn-2">
+                                    <div class="menu-link d-flex justify-content-between">
+                                        <a
+                                            href="{{ route('products', ['id' => $category['id'], 'data_from' => 'category', 'page' => 1]) }}">{{ $category['name'] }}</a>
+                                        <a data-toggle="collapse" type="button"
+                                            data-target="#category__{{ $category['id'] }}" aria-expanded="true"><i
+                                                class="fa fa-plus"></i></a>
                                     </div>
-                                </div>
-                            </li>
+                                    @if ($category->childes->count() > 0)
+                                        <div class="collapse" id="category__{{ $category['id'] }}">
+                                            <div class="card card-body">
+                                                <ul class="mega-item">
+                                                    @foreach ($category['childes'] as $subCategory)
+                                                        <li class="mega-dd-btn-2">
+                                                            <div class="menu-link d-flex justify-content-between">
+                                                                <a
+                                                                    href="{{ route('products', ['id' => $subCategory['id'], 'data_from' => 'category', 'page' => 1]) }}">{{ $subCategory['name'] }}</a>
+                                                                <a type="button" data-toggle="collapse"
+                                                                    data-target="#subCategory__{{ $subCategory['id'] }}"
+                                                                    aria-expanded="true"><i
+                                                                        class="fa fa-plus"></i></a>
+                                                            </div>
+                                                            <div class="collapse"
+                                                                id="subCategory__{{ $subCategory['id'] }}">
+                                                                <div class="card card-body">
+                                                                    <ul class="mega-item">
+                                                                        @foreach ($subCategory['childes'] as $subSubCategory)
+                                                                            <li><a
+                                                                                    href="{{ route('products', ['id' => $subSubCategory['id'], 'data_from' => 'category', 'page' => 1]) }}">{{ $subSubCategory['name'] }}</a>
+                                                                            </li>
+                                                                        @endforeach
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    @endif
+                                </li>
+                            @endforeach
                         </ul>
                     </div>
                 </div>
@@ -159,17 +174,18 @@
             </div>
             <div class="menu-box">
                 <div class="menu-link">
-                    <a href="{{ route('video_shopping','video-shopping') }}"><i class="fa fa-ptab3 mr-2"></i> Video Shopping</a>
+                    <a href="{{ route('video_shopping', 'video-shopping') }}"><i class="fa fa-ptab3 mr-2"></i> Video
+                        Shopping</a>
                 </div>
             </div>
             <div class="menu-box">
                 <div class="menu-link">
-                    <a href="{{ route('campain')}}"><i class="fa fa-ptab3 mr-2"></i>Campain</a>
+                    <a href="{{ route('campain') }}"><i class="fa fa-ptab3 mr-2"></i>Campain</a>
                 </div>
             </div>
             <div class="menu-box">
                 <div class="menu-link">
-                    <a href="#"><i class="fa fa-ptab3 mr-2"></i>Selling Product</a>
+                    <a href="{{ route('selling.product') }}"><i class="fa fa-ptab3 mr-2"></i>Selling Product</a>
                 </div>
             </div>
             <div class="menu-box">

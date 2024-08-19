@@ -157,37 +157,88 @@
     $rating = \App\CPU\ProductManager::get_rating($product->reviews);
     $decimal_point_settings = \App\CPU\Helpers::get_business_settings('decimal_point_settings');
     ?>
+
+@php
+    $videoUrl = $product->video_url;
+    $embedUrl = '';
+
+    if (strpos($videoUrl, 'facebook.com') !== false) {
+        if (strpos($videoUrl, '/reel/') !== false) {
+            // Facebook Reel URL
+            $videoId = explode('/reel/', $videoUrl)[1];
+            $videoId = explode('?', $videoId)[0];
+            $embedUrl = "https://www.facebook.com/plugins/video.php?href=https://www.facebook.com/watch/?v={$videoId}";
+        } elseif (strpos($videoUrl, 'watch?v=') !== false || strpos($videoUrl, '/watch/') !== false) {
+            // Facebook Watch Video URL
+            if (strpos($videoUrl, 'v=') !== false) {
+                $videoId = explode('v=', $videoUrl)[1];
+            } else {
+                $videoId = explode('/watch/', $videoUrl)[1];
+            }
+            $videoId = explode('&', $videoId)[0];  // Ensure we remove any trailing query parameters
+            $embedUrl = "https://www.facebook.com/plugins/video.php?href=https://www.facebook.com/watch/?v={$videoId}";
+        }
+    } elseif (strpos($videoUrl, 'youtube.com') !== false || strpos($videoUrl, 'youtu.be') !== false) {
+        if (strpos($videoUrl, 'youtube.com/watch') !== false) {
+            // Standard YouTube Video URL
+            $videoId = explode('v=', $videoUrl)[1];
+            $videoId = explode('&', $videoId)[0];
+            $embedUrl = "https://www.youtube.com/embed/{$videoId}";
+        } elseif (strpos($videoUrl, 'youtu.be') !== false) {
+            // Shortened YouTube URL
+            $videoId = explode('/', $videoUrl)[3];
+            $videoId = explode('?', $videoId)[0];
+            $embedUrl = "https://www.youtube.com/embed/{$videoId}";
+        } elseif (strpos($videoUrl, '/embed/') !== false) {
+            // YouTube Embed URL
+            $embedUrl = $videoUrl;
+        }
+    }
+@endphp
+
+
     <section class="" style="margin-top: 88px;">
         <div class="container">
             <div class="row">
                 <div class="col-md-5 mb-3">
                     <div class="p-image">
-                        <div class="row mb-2">
-                            <div class="col-md-9 mx-auto">
-                                <div class="main-image mb-3 float-right" id="img-zoom">
-                                    <img id="main-image"
-                                        src="{{ \App\CPU\ProductManager::product_image_path('thumbnail') }}/{{ $product['thumbnail'] }}"
-                                        xoriginal="{{ \App\CPU\ProductManager::product_image_path('thumbnail') }}/{{ $product['thumbnail'] }}"
-                                        class="img-fluid xzoom" alt="Product Image">
+                        @if ($categorySlug == 'video-shopping')
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <iframe src="{{ $embedUrl }}"
+                                        width="500" height="700" style="border:none;overflow:hidden" scrolling="no"
+                                        frameborder="0" allowfullscreen="true"
+                                        allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-10 mx-auto">
-                                <div class="p-details-sub-img owl-carousel owl-theme">
-                                    @if ($product->images != null)
-                                        @foreach (json_decode($product->images) as $key => $photo)
-                                            <div class="item">
-                                                <a href="{{ asset("storage/app/public/product/$photo") }}">
-                                                    <img src="{{ asset("storage/app/public/product/$photo") }}"
-                                                        class="xzoom-gallery" alt="product image">
-                                                </a>
-                                            </div>
-                                        @endforeach
-                                    @endif
+                        @else
+                            <div class="row mb-2">
+                                <div class="col-md-9 mx-auto">
+                                    <div class="main-image mb-3 float-right" id="img-zoom">
+                                        <img id="main-image"
+                                            src="{{ \App\CPU\ProductManager::product_image_path('thumbnail') }}/{{ $product['thumbnail'] }}"
+                                            xoriginal="{{ \App\CPU\ProductManager::product_image_path('thumbnail') }}/{{ $product['thumbnail'] }}"
+                                            class="img-fluid xzoom" alt="Product Image">
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                            <div class="row">
+                                <div class="col-md-10 mx-auto">
+                                    <div class="p-details-sub-img owl-carousel owl-theme">
+                                        @if ($product->images != null)
+                                            @foreach (json_decode($product->images) as $key => $photo)
+                                                <div class="item">
+                                                    <a href="{{ asset("storage/app/public/product/$photo") }}">
+                                                        <img src="{{ asset("storage/app/public/product/$photo") }}"
+                                                            class="xzoom-gallery" alt="product image">
+                                                    </a>
+                                                </div>
+                                            @endforeach
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
                 <div class="col-md-7 mb-3">
@@ -246,7 +297,7 @@
                                                 <div class="col">
                                                     <div class="v-size-box">
                                                         <input type="radio" id="{{ $choice->name }}-{{ $option }}"
-                                                             name="{{ $choice->name }}" value="{{ $option }}"
+                                                            name="{{ $choice->name }}" value="{{ $option }}"
                                                             @if ($key == 0) checked @endif>
                                                         <label for="{{ $choice->name }}-{{ $option }}"
                                                             class="size-label">{{ $option }}</label>
@@ -286,15 +337,16 @@
                                                     <strong
                                                         id="chosen_price">{{ \App\CPU\Helpers::get_price_range($product) }}</strong>
                                                 </div>
-                                                <span class="instock">Instock: 5</span>
+                                                <span class="instock">Instock: {{$product->current_stock}}</span>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="row mb-3">
                                         <div class="col-md-6 mb-3">
-                                            <button type="button" onclick="buy_now('form-{{ $product->id }}')" href="javascript:void(0);"
-                                                class="w-100 common-btn border-0">Order Now</button>
+                                            <button type="button" onclick="buy_now('form-{{ $product->id }}')"
+                                                href="javascript:void(0);" class="w-100 common-btn border-0">Order
+                                                Now</button>
                                         </div>
                                         <div class="col-md-6">
                                             <button type="button" class="btn btn-dark d-block w-100"
@@ -395,14 +447,19 @@
                             </div>
                         </div>
                     </div>
+                    @if ($categorySlug != 'video-shopping')
                     @if ($product['video_url'])
-                    <div class="row">
-                        <div class="col-md-7">
-                            <div class="video-product">
-                                <iframe width="100%" height="360" src="{{$product['video_url']}}" title="Kurti" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        <div class="row">
+                            <div class="col-md-7">
+                                <div class="video-product">
+                                    <iframe width="100%" height="360" src="{{ $product['video_url'] }}"
+                                        title="Kurti" frameborder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    @endif
                     @endif
                 </div>
             </div>
@@ -477,26 +534,31 @@
                                         <img class="pic-2"
                                             src="{{ \App\CPU\ProductManager::product_image_path('thumbnail') }}/{{ $product['thumbnail'] }}">
                                     </a>
-                                        <ul class="social">
-                                            <li><a href="{{ route('product', $product->slug) }}" data-tip="Quick View"><i
-                                                        class="fa fa-eye"></i></a></li>
-                                            <li><a href="javascript:void(0);" data-toggle="modal"
-                                                data-target="#addToCartModal_{{ $product->id }}" data-tip="Add to Cart"><i
-                                                        class="fa fa-shopping-cart"></i></a>
-                                            </li>
-                                        </ul>
-                                        <button type="button" style="cursor: pointer;" class="buy-now" onclick="buy_now('form-{{ $product->id }}')">Buy Now</button>
-                                    </div>
+                                    <ul class="social">
+                                        <li><a href="{{ route('product', $product->slug) }}" data-tip="Quick View"><i
+                                                    class="fa fa-eye"></i></a></li>
+                                        <li><a href="javascript:void(0);" data-toggle="modal"
+                                                data-target="#addToCartModal_{{ $product->id }}"
+                                                data-tip="Add to Cart"><i class="fa fa-shopping-cart"></i></a>
+                                        </li>
+                                    </ul>
+                                    <button type="button" style="cursor: pointer;" class="buy-now"
+                                        onclick="buy_now('form-{{ $product->id }}')">Buy Now</button>
+                                </div>
                                 <div class="product-content">
                                     <h3 class="title"><a
                                             href="{{ route('product', $product->slug) }}">{{ Str::limit($product['name'], 23) }}</a>
                                     </h3>
                                     <div class="price d-flex justify-content-center align-content-center">
+                                        @if ($product->discount > 0)
                                         <span
                                             class="mr-2">{{ \App\CPU\Helpers::currency_converter(
                                                 $product->unit_price - \App\CPU\Helpers::get_product_discount($product, $product->unit_price),
                                             ) }}</span>
                                         <del>{{ \App\CPU\Helpers::currency_converter($product->unit_price) }}</del>
+                                        @else
+                                        <span>{{ \App\CPU\Helpers::currency_converter($product->unit_price) }}</span>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -510,7 +572,8 @@
                                     <input type="hidden" name="id" value="{{ $product->id }}">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <button type="button" class="close" data-dismiss="modal"
+                                                aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
@@ -536,8 +599,9 @@
                                                     @foreach (json_decode($product->colors) as $key => $color)
                                                         <div class="col">
                                                             <div class="v-color-box">
-                                                                <input type="radio" id="{{ $product->id }}-color-{{ $key }}"
-                                                                     name="color" value="{{ $color }}"
+                                                                <input type="radio"
+                                                                    id="{{ $product->id }}-color-{{ $key }}"
+                                                                    name="color" value="{{ $color }}"
                                                                     @if ($key == 0) checked @endif>
                                                                 <label style="background: {{ $color }}"
                                                                     for="{{ $product->id }}-color-{{ $key }}"
@@ -552,15 +616,19 @@
                                                 @foreach (json_decode($product->choice_options) as $key => $choice)
                                                     <div class="row mb-3">
                                                         <div class="col-12">
-                                                            <h4 style="font-size: 18px; margin:0;">{{ $choice->title }}</h4>
+                                                            <h4 style="font-size: 18px; margin:0;">{{ $choice->title }}
+                                                            </h4>
                                                         </div>
                                                         @foreach ($choice->options as $key => $option)
                                                             <div class="col">
                                                                 <div class="v-size-box">
-                                                                    <input type="radio" id="{{ $product->id }}-size-{{ $key }}"
-                                                                         name="{{ $choice->name }}" value="{{ $option }}"
+                                                                    <input type="radio"
+                                                                        id="{{ $product->id }}-size-{{ $key }}"
+                                                                        name="{{ $choice->name }}"
+                                                                        value="{{ $option }}"
                                                                         @if ($key == 0) checked @endif>
-                                                                    <label for="{{ $product->id }}-size-{{ $key }}"
+                                                                    <label
+                                                                        for="{{ $product->id }}-size-{{ $key }}"
                                                                         class="size-label">{{ $option }}</label>
                                                                 </div>
                                                             </div>
@@ -569,32 +637,36 @@
                                                 @endforeach
                                             @endif
                                             <div class="row">
-                                               <div class="col-md-10 mx-auto">
-                                                   <div class="product-quantity d-flex align-items-center">
-                                                       <div class="input-group input-group--style-2 pr-3" style="width: 160px;">
-                                                           <span class="input-group-btn">
-                                                               <button class="btn btn-number" type="button" data-type="minus"
-                                                                   data-field="quantity" disabled="disabled"
-                                                                   style="padding: 10px">
-                                                                   -
-                                                               </button>
-                                                           </span>
-                                                           <input type="text" name="quantity"
-                                                               class="form-control input-number text-center cart-qty-field"
-                                                               placeholder="1" value="1" min="1" max="100">
-                                                           <span class="input-group-btn">
-                                                               <button class="btn btn-number" type="button" data-type="plus"
-                                                                   data-field="quantity" style="padding: 10px">
-                                                                   +
-                                                               </button>
-                                                           </span>
-                                                       </div>
-                                                   </div>
-                                               </div>
-                                           </div>
+                                                <div class="col-md-10 mx-auto">
+                                                    <div class="product-quantity d-flex align-items-center">
+                                                        <div class="input-group input-group--style-2 pr-3"
+                                                            style="width: 160px;">
+                                                            <span class="input-group-btn">
+                                                                <button class="btn btn-number" type="button"
+                                                                    data-type="minus" data-field="quantity"
+                                                                    disabled="disabled" style="padding: 10px">
+                                                                    -
+                                                                </button>
+                                                            </span>
+                                                            <input type="text" name="quantity"
+                                                                class="form-control input-number text-center cart-qty-field"
+                                                                placeholder="1" value="1" min="1"
+                                                                max="100">
+                                                            <span class="input-group-btn">
+                                                                <button class="btn btn-number" type="button"
+                                                                    data-type="plus" data-field="quantity"
+                                                                    style="padding: 10px">
+                                                                    +
+                                                                </button>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <a href="{{ route('product', $product->slug) }}" class="btn btn-secondary">View Details</a>
+                                            <a href="{{ route('product', $product->slug) }}"
+                                                class="btn btn-secondary">View Details</a>
                                             <button type="button" class="btn btn-danger"
                                                 onclick="addToCart('form-{{ $product->id }}')">Add To Cart</button>
                                         </div>
