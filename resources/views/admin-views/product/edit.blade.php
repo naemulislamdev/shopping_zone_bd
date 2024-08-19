@@ -77,14 +77,14 @@
                                     <div class="form-group">
                                         <label class="input-label">{{\App\CPU\translate('description')}}
                                             ({{strtoupper($lang)}})</label>
-                                        <textarea rows="10" style="width:400px" type="text"  name="description[]"  class=" editor textarea"
+                                        <textarea rows="10" style="width:400px" type="text"  name="description[]"  class=" editor" id="summernote"
                                                   >{!! $translate[$lang]['description']??$product['details'] !!}</textarea>
                                     </div>
-                                    
+
                                     <div class="form-group">
                                         <label class="input-label">{{\App\CPU\translate('short description')}}
                                             ({{strtoupper($lang)}})</label>
-                                        <textarea rows="10" style="width:400px" type="text"  name="short_description[]"  class=" short_description textarea"
+                                        <textarea rows="10" style="width:400px" type="text"  name="short_description[]"  class=" short_description" id="summernote1"
                                                   >{!! $translate[$lang]['short_description']??$product['short_description'] !!}</textarea>
                                     </div>
                                 </div>
@@ -251,6 +251,7 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label class="control-label">{{\App\CPU\translate('Unit price')}}</label>
+                                        <span class="text-danger">*</span>
                                         <input type="number" min="0" step="0.01"
                                                placeholder="{{\App\CPU\translate('Unit price') }}"
                                                name="unit_price" class="form-control"
@@ -259,6 +260,7 @@
                                     <div class="col-md-6">
                                         <label
                                             class="control-label">{{\App\CPU\translate('Purchase price')}}</label>
+                                            <span class="text-danger">*</span>
                                         <input type="number" min="0" step="0.01"
                                                placeholder="{{\App\CPU\translate('Purchase price') }}"
                                                name="purchase_price" class="form-control"
@@ -275,6 +277,7 @@
 
                                     <div class="col-md-4 mt-2">
                                         <label class="control-label">{{\App\CPU\translate('Discount')}}</label>
+                                        <span class="text-danger">*</span>
                                         <input type="number" min="0"
                                                value={{ $product->discount_type=='flat'?\App\CPU\Convert::default($product->discount): $product->discount}} step="0.01"
                                                placeholder="{{\App\CPU\translate('Discount') }}" name="discount"
@@ -334,7 +337,7 @@
                             <br>
                         </div>
                     </div>
-                    
+
                      <div class="card mt-2 rest-part">
                         <div class="card-header">
                             <h4>Product Campaing Discount</h4>
@@ -349,25 +352,25 @@
                                 </tr>
                                  @foreach($campaingDetalies as $campaing_detalies)
                                 <tr>
-                                   
+
                                   <td>
-                                      
+
                                    <input class="form-control" type="date" placeholder="start day" name="start_day[]" value={{$campaing_detalies->start_day}}  required>
-                                             
+
                                   </td>
-                                 
+
                                   <td>
                                     <input type="number"
                                            class="form-control" placeholder="Discount" name="discountCam[]"
                                             value={{$campaing_detalies->discountCam}}  required>
                                   </td>
-                                  
+
                                    <td>
                                         <a href="{{ route('admin.product.CampaingDelete',$campaing_detalies->id) }}">
                                             <i class="tio-add-to-trash"></i>
                                         </a>
                                   </td>
-                                  
+
                                 </tr>
                                 @endforeach
                               </table>
@@ -391,7 +394,7 @@
 
                                 <div class="col-md-8 mb-4">
                                     <label class="control-label">{{\App\CPU\translate('Meta Description')}}</label>
-                                    <textarea rows="10" type="text" name="meta_description" class="form-control">{{$product['meta_description']}}</textarea>
+                                    <textarea rows="10" type="text" name="meta_description" class="form-control" id="summernote2">{{$product['meta_description']}}</textarea>
                                 </div>
 
                                 <div class="col-md-4">
@@ -454,8 +457,27 @@
                                     </div>
 
                                 </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="name">Size Chart</label><small
+                                            style="color: red">* ( {{\App\CPU\translate('ratio')}} 1:1 )</small>
+                                    </div>
 
-                                <div class="col-md-6">
+                                    <div class="row" id="size_chart">
+                                        <div class="col-6">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <img style="width: 100%" height="auto"
+                                                         onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
+                                                         src="{{asset("storage/app/public/product/thumbnail")}}/{{$product['size_chart']}}"
+                                                         alt="Product Size Chart image">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="name">{{\App\CPU\translate('Upload thumbnail')}}</label><small
                                             style="color: red">* ( {{\App\CPU\translate('ratio')}} 1:1 )</small>
@@ -501,6 +523,7 @@
     <script>
         var imageCount = {{10-count(json_decode($product->images))}};
         var thumbnail = '{{\App\CPU\ProductManager::product_image_path('thumbnail').'/'.$product->thumbnail??asset('public/assets/back-end/img/400x400/img2.jpg')}}';
+        var size_chart = '{{\App\CPU\ProductManager::product_image_path('size_chart').'/'.$product->size_chart??asset('public/assets/back-end/img/400x400/img2.jpg')}}';
         $(function () {
             if (imageCount > 0) {
                 $("#coba").spartanMultiImagePicker({
@@ -542,7 +565,40 @@
                 fieldName: 'image',
                 maxCount: 1,
                 rowHeight: 'auto',
-                groupClassName: 'col-6',
+                groupClassName: 'col-3',
+                maxFileSize: '',
+                placeholderImage: {
+                    image: '{{asset('public/assets/back-end/img/400x400/img2.jpg')}}',
+                    width: '100%',
+                },
+                dropFileLabel: "Drop Here",
+                onAddRow: function (index, file) {
+
+                },
+                onRenderedPreview: function (index) {
+
+                },
+                onRemoveRow: function (index) {
+
+                },
+                onExtensionErr: function (index, file) {
+                    toastr.error('{{\App\CPU\translate('Please only input png or jpg type file')}}', {
+                        CloseButton: true,
+                        ProgressBar: true
+                    });
+                },
+                onSizeErr: function (index, file) {
+                    toastr.error('{{\App\CPU\translate('File size too big')}}', {
+                        CloseButton: true,
+                        ProgressBar: true
+                    });
+                }
+            });
+            $("#size_chart").spartanMultiImagePicker({
+                fieldName: 'size_chart',
+                maxCount: 1,
+                rowHeight: 'auto',
+                groupClassName: 'col-3',
                 maxFileSize: '',
                 placeholderImage: {
                     image: '{{asset('public/assets/back-end/img/400x400/img2.jpg')}}',
@@ -731,7 +787,7 @@
 
     <script>
         function check() {
-            
+
             var formData = new FormData(document.getElementById('product_form'));
             $.ajaxSetup({
                 headers: {
@@ -761,7 +817,7 @@
                 }
             });
         };
-        
+
         function add_fields() {
           document.getElementById("myTable").insertRow(-1).innerHTML = '<tr><td><input type="date"  placeholder="start day" name="start_day[]" value="" class="form-control" required></td><td><input type="nubmer" placeholder="Discount" name="discountCam[]" value="" class="form-control" required> </td> </tr>';
         }
@@ -814,13 +870,16 @@
         })
     </script>
 
-    {{--ck editor--}}
-    <script src="{{asset('/')}}vendor/ckeditor/ckeditor/ckeditor.js"></script>
-    <script src="{{asset('/')}}vendor/ckeditor/ckeditor/adapters/jquery.js"></script>
+     <!-- include summernote css/js -->
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+
     <script>
-        // $('.textarea').ckeditor({
-        //     contentsLangDirection : '{{Session::get('direction')}}',
-        // });
+      $(document).ready(function() {
+  $('#summernote').summernote();
+  $('#summernote1').summernote();
+  $('#summernote2').summernote();
+});
     </script>
     {{--ck editor--}}
 @endpush

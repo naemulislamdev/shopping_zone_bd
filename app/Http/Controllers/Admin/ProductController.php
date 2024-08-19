@@ -143,14 +143,14 @@ class ProductController extends BaseController
                 'position' => 1,
             ]);
         }
-        
+
         if ($request->sub_category_id != null) {
             array_push($category, [
                 'id' => $request->sub_category_id,
                 'position' => 2,
             ]);
         }
-        
+
         if ($request->sub_sub_category_id != null) {
             array_push($category, [
                 'id' => $request->sub_sub_category_id,
@@ -162,7 +162,7 @@ class ProductController extends BaseController
         $p->brand_id = $request->brand_id;
         $p->unit = $request->unit;
         $p->details = $request->description[array_search('en', $request->lang)];
-        $p->short_description = $request->short_description;
+        $p->short_description = $request->short_description[array_search('en', $request->lang)];
 
         if ($request->has('colors_active') && $request->has('colors') && count($request->colors) > 0) {
             $p->colors = json_encode($request->colors);
@@ -248,8 +248,8 @@ class ProductController extends BaseController
         $p->request_status = 1;
         $p->shipping_cost = BackEndHelper::currency_to_usd($request->shipping_cost);
         $p->multiply_qty = $request->multiplyQTY=='on'?1:0;
-        
-        
+
+
 
         if ($request->ajax()) {
             return response()->json([], 200);
@@ -261,14 +261,15 @@ class ProductController extends BaseController
                 $p->images = json_encode($product_images);
             }
             $p->thumbnail = ImageManager::upload('product/thumbnail/', 'png', $request->image);
+            $p->size_chart = ImageManager::upload('product/thumbnail/', 'png', $request->size_chart);
 
             $p->meta_title = $request->meta_title;
             $p->meta_description = $request->meta_description;
             $p->meta_image = ImageManager::upload('product/meta/', 'png', $request->meta_image);
 
             $p->save();
-  
-            
+
+
             $data = [];
             foreach ($request->lang as $index => $key) {
                 if ($request->name[$index] && $key != 'en') {
@@ -291,8 +292,8 @@ class ProductController extends BaseController
                 }
             }
             Translation::insert($data);
-            
-           
+
+
              $campaing_detalie = [];
                 for ($i = 0; $i < count($request->start_day); $i++) {
                     $campaing_detalie[] = [
@@ -302,12 +303,12 @@ class ProductController extends BaseController
                         'auth_id' => auth('admin')->id(),
                     ];
                }
-              
 
-              
+
+
                     campaing_detalie::insert($campaing_detalie);
-                
-              
+
+
 
             Toastr::success(translate('Product added successfully!'));
             return redirect()->route('admin.product.list', ['in_house']);
@@ -536,7 +537,7 @@ class ProductController extends BaseController
 
     public function update(Request $request, $id)
     {
-        
+
         $product = Product::find($id);
         $validator = Validator::make($request->all(), [
             'name'              => 'required',
@@ -722,6 +723,10 @@ class ProductController extends BaseController
                 $product->thumbnail = ImageManager::update('product/thumbnail/', $product->thumbnail, 'png', $request->file('image'));
             }
 
+            if ($request->file('size_chart')) {
+                $product->size_chart = ImageManager::update('product/thumbnail/', $product->size_chart, 'png', $request->file('size_chart'));
+            }
+
             $product->meta_title = $request->meta_title;
             $product->meta_description = $request->meta_description;
             if ($request->file('meta_image')) {
@@ -750,13 +755,13 @@ class ProductController extends BaseController
                     );
                 }
             }
-            
-            
-            
+
+
+
             // for ($i = 0; $i < count($request->start_day); $i++) {
-                 
+
             // }
-            
+
                 //   $campaingdetalie=DB::table('campaing_detalies')->where(['product_id'=>$product->id])->get();
                 // //   dd($campaingdetalie);
                 //   $campaingdetalie->product_id=$id;
@@ -765,8 +770,8 @@ class ProductController extends BaseController
                 //   $campaingdetalie->discountCam=$request->discountCam;
                 //   $campaingdetalie->auth_id=auth('admin')->id();
                 //   $campaingdetalie->save();
-            
-           
+
+
            $campaing_detalie = [];
                 for ($i = 0; $i < count($request->start_day); $i++) {
                     $campaing_detalie[] = [
@@ -776,22 +781,22 @@ class ProductController extends BaseController
                         'auth_id' => auth('admin')->id(),
                     ];
                }
-              
 
-               
+
+
                   if (count($campaing_detalie)) {
                         DB::table('campaing_detalies')->where(['product_id'=>$product->id])->delete();
                         campaing_detalie::insert($campaing_detalie);
-                        
-                    }
-                    
-            //   $phoneBook->contact_phones()->delete();
-           
-              
 
-              
+                    }
+
+            //   $phoneBook->contact_phones()->delete();
+
+
+
+
                     // campaing_detalie::insert($campaing_detalie);
-            
+
             Toastr::success('Product updated successfully.');
             return back();
         }
@@ -833,6 +838,7 @@ class ProductController extends BaseController
             ImageManager::delete('/product/' . $image);
         }
         ImageManager::delete('/product/thumbnail/' . $product['thumbnail']);
+        ImageManager::delete('/product/thumbnail/' . $product['size_chart']);
         $product->delete();
 
         FlashDealProduct::where(['product_id' => $id])->delete();
@@ -956,7 +962,7 @@ class ProductController extends BaseController
         $limit =  $request->limit ?? 4;
         return view('admin-views.product.barcode', compact('product', 'limit'));
     }
-    
+
      public function CampaingDelete($id)
     {
         $task = campaing_detalie::find($id);
@@ -965,11 +971,11 @@ class ProductController extends BaseController
         Toastr::success('Campaign removed successfully!');
         return back();
     }
-    
+
     public function productsearch(Request $request ){
             $pro = Product::where('name', $request->name)
     ->orWhere('name', 'like', '%' . $request->name . '%')->get();
-      
+
             // dd($pro);
          return view('admin-views.product.searchlist', compact('pro'));
     }
