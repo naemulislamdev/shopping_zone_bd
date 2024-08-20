@@ -81,8 +81,6 @@
                                 </div>
                             </div>
                         </div>
-
-
                         <div class="">
                             <button type="submit" class="btn btn-primary float-right">{{ \App\CPU\translate('update')}}</button>
                         </div>

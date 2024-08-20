@@ -79,9 +79,11 @@
             margin-top: 10px !important;
         }
 
-        .wishlist_product_img img {
+        .wishlist_product_img > a > img {
             margin: 8px;
+            width: 100% !important;
         }
+
     }
 </style>
 @if($wishlists->count()>0)
@@ -94,7 +96,7 @@
                         <div class="row forPadding">
                             <div class="wishlist_product_img col-md-2 col-lg-2 col-sm-2">
                                 <a href="{{route('product',$product->slug)}}">
-                                    <img
+                                    <img style="width: 100%;"
                                         src="{{\App\CPU\ProductManager::product_image_path('thumbnail')}}/{{$product['thumbnail']}}"
                                         >
                                 </a>
@@ -106,7 +108,7 @@
                                 <br>
                                 <span
                                     class="sellerName"> {{\App\CPU\translate('Brand')}} :{{$product->brand?$product->brand['name']:''}} </span>
-                    
+
                                 <div class="">
                                     @if($product->discount > 0)
                                     <strike style="color: #E96A6A;" class="{{Session::get('direction') === "rtl" ? 'ml-1' : 'mr-3'}}">
@@ -122,7 +124,7 @@
                                 style="color: #92C6FF;">
 
                                 <a href="javascript:" class="wishlist_product_icon ml-2 pull-right mr-3">
-                                    <i class="czi-close-circle" onclick="removeWishlist('{{$product['id']}}')"
+                                    <i class="fa fa-close" onclick="removeWishlist('{{$product['id']}}')"
                                        style="color: red"></i>
                                 </a>
                             </div>

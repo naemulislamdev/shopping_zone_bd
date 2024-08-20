@@ -47,9 +47,9 @@
                 <div class="footer-title">
                     <h3>My Account</h3>
                     <ul>
-                        <li><a href="{{ route('customer.auth.login')}}">Profile info</a></li>
-                        <li><a href="{{ route('customer.auth.login')}}">Wish List</a></li>
-                        <li><a href="#">Order History</a></li>
+                        <li><a href="@if(auth('customer')->check()){{ route('user-account')}} @else {{ route('customer.auth.login')}} @endif">Profile info</a></li>
+                        <li><a href="{{ route('wishlists')}}">Wish List</a></li>
+                        <li><a href="@if(auth('customer')->check()){{ route('account-oder')}} @else {{ route('customer.auth.login')}} @endif">Order History</a></li>
                         <li><a href="{{ route('track-order.index')}}">Track Order</a></li>
                     </ul>
                 </div>

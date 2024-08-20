@@ -14,6 +14,10 @@ class ReviewController extends Controller
 {
     public function store(Request $request)
     {
+        $request->validate([
+            'rating' => 'required|string',
+            'comment' => 'required|string|max:100',
+        ]);
         $image_array = [];
         if ($request->has('fileUpload')) {
             foreach ($request->file('fileUpload') as $image) {

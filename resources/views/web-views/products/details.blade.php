@@ -158,62 +158,61 @@
     $decimal_point_settings = \App\CPU\Helpers::get_business_settings('decimal_point_settings');
     ?>
 
-@php
-    $videoUrl = $product->video_url;
-    $embedUrl = '';
+    @php
+        $videoUrl = $product->video_url;
+        $embedUrl = '';
 
-    if (strpos($videoUrl, 'facebook.com') !== false) {
-        if (strpos($videoUrl, '/reel/') !== false) {
-            // Facebook Reel URL
-            $videoId = explode('/reel/', $videoUrl)[1];
-            $videoId = explode('?', $videoId)[0];
-            $embedUrl = "https://www.facebook.com/plugins/video.php?href=https://www.facebook.com/watch/?v={$videoId}";
-        } elseif (strpos($videoUrl, 'watch?v=') !== false || strpos($videoUrl, '/watch/') !== false) {
-            // Facebook Watch Video URL
-            if (strpos($videoUrl, 'v=') !== false) {
-                $videoId = explode('v=', $videoUrl)[1];
-            } else {
-                $videoId = explode('/watch/', $videoUrl)[1];
+        if (strpos($videoUrl, 'facebook.com') !== false) {
+            if (strpos($videoUrl, '/reel/') !== false) {
+                // Facebook Reel URL
+                $videoId = explode('/reel/', $videoUrl)[1];
+                $videoId = explode('?', $videoId)[0];
+                $embedUrl = "https://www.facebook.com/plugins/video.php?href=https://www.facebook.com/watch/?v={$videoId}";
+            } elseif (strpos($videoUrl, 'watch?v=') !== false || strpos($videoUrl, '/watch/') !== false) {
+                // Facebook Watch Video URL
+                if (strpos($videoUrl, 'v=') !== false) {
+                    $videoId = explode('v=', $videoUrl)[1];
+                } else {
+                    $videoId = explode('/watch/', $videoUrl)[1];
+                }
+                $videoId = explode('&', $videoId)[0]; // Ensure we remove any trailing query parameters
+                $embedUrl = "https://www.facebook.com/plugins/video.php?href=https://www.facebook.com/watch/?v={$videoId}";
             }
-            $videoId = explode('&', $videoId)[0];  // Ensure we remove any trailing query parameters
-            $embedUrl = "https://www.facebook.com/plugins/video.php?href=https://www.facebook.com/watch/?v={$videoId}";
+        } elseif (strpos($videoUrl, 'youtube.com') !== false || strpos($videoUrl, 'youtu.be') !== false) {
+            if (strpos($videoUrl, 'youtube.com/watch') !== false) {
+                // Standard YouTube Video URL
+                $videoId = explode('v=', $videoUrl)[1];
+                $videoId = explode('&', $videoId)[0];
+                $embedUrl = "https://www.youtube.com/embed/{$videoId}";
+            } elseif (strpos($videoUrl, 'youtu.be') !== false) {
+                // Shortened YouTube URL
+                $videoId = explode('/', $videoUrl)[3];
+                $videoId = explode('?', $videoId)[0];
+                $embedUrl = "https://www.youtube.com/embed/{$videoId}";
+            } elseif (strpos($videoUrl, '/embed/') !== false) {
+                // YouTube Embed URL
+                $embedUrl = $videoUrl;
+            }
         }
-    } elseif (strpos($videoUrl, 'youtube.com') !== false || strpos($videoUrl, 'youtu.be') !== false) {
-        if (strpos($videoUrl, 'youtube.com/watch') !== false) {
-            // Standard YouTube Video URL
-            $videoId = explode('v=', $videoUrl)[1];
-            $videoId = explode('&', $videoId)[0];
-            $embedUrl = "https://www.youtube.com/embed/{$videoId}";
-        } elseif (strpos($videoUrl, 'youtu.be') !== false) {
-            // Shortened YouTube URL
-            $videoId = explode('/', $videoUrl)[3];
-            $videoId = explode('?', $videoId)[0];
-            $embedUrl = "https://www.youtube.com/embed/{$videoId}";
-        } elseif (strpos($videoUrl, '/embed/') !== false) {
-            // YouTube Embed URL
-            $embedUrl = $videoUrl;
-        }
-    }
-@endphp
-
+    @endphp
 
     <section class="" style="margin-top: 88px;">
         <div class="container">
             <div class="row">
-                <div class="col-md-5 mb-3">
+                <div class="col-md-4 mb-3">
                     <div class="p-image">
                         @if ($categorySlug == 'video-shopping')
                             <div class="row">
-                                <div class="col-md-9">
-                                    <iframe src="{{ $embedUrl }}"
-                                        width="500" height="700" style="border:none;overflow:hidden" scrolling="no"
-                                        frameborder="0" allowfullscreen="true"
+                                <div class="col-md-11">
+                                    <iframe src="{{ $embedUrl }}" width="500" height="700"
+                                        style="border:none;overflow:hidden" scrolling="no" frameborder="0"
+                                        allowfullscreen="true"
                                         allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
                                 </div>
                             </div>
                         @else
                             <div class="row mb-2">
-                                <div class="col-md-9 mx-auto">
+                                <div class="col-md-11 mx-auto">
                                     <div class="main-image mb-3 float-right" id="img-zoom">
                                         <img id="main-image"
                                             src="{{ \App\CPU\ProductManager::product_image_path('thumbnail') }}/{{ $product['thumbnail'] }}"
@@ -241,7 +240,7 @@
                         @endif
                     </div>
                 </div>
-                <div class="col-md-7 mb-3">
+                <div class="col-md-8 mb-3">
                     <div class="row">
                         <div class="col-md-7 mb-3">
                             <div class="p-details">
@@ -265,19 +264,21 @@
                                             <div class="col-12">
                                                 <h4>Color</h4>
                                             </div>
-                                            @foreach (json_decode($product->colors) as $key => $color)
-                                                <div class="col">
-                                                    <div class="v-color-box">
-                                                        <input type="radio"
-                                                            id="{{ $product->id }}-color-{{ $key }}" checked
-                                                            name="color" value="{{ $color }}"
-                                                            @if ($key == 0) checked @endif>
-                                                        <label style="background: {{ $color }}"
-                                                            for="{{ $product->id }}-color-{{ $key }}"
-                                                            class="color-label"></label>
-                                                    </div>
+                                            <div class="col-12">
+                                                <div class="d-flex">
+                                                    @foreach (json_decode($product->colors) as $key => $color)
+                                                        <div class="v-color-box">
+                                                            <input type="radio"
+                                                                id="{{ $product->id }}-color-{{ $key }}" checked
+                                                                name="color" value="{{ $color }}"
+                                                                @if ($key == 0) checked @endif>
+                                                            <label style="background: {{ $color }}"
+                                                                for="{{ $product->id }}-color-{{ $key }}"
+                                                                class="color-label"></label>
+                                                        </div>
+                                                    @endforeach
                                                 </div>
-                                            @endforeach
+                                            </div>
                                         </div>
                                     @endif
                                     @php
@@ -293,17 +294,20 @@
                                             <div class="col-12">
                                                 <h4 style="font-size: 18px; margin:0;">{{ $choice->title }}</h4>
                                             </div>
-                                            @foreach ($choice->options as $key => $option)
-                                                <div class="col">
-                                                    <div class="v-size-box">
-                                                        <input type="radio" id="{{ $choice->name }}-{{ $option }}"
-                                                            name="{{ $choice->name }}" value="{{ $option }}"
-                                                            @if ($key == 0) checked @endif>
-                                                        <label for="{{ $choice->name }}-{{ $option }}"
-                                                            class="size-label">{{ $option }}</label>
-                                                    </div>
+                                            <div class="col-12">
+                                                <div class="d-flex">
+                                                    @foreach ($choice->options as $key => $option)
+                                                        <div class="v-size-box">
+                                                            <input type="radio"
+                                                                id="{{ $choice->name }}-{{ $option }}"
+                                                                name="{{ $choice->name }}" value="{{ $option }}"
+                                                                @if ($key == 0) checked @endif>
+                                                            <label for="{{ $choice->name }}-{{ $option }}"
+                                                                class="size-label">{{ $option }}</label>
+                                                        </div>
+                                                    @endforeach
                                                 </div>
-                                            @endforeach
+                                            </div>
                                         </div>
                                     @endforeach
 
@@ -337,7 +341,7 @@
                                                     <strong
                                                         id="chosen_price">{{ \App\CPU\Helpers::get_price_range($product) }}</strong>
                                                 </div>
-                                                <span class="instock">Instock: {{$product->current_stock}}</span>
+                                                <span class="instock">Instock: {{ $product->current_stock }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -353,7 +357,6 @@
                                                 onclick="addToCart('form-{{ $product->id }}')">Add to
                                                 Cart</button>
                                         </div>
-
                                     </div>
                                 </form>
                                 <div class="row">
@@ -365,6 +368,38 @@
                                         </button>
                                     </div>
                                     <div class="col-md-12 mb-3">
+                                        <div class="accordion mb-3" id="accordionExample">
+                                            <div class="card">
+                                                <div class="card-header d-flex justify-content-between align-items-center"
+                                                    id="productSizeChart">
+                                                    <h5 class="mb-0">
+                                                        <button class="btn btn-link" type="button"
+                                                            data-toggle="collapse" data-target="#sizeChart"
+                                                            aria-expanded="true" aria-controls="sizeChart">
+                                                            Size Chart
+                                                        </button>
+                                                    </h5>
+                                                    <span class="toggle-icon" data-toggle="collapse"
+                                                        data-target="#sizeChart" aria-expanded="true"
+                                                        aria-controls="sizeChart"><i class="fa fa-plus"></i></span>
+                                                </div>
+
+                                                <div id="sizeChart" class="collapse show"
+                                                    aria-labelledby="productSizeChart" data-parent="#accordionExample">
+                                                    <div class="card-body">
+                                                        <div class="size-img-box">
+                                                            @if ($product['size_chart'])
+                                                            <img
+                                                            src="{{ \App\CPU\ProductManager::product_image_path('thumbnail') }}/{{ $product['size_chart'] }}"
+                                                            class="img-fluid" alt="Product size chart image">
+                                                            @else
+                                                            <span>Size chart are not available.</span>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="accordion mb-3" id="accordionExample">
                                             <div class="card">
                                                 <div class="card-header d-flex justify-content-between align-items-center"
@@ -407,10 +442,223 @@
                                                         aria-controls="reviewCollapse"><i class="fa fa-plus"></i></span>
                                                 </div>
 
+                                                @php
+                                                    $reviewProductId = $product->id;
+                                                @endphp
                                                 <div id="reviewCollapse" class="collapse" aria-labelledby="review"
                                                     data-parent="#accordionExample">
                                                     <div class="card-body">
-                                                        <p>There have been no reviews for this product yet.</p>
+                                                        @php($reviews_of_product = App\Model\Review::where('product_id', $product->id)->paginate(2))
+
+                                                        <div class="row pt-2 pb-3">
+                                                            <div class="col-lg-3 col-md-4 ">
+                                                                <div
+                                                                    class=" row d-flex justify-content-center align-items-center">
+                                                                    <div
+                                                                        class="col-12 d-flex justify-content-center align-items-center">
+                                                                        <h2 class="overall_review mb-2"
+                                                                            style="font-weight: 500;font-size: 50px;">
+                                                                            {{ $overallRating[1] }}
+                                                                        </h2>
+                                                                    </div>
+                                                                    <div
+                                                                        class="d-flex justify-content-center align-items-center star-rating ">
+                                                                        @if (round($overallRating[0]) == 5)
+                                                                            @for ($i = 0; $i < 5; $i++)
+                                                                                <i
+                                                                                    class="fa fa-star-o font-size-sm text-accent {{ Session::get('direction') === 'rtl' ? 'ml-1' : 'mr-1' }}"></i>
+                                                                            @endfor
+                                                                        @endif
+                                                                        @if (round($overallRating[0]) == 4)
+                                                                            @for ($i = 0; $i < 4; $i++)
+                                                                                <i
+                                                                                    class="fa fa-star-o font-size-sm text-accent {{ Session::get('direction') === 'rtl' ? 'ml-1' : 'mr-1' }}"></i>
+                                                                            @endfor
+                                                                            <i
+                                                                                class="fa fa-star font-size-sm text-muted {{ Session::get('direction') === 'rtl' ? 'ml-1' : 'mr-1' }}"></i>
+                                                                        @endif
+                                                                        @if (round($overallRating[0]) == 3)
+                                                                            @for ($i = 0; $i < 3; $i++)
+                                                                                <i
+                                                                                    class="fa fa-star-o font-size-sm text-accent {{ Session::get('direction') === 'rtl' ? 'ml-1' : 'mr-1' }}"></i>
+                                                                            @endfor
+                                                                            @for ($j = 0; $j < 2; $j++)
+                                                                                <i
+                                                                                    class="fa fa-star font-size-sm text-accent {{ Session::get('direction') === 'rtl' ? 'ml-1' : 'mr-1' }}"></i>
+                                                                            @endfor
+                                                                        @endif
+                                                                        @if (round($overallRating[0]) == 2)
+                                                                            @for ($i = 0; $i < 2; $i++)
+                                                                                <i
+                                                                                    class="fa fa-star-o font-size-sm text-accent {{ Session::get('direction') === 'rtl' ? 'ml-1' : 'mr-1' }}"></i>
+                                                                            @endfor
+                                                                            @for ($j = 0; $j < 3; $j++)
+                                                                                <i
+                                                                                    class="fa fa-star font-size-sm text-accent {{ Session::get('direction') === 'rtl' ? 'ml-1' : 'mr-1' }}"></i>
+                                                                            @endfor
+                                                                        @endif
+                                                                        @if (round($overallRating[0]) == 1)
+                                                                            @for ($i = 0; $i < 4; $i++)
+                                                                                <i
+                                                                                    class="fa fa-star font-size-sm text-accent {{ Session::get('direction') === 'rtl' ? 'ml-1' : 'mr-1' }}"></i>
+                                                                            @endfor
+                                                                            <i
+                                                                                class="fa fa-star-o font-size-sm text-accent {{ Session::get('direction') === 'rtl' ? 'ml-1' : 'mr-1' }}"></i>
+                                                                        @endif
+                                                                        @if (round($overallRating[0]) == 0)
+                                                                            @for ($i = 0; $i < 5; $i++)
+                                                                                <i
+                                                                                    class="fa fa-star font-size-sm text-muted {{ Session::get('direction') === 'rtl' ? 'ml-1' : 'mr-1' }}"></i>
+                                                                            @endfor
+                                                                        @endif
+                                                                    </div>
+                                                                    <div
+                                                                        class="col-12 d-flex justify-content-center align-items-center mt-2">
+                                                                        <span class="text-center">
+                                                                            {{ $reviews_of_product->total() }}
+                                                                            {{ \App\CPU\translate('ratings') }}
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-9 col-md-8 pt-sm-3 pt-md-0">
+                                                                <div
+                                                                    class="row d-flex align-items-center mb-2 font-size-sm">
+                                                                    <div class="col-3 text-nowrap "><span
+                                                                            class="d-inline-block align-middle text-body">{{ \App\CPU\translate('Excellent') }}</span>
+                                                                    </div>
+                                                                    <div class="col-8">
+                                                                        <div class="progress text-body"
+                                                                            style="height: 5px;">
+                                                                            <div class="progress-bar " role="progressbar"
+                                                                                style="background-color: {{ $web_config['primary_color'] }} !important;width: <?php echo $widthRating = $rating[0] != 0 ? ($rating[0] / $overallRating[1]) * 100 : 0; ?>%;"
+                                                                                aria-valuenow="60" aria-valuemin="0"
+                                                                                aria-valuemax="100"></div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-1 text-body">
+                                                                        <span
+                                                                            class=" {{ Session::get('direction') === 'rtl' ? 'mr-3 float-left' : 'ml-3 float-right' }} ">
+                                                                            {{ $rating[0] }}
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div
+                                                                    class="row d-flex align-items-center mb-2 text-body font-size-sm">
+                                                                    <div class="col-3 text-nowrap "><span
+                                                                            class="d-inline-block align-middle ">{{ \App\CPU\translate('Good') }}</span>
+                                                                    </div>
+                                                                    <div class="col-8">
+                                                                        <div class="progress" style="height: 5px;">
+                                                                            <div class="progress-bar" role="progressbar"
+                                                                                style="background-color: {{ $web_config['primary_color'] }} !important;width: <?php echo $widthRating = $rating[1] != 0 ? ($rating[1] / $overallRating[1]) * 100 : 0; ?>%; background-color: #a7e453;"
+                                                                                aria-valuenow="27" aria-valuemin="0"
+                                                                                aria-valuemax="100"></div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-1">
+                                                                        <span
+                                                                            class="{{ Session::get('direction') === 'rtl' ? 'mr-3 float-left' : 'ml-3 float-right' }}">
+                                                                            {{ $rating[1] }}
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div
+                                                                    class="row d-flex align-items-center mb-2 text-body font-size-sm">
+                                                                    <div class="col-3 text-nowrap"><span
+                                                                            class="d-inline-block align-middle ">{{ \App\CPU\translate('Average') }}</span>
+                                                                    </div>
+                                                                    <div class="col-8">
+                                                                        <div class="progress" style="height: 5px;">
+                                                                            <div class="progress-bar" role="progressbar"
+                                                                                style="background-color: {{ $web_config['primary_color'] }} !important;width: <?php echo $widthRating = $rating[2] != 0 ? ($rating[2] / $overallRating[1]) * 100 : 0; ?>%; background-color: #ffda75;"
+                                                                                aria-valuenow="17" aria-valuemin="0"
+                                                                                aria-valuemax="100"></div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-1">
+                                                                        <span
+                                                                            class="{{ Session::get('direction') === 'rtl' ? 'mr-3 float-left' : 'ml-3 float-right' }}">
+                                                                            {{ $rating[2] }}
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div
+                                                                    class="row d-flex align-items-center mb-2 text-body font-size-sm">
+                                                                    <div class="col-3 text-nowrap "><span
+                                                                            class="d-inline-block align-middle">{{ \App\CPU\translate('Below Average') }}</span>
+                                                                    </div>
+                                                                    <div class="col-8">
+                                                                        <div class="progress" style="height: 5px;">
+                                                                            <div class="progress-bar" role="progressbar"
+                                                                                style="background-color: {{ $web_config['primary_color'] }} !important;width: <?php echo $widthRating = $rating[3] != 0 ? ($rating[3] / $overallRating[1]) * 100 : 0; ?>%; background-color: #fea569;"
+                                                                                aria-valuenow="9" aria-valuemin="0"
+                                                                                aria-valuemax="100"></div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-1">
+                                                                        <span
+                                                                            class="{{ Session::get('direction') === 'rtl' ? 'mr-3 float-left' : 'ml-3 float-right' }}">
+                                                                            {{ $rating[3] }}
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div
+                                                                    class="row d-flex align-items-center text-body font-size-sm">
+                                                                    <div class="col-3 text-nowrap"><span
+                                                                            class="d-inline-block align-middle ">{{ \App\CPU\translate('Poor') }}</span>
+                                                                    </div>
+                                                                    <div class="col-8">
+                                                                        <div class="progress" style="height: 5px;">
+                                                                            <div class="progress-bar" role="progressbar"
+                                                                                style="background-color: {{ $web_config['primary_color'] }} !important;backbround-color:{{ $web_config['primary_color'] }};width: <?php echo $widthRating = $rating[4] != 0 ? ($rating[4] / $overallRating[1]) * 100 : 0; ?>%;"
+                                                                                aria-valuenow="4" aria-valuemin="0"
+                                                                                aria-valuemax="100"></div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-1">
+                                                                        <span
+                                                                            class="{{ Session::get('direction') === 'rtl' ? 'mr-3 float-left' : 'ml-3 float-right' }}">
+                                                                            {{ $rating[4] }}
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row pb-4 mb-3">
+                                                            <div
+                                                                style="display: block;width:100%;text-align: center;background: #F3F4F5;border-radius: 5px;padding:5px;">
+                                                                <span
+                                                                    class="text-capitalize">{{ \App\CPU\translate('Product Review') }}</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row pb-4">
+                                                            <div class="col-12" id="product-review-list">
+                                                                @if (count($product->reviews) == 0)
+                                                                    <div class="card">
+                                                                        <div class="card-body">
+                                                                            <h6 class="text-danger text-center">
+                                                                                {{ \App\CPU\translate('product_review_not_available') }}
+                                                                            </h6>
+                                                                        </div>
+                                                                    </div>
+                                                                @endif
+                                                            </div>
+                                                            @if (count($product->reviews) > 0)
+                                                                <div class="col-12">
+                                                                    <div
+                                                                        class="card-footer d-flex justify-content-center align-items-center">
+                                                                        <button class="btn"
+                                                                            style="background: {{ $web_config['primary_color'] }}; color: #ffffff"
+                                                                            onclick="load_review()">{{ \App\CPU\translate('view more') }}</button>
+                                                                    </div>
+                                                                </div>
+                                                            @endif
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -439,28 +687,29 @@
                                         <p>Within 7 Days<a href="{{ route('privacy-policy') }}"> View Policy</a></p>
                                     </div>
                                 </div>
-                                <div class="pay-method">
+                                <div class="pay-method mb-3">
                                     <span>Payment</span>
                                     <img src="{{ asset('public/assets/front-end/images/payment/payment.png') }}"
                                         alt="">
                                 </div>
                             </div>
+                            @if ($categorySlug != 'video-shopping')
+                                @if ($product['video_url'])
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="video-product">
+                                                <iframe width="100%" height="360" src="{{ $product['video_url'] }}"
+                                                    title="Kurti" frameborder="0"
+                                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                                    referrerpolicy="strict-origin-when-cross-origin"
+                                                    allowfullscreen></iframe>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+                            @endif
                         </div>
                     </div>
-                    @if ($categorySlug != 'video-shopping')
-                    @if ($product['video_url'])
-                        <div class="row">
-                            <div class="col-md-7">
-                                <div class="video-product">
-                                    <iframe width="100%" height="360" src="{{ $product['video_url'] }}"
-                                        title="Kurti" frameborder="0"
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
-                    @endif
                 </div>
             </div>
         </div>
@@ -551,13 +800,13 @@
                                     </h3>
                                     <div class="price d-flex justify-content-center align-content-center">
                                         @if ($product->discount > 0)
-                                        <span
-                                            class="mr-2">{{ \App\CPU\Helpers::currency_converter(
-                                                $product->unit_price - \App\CPU\Helpers::get_product_discount($product, $product->unit_price),
-                                            ) }}</span>
-                                        <del>{{ \App\CPU\Helpers::currency_converter($product->unit_price) }}</del>
+                                            <span
+                                                class="mr-2">{{ \App\CPU\Helpers::currency_converter(
+                                                    $product->unit_price - \App\CPU\Helpers::get_product_discount($product, $product->unit_price),
+                                                ) }}</span>
+                                            <del>{{ \App\CPU\Helpers::currency_converter($product->unit_price) }}</del>
                                         @else
-                                        <span>{{ \App\CPU\Helpers::currency_converter($product->unit_price) }}</span>
+                                            <span>{{ \App\CPU\Helpers::currency_converter($product->unit_price) }}</span>
                                         @endif
                                     </div>
                                 </div>
@@ -596,19 +845,21 @@
                                                     <div class="col-12">
                                                         <h4>Color</h4>
                                                     </div>
-                                                    @foreach (json_decode($product->colors) as $key => $color)
-                                                        <div class="col">
-                                                            <div class="v-color-box">
-                                                                <input type="radio"
-                                                                    id="{{ $product->id }}-color-{{ $key }}"
-                                                                    name="color" value="{{ $color }}"
-                                                                    @if ($key == 0) checked @endif>
-                                                                <label style="background: {{ $color }}"
-                                                                    for="{{ $product->id }}-color-{{ $key }}"
-                                                                    class="color-label"></label>
-                                                            </div>
+                                                    <div class="col-12">
+                                                        <div class="d-flex">
+                                                            @foreach (json_decode($product->colors) as $key => $color)
+                                                                <div class="v-color-box">
+                                                                    <input type="radio"
+                                                                        id="{{ $product->id }}-color-{{ $key }}"
+                                                                        name="color" value="{{ $color }}"
+                                                                        @if ($key == 0) checked @endif>
+                                                                    <label style="background: {{ $color }}"
+                                                                        for="{{ $product->id }}-color-{{ $key }}"
+                                                                        class="color-label"></label>
+                                                                </div>
+                                                            @endforeach
                                                         </div>
-                                                    @endforeach
+                                                    </div>
                                                 </div>
                                             @endif
 
@@ -619,20 +870,23 @@
                                                             <h4 style="font-size: 18px; margin:0;">{{ $choice->title }}
                                                             </h4>
                                                         </div>
-                                                        @foreach ($choice->options as $key => $option)
-                                                            <div class="col">
-                                                                <div class="v-size-box">
-                                                                    <input type="radio"
-                                                                        id="{{ $product->id }}-size-{{ $key }}"
-                                                                        name="{{ $choice->name }}"
-                                                                        value="{{ $option }}"
-                                                                        @if ($key == 0) checked @endif>
-                                                                    <label
-                                                                        for="{{ $product->id }}-size-{{ $key }}"
-                                                                        class="size-label">{{ $option }}</label>
-                                                                </div>
+                                                        <div class="col-12">
+                                                            <div class="d-flex">
+                                                                @foreach ($choice->options as $key => $option)
+                                                                    <div class="v-size-box">
+                                                                        <input type="radio"
+                                                                            id="{{ $product->id }}-size-{{ $key }}"
+                                                                            name="{{ $choice->name }}"
+                                                                            value="{{ $option }}"
+                                                                            @if ($key == 0) checked @endif>
+                                                                        <label
+                                                                            for="{{ $product->id }}-size-{{ $key }}"
+                                                                            class="size-label">{{ $option }}</label>
+                                                                    </div>
+                                                                @endforeach
                                                             </div>
-                                                        @endforeach
+                                                        </div>
+
                                                     </div>
                                                 @endforeach
                                             @endif
@@ -714,7 +968,42 @@
             $('#show-modal-view').modal('toggle')
         }
     </script>
+    <script>
+        $(document).ready(function() {
+            load_review();
+        });
+        let load_review_count = 1;
 
+        function load_review() {
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                }
+            });
+            $.ajax({
+                type: "post",
+                url: '{{ route('review-list-product') }}',
+                data: {
+                    product_id: {{ $reviewProductId }},
+                    offset: load_review_count
+                },
+                success: function(data) {
+                    console.log(data);
+
+                    $('#product-review-list').append(data.productReview)
+                    if (data.not_empty == 0 && load_review_count > 2) {
+                        toastr.info('{{ \App\CPU\translate('no more review remain to load') }}', {
+                            CloseButton: true,
+                            ProgressBar: true
+                        });
+                        console.log('iff');
+                    }
+                }
+            });
+            load_review_count++
+        }
+    </script>
     {{-- Messaging with shop seller --}}
     <script>
         $('#contact-seller').on('click', function(e) {

@@ -39,6 +39,7 @@
             width: 70px;
             height: 70px;
             margin-top: 7px;
+            margin-right: 10px;
         }
 
         .v-color-box input,
@@ -240,6 +241,7 @@
     <script src="{{ asset('public/assets/front-end') }}/js/wow.min.js"></script>
     <script src="{{ asset('public/assets/front-end') }}/js/xzoom.min.js"></script>
     <script src="{{ asset('public/assets/front-end') }}/js/xzoom_setup.js"></script>
+    <script src="{{ asset('public/assets/front-end') }}/js/spartan-multi-image-picker-min.js"></script>
 
     {{-- <script src="{{asset('public/assets/front-end')}}/vendor/smooth-scroll/dist/smooth-scroll.polyfills.min.js"></script> --}}
 

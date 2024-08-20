@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Web;
 
+use App\ClientReview;
 use App\CPU\Helpers;
 use App\CPU\OrderManager;
 use App\CPU\ProductManager;
@@ -42,6 +43,7 @@ use Gregwar\Captcha\PhraseBuilder;
 use Gregwar\Captcha\CaptchaBuilder;
 use App\CPU\CustomerManager;
 use App\CPU\Convert;
+use App\Model\Branch;
 use Carbon\Carbon;
 
 class WebController extends Controller
@@ -147,12 +149,39 @@ class WebController extends Controller
     //outlets function
     public function outlets()
     {
-        return view('web-views.outlets');
+        $branchs = Branch::where('status', 1)->get();
+        return view('web-views.outlets',compact('branchs'));
     }
     //checkout function
     // public function checkout(){
     //     return view('frontend.checkout');
     // }
+    public function clientReview(Request $request){
+        if(auth('customer')->check()){
+            $request->validate([
+                'client_name' => 'required|string|max:50',
+                'client_comment' => 'required|string|max:200',
+                'rating' => 'required|string',
+            ]);
+            $ClientReview = ClientReview::create([
+                'name' => $request->client_name,
+                'comment' => $request->client_comment,
+                'ratings' => $request->rating,
+                'customer_id' => auth('customer')->id(),
+                'status' => false
+            ]);
+            if($ClientReview){
+                Toastr::success('Review is created successfully!');
+            }else{
+                Toastr::warning('Something want wrong!');
+            }
+            return back();
+        }else{
+            Toastr::warning('Login first as a customer!');
+            return back();
+        }
+
+    }
 
     public function flash_deals($id)
     {

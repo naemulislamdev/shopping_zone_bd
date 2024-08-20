@@ -52,9 +52,9 @@
                 <div class="row product-grid" id="ajax-products">
                     @foreach ($selling_products as $product)
                         @if ($product->discount > 0)
-                            <div class="col-md-3 col-sm-6 product-column" data-category="category">
-                                <div class="product-box product-box-col-3" data-category="category">
-                                    <div class="product-image2 product-image2-col-3" data-category="category">
+                            <div class="col-md-2 col-sm-6 product-column" data-category="category">
+                                <div class="product-box product-box-col-2" data-category="category">
+                                    <div class="product-image2 product-image2-col-2" data-category="category">
                                         @php($decimal_point_settings = \App\CPU\Helpers::get_business_settings('decimal_point_settings'))
                                         @if ($product->discount > 0)
                                             <div class="discount-box float-end">
@@ -99,6 +99,19 @@
                                                 <span>{{ \App\CPU\Helpers::currency_converter($product->unit_price) }}</span>
                                             @endif
                                         </div>
+                                    </div>
+                                    @php($overallRating = \App\CPU\ProductManager::get_overall_rating($product->reviews))
+                                    <div class="rating-show justify-content-between text-center">
+                                        <span class="d-inline-block font-size-sm text-body">
+                                            @for ($inc = 0; $inc < 5; $inc++)
+                                                @if ($inc < $overallRating[0])
+                                                    <i class="fa fa-star" style="color:#fea569 !important"></i>
+                                                @else
+                                                    <i class="fa fa-star-o" style="color:#fea569 !important"></i>
+                                                @endif
+                                            @endfor
+                                            <label class="badge-style">( {{ $product->reviews_count }} )</label>
+                                        </span>
                                     </div>
                                 </div>
                             </div>
