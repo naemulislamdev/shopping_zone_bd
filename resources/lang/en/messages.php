@@ -1727,4 +1727,5 @@
   'direction' => 'Direction',
   'Are you sure to delete this' => 'Are you sure to delete this',
   'default language can not be deleted! to delete change the default language first!' => 'Default language can not be deleted! to delete change the default language first!',
+  'exchange' => 'Exchange',
 );
