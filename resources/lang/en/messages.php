@@ -1727,9 +1727,7 @@
   'direction' => 'Direction',
   'Are you sure to delete this' => 'Are you sure to delete this',
   'default language can not be deleted! to delete change the default language first!' => 'Default language can not be deleted! to delete change the default language first!',
-<<<<<<< HEAD
   'exchange' => 'Exchange',
-=======
   'Do you want to delete this?' => 'Do you want to delete this ',
   'Don\'t Delete' => 'Don t Delete',
   'SUPPORT TICKET ANSWER' => 'SUPPORT TICKET ANSWER',
@@ -1748,5 +1746,4 @@
   'Weite a Review' => 'Weite a Review',
   5 => '5',
   'Logout _successfully!!' => 'Logout  successfully!!',
->>>>>>> 4c06a277651e0822f09f22b912d1f69636be8146
 );
