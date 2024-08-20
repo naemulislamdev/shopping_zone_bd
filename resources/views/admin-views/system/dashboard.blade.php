@@ -40,69 +40,113 @@
 @endpush
 
 @section('content')
-    @if(auth('admin')->user()->admin_role_id==1 || \App\CPU\Helpers::module_permission_check('dashboard'))
-        <div class="content container-fluid" >
+    @if (auth('admin')->user()->admin_role_id == 1 || \App\CPU\Helpers::module_permission_check('dashboard'))
+        <div class="content container-fluid">
             <!-- Page Header -->
-            <div class="page-header" style="padding-bottom: 0!important;border-bottom: 0!important;margin-bottom: 1.25rem!important;">
+            <div class="page-header"
+                style="padding-bottom: 0!important;border-bottom: 0!important;margin-bottom: 1.25rem!important;">
                 <div class="flex-between align-items-center">
                     <div>
-                        <h1 class="page-header-title" style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};">{{\App\CPU\translate('Dashboard')}}</h1>
-                        <p>{{ \App\CPU\translate('Welcome_message')}}.</p>
+                        <h1 class="page-header-title"
+                            style="text-align: {{ Session::get('direction') === 'rtl' ? 'right' : 'left' }};">
+                            {{ \App\CPU\translate('Dashboard') }}</h1>
+                        <p>{{ \App\CPU\translate('Welcome_message') }}.</p>
                     </div>
                     <div style="height: 25px">
                         <label class="badge badge-soft-success">
-                            {{\App\CPU\translate('Software version')}} : {{ env('SOFTWARE_VERSION') }}
+                            {{ \App\CPU\translate('Software version') }} : {{ env('SOFTWARE_VERSION') }}
                         </label>
                     </div>
                 </div>
             </div>
             <!-- End Page Header -->
 
-            <div class="card mb-3" style="background-color: #041562">
-                <div class="card-body">
-                    <div class="row flex-between gx-2 gx-lg-3 mb-2">
-                        <div>
-                            <h4 style="color:white"><i style="font-size: 30px"
-                                   class="tio-chart-bar-4"></i>{{\App\CPU\translate('dashboard_order_statistics')}}</h4>
-                        </div>
-                        <div class="col-12 col-md-4" style="width: 20vw">
-                            <select class="custom-select" name="statistics_type"
-                                    onchange="order_stats_update(this.value)">
-                                <option
-                                    value="overall" {{session()->has('statistics_type') && session('statistics_type') == 'overall'?'selected':''}}>
-                                    {{ \App\CPU\translate('Overall_statistics')}}
-                                </option>
-                                <option
-                                    value="today" {{session()->has('statistics_type') && session('statistics_type') == 'today'?'selected':''}}>
-                                    {{ \App\CPU\translate("Todays Statistics")}}
-                                </option>
-                                <option
-                                    value="this_month" {{session()->has('statistics_type') && session('statistics_type') == 'this_month'?'selected':''}}>
-                                    {{ \App\CPU\translate("This Months Statistics")}}
-                                </option>
-                            </select>
+            <div class="row">
+                <div class="col-lg-8 col-md-8">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card mb-3" style="background-color: #ffffff">
+                                <div class="card-body">
+                                    <div class="row flex-between gx-2 gx-lg-3 mb-2">
+                                        <div>
+                                            <h4 style="color:white"><i style="font-size: 30px"
+                                                    class="tio-chart-bar-4"></i>{{ \App\CPU\translate('dashboard_order_statistics') }}
+                                            </h4>
+                                        </div>
+                                        <div class="col-12 col-md-4" style="width: 20vw">
+                                            <select class="custom-select" name="statistics_type"
+                                                onchange="order_stats_update(this.value)">
+                                                <option value="overall"
+                                                    {{ session()->has('statistics_type') && session('statistics_type') == 'overall' ? 'selected' : '' }}>
+                                                    {{ \App\CPU\translate('Overall_statistics') }}
+                                                </option>
+                                                <option value="today"
+                                                    {{ session()->has('statistics_type') && session('statistics_type') == 'today' ? 'selected' : '' }}>
+                                                    {{ \App\CPU\translate('Todays Statistics') }}
+                                                </option>
+                                                <option value="this_month"
+                                                    {{ session()->has('statistics_type') && session('statistics_type') == 'this_month' ? 'selected' : '' }}>
+                                                    {{ \App\CPU\translate('This Months Statistics') }}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row gx-2 gx-lg-3" id="order_stats">
+                                        @include('admin-views.partials._dashboard-order-stats', [
+                                            'data' => $data,
+                                        ])
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="row gx-2 gx-lg-3" id="order_stats">
-                        @include('admin-views.partials._dashboard-order-stats',['data'=>$data])
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12">
+                            <div class="card mb-3" style="background-color: #ffffff">
+                                <div class="card-body">
+                                    <div class="flex-between gx-2 gx-lg-3 mb-2">
+                                        <div>
+                                            <h4 style="color:rgb(13, 13, 13)"><i style="font-size: 30px"
+                                                    class="tio-chart-line-up"></i>{{ \App\CPU\translate('admin_wallet') }}
+                                            </h4>
+                                        </div>
+                                    </div>
+                                    <div class="row gx-2 gx-lg-3" id="order_stats">
+                                        @include('admin-views.partials._dashboard-wallet-stats', [
+                                            'data' => $data,
+                                        ])
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 mb-3">
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <!-- Card -->
+                            <div class="card h-100">
+                                @include('admin-views.partials._top-selling-products', [
+                                    'top_sell' => $data['top_sell'],
+                                ])
+                            </div>
+                            <!-- End Card -->
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 mb-3">
+                            <!-- Card -->
+                            <div class="card h-100">
+                                @include('admin-views.partials._top-customer', [
+                                    'top_customer' => $data['top_customer'],
+                                ])
+                            </div>
+                            <!-- End Card -->
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- End Stats -->
-            <div class="card mb-3" style="background-color: #041562">
-                <div class="card-body">
-                    <div class="flex-between gx-2 gx-lg-3 mb-2">
-                        <div>
-                            <h4 style="color:white"><i style="font-size: 30px"
-                                   class="tio-chart-line-up"></i>{{\App\CPU\translate('admin_wallet')}}</h4>
-                        </div>
-                    </div>
-                    <div class="row gx-2 gx-lg-3" id="order_stats">
-                        @include('admin-views.partials._dashboard-wallet-stats',['data'=>$data])
-                    </div>
-                </div>
-            </div>
             <!-- End Stats -->
 
             <div class="row gx-2 gx-lg-3">
@@ -110,44 +154,48 @@
                     <!-- Card -->
                     <div class="card h-100">
                         <!-- Body -->
-                        <div class="card-body" >
+                        <div class="card-body">
                             <div class="row mb-4">
                                 <div class="col-12 mb-3 border-bottom">
                                     <h5 class="card-header-title float-left mb-2">
                                         <i style="font-size: 30px" class="tio-chart-pie-1"></i>
-                                        {{\App\CPU\translate('earning_statistics_for_business_analytics')}}
+                                        {{ \App\CPU\translate('earning_statistics_for_business_analytics') }}
                                     </h5>
                                     <!-- Legend Indicators -->
-                                    <h5 class="card-header-title float-right mb-2">{{\App\CPU\translate('this_year_earning')}}
+                                    <h5 class="card-header-title float-right mb-2">
+                                        {{ \App\CPU\translate('this_year_earning') }}
                                         <i style="font-size: 30px" class="tio-chart-bar-2"></i>
                                     </h5>
                                     <!-- End Legend Indicators -->
                                 </div>
                                 <div class="col-md-4 col-12 graph-border-1">
                                     <div class="mt-2 center-div">
-                                    <span class="h6 mb-0">
-                                        <i class="legend-indicator bg-primary"
-                                           style="background-color: #FC9918!important;"></i>
-                                        {{\App\CPU\translate('in-house_earning')}} : {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency(array_sum($inhouse_data)))}}
-                                    </span>
+                                        <span class="h6 mb-0">
+                                            <i class="legend-indicator bg-primary"
+                                                style="background-color: #FC9918!important;"></i>
+                                            {{ \App\CPU\translate('in-house_earning') }} :
+                                            {{ \App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency(array_sum($inhouse_data))) }}
+                                        </span>
                                     </div>
                                 </div>
                                 <div class="col-md-4 col-12 graph-border-1">
                                     <div class="mt-2 center-div">
-                                      <span class="h6 mb-0">
-                                          <i class="legend-indicator bg-success"
-                                             style="background-color: #F14A16!important;"></i>
-                                         {{\App\CPU\translate('seller_earnings')}} : {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency(array_sum($seller_data)))}}
-                                    </span>
+                                        <span class="h6 mb-0">
+                                            <i class="legend-indicator bg-success"
+                                                style="background-color: #F14A16!important;"></i>
+                                            {{ \App\CPU\translate('seller_earnings') }} :
+                                            {{ \App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency(array_sum($seller_data))) }}
+                                        </span>
                                     </div>
                                 </div>
                                 <div class="col-md-4 col-12 graph-border-1">
                                     <div class="mt-2 center-div">
-                                      <span class="h6 mb-0">
-                                          <i class="legend-indicator bg-danger"
-                                             style="background-color: #35589A!important;"></i>
-                                        {{\App\CPU\translate('commission_earned')}} : {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency(array_sum($commission_data)))}}
-                                    </span>
+                                        <span class="h6 mb-0">
+                                            <i class="legend-indicator bg-danger"
+                                                style="background-color: #35589A!important;"></i>
+                                            {{ \App\CPU\translate('commission_earned') }} :
+                                            {{ \App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency(array_sum($commission_data))) }}
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -156,23 +204,23 @@
                             <!-- Bar Chart -->
                             <div class="chartjs-custom">
                                 <canvas id="updatingData" style="height: 20rem;"
-                                        data-hs-chartjs-options='{
+                                    data-hs-chartjs-options='{
                             "type": "bar",
                             "data": {
                               "labels": ["Jan","Feb","Mar","April","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
                               "datasets": [{
-                                "data": [{{$inhouse_data[1]}},{{$inhouse_data[2]}},{{$inhouse_data[3]}},{{$inhouse_data[4]}},{{$inhouse_data[5]}},{{$inhouse_data[6]}},{{$inhouse_data[7]}},{{$inhouse_data[8]}},{{$inhouse_data[9]}},{{$inhouse_data[10]}},{{$inhouse_data[11]}},{{$inhouse_data[12]}}],
+                                "data": [{{ $inhouse_data[1] }},{{ $inhouse_data[2] }},{{ $inhouse_data[3] }},{{ $inhouse_data[4] }},{{ $inhouse_data[5] }},{{ $inhouse_data[6] }},{{ $inhouse_data[7] }},{{ $inhouse_data[8] }},{{ $inhouse_data[9] }},{{ $inhouse_data[10] }},{{ $inhouse_data[11] }},{{ $inhouse_data[12] }}],
                                 "backgroundColor": "#FC9918",
                                 "hoverBackgroundColor": "#FC9918",
                                 "borderColor": "#FC9918"
                               },
                               {
-                                "data": [{{$seller_data[1]}},{{$seller_data[2]}},{{$seller_data[3]}},{{$seller_data[4]}},{{$seller_data[5]}},{{$seller_data[6]}},{{$seller_data[7]}},{{$seller_data[8]}},{{$seller_data[9]}},{{$seller_data[10]}},{{$seller_data[11]}},{{$seller_data[12]}}],
+                                "data": [{{ $seller_data[1] }},{{ $seller_data[2] }},{{ $seller_data[3] }},{{ $seller_data[4] }},{{ $seller_data[5] }},{{ $seller_data[6] }},{{ $seller_data[7] }},{{ $seller_data[8] }},{{ $seller_data[9] }},{{ $seller_data[10] }},{{ $seller_data[11] }},{{ $seller_data[12] }}],
                                 "backgroundColor": "#F14A16",
                                 "borderColor": "#F14A16"
                               },
                               {
-                                "data": [{{$commission_data[1]}},{{$commission_data[2]}},{{$commission_data[3]}},{{$commission_data[4]}},{{$commission_data[5]}},{{$commission_data[6]}},{{$commission_data[7]}},{{$commission_data[8]}},{{$commission_data[9]}},{{$commission_data[10]}},{{$commission_data[11]}},{{$commission_data[12]}}],
+                                "data": [{{ $commission_data[1] }},{{ $commission_data[2] }},{{ $commission_data[3] }},{{ $commission_data[4] }},{{ $commission_data[5] }},{{ $commission_data[6] }},{{ $commission_data[7] }},{{ $commission_data[8] }},{{ $commission_data[9] }},{{ $commission_data[10] }},{{ $commission_data[11] }},{{ $commission_data[12] }}],
                                 "backgroundColor": "#35589A",
                                 "borderColor": "#35589A"
                               }]
@@ -192,7 +240,7 @@
                                     "fontColor": "#97a4af",
                                     "fontFamily": "Open Sans, sans-serif",
                                     "padding": 10,
-                                    "postfix": " {{\App\CPU\BackEndHelper::currency_symbol()}}"
+                                    "postfix": " {{ \App\CPU\BackEndHelper::currency_symbol() }}"
                                   }
                                 }],
                                 "xAxes": [{
@@ -239,7 +287,7 @@
                         <!-- Header -->
                         <div class="card-header">
                             <h5 class="card-header-title">
-                                <i class="tio-company"></i> {{\App\CPU\translate('total_business_overview')}}
+                                <i class="tio-company"></i> {{ \App\CPU\translate('total_business_overview') }}
                             </h5>
                             <i class="tio-chart-pie-1" style="font-size: 45px"></i>
                         </div>
@@ -261,7 +309,9 @@
                 <div class="col-lg-6 mb-3">
                     <!-- Card -->
                     <div class="card h-100">
-                        @include('admin-views.partials._top-store-by-order',['top_store_by_order_received'=>$data['top_store_by_order_received']])
+                        @include('admin-views.partials._top-store-by-order', [
+                            'top_store_by_order_received' => $data['top_store_by_order_received'],
+                        ])
                     </div>
                     <!-- End Card -->
                 </div>
@@ -269,35 +319,23 @@
                 <div class="col-lg-6 mb-3">
                     <!-- Card -->
                     <div class="card h-100">
-                        @include('admin-views.partials._top-selling-store',['top_store_by_earning'=>$data['top_store_by_earning']])
+                        @include('admin-views.partials._top-selling-store', [
+                            'top_store_by_earning' => $data['top_store_by_earning'],
+                        ])
                     </div>
                     <!-- End Card -->
                 </div>
+
 
                 <div class="col-lg-6 mb-3">
                     <!-- Card -->
                     <div class="card h-100">
-                        @include('admin-views.partials._top-selling-products',['top_sell'=>$data['top_sell']])
+                        @include('admin-views.partials._most-rated-products', [
+                            'most_rated_products' => $data['most_rated_products'],
+                        ])
                     </div>
                     <!-- End Card -->
                 </div>
-
-                <div class="col-lg-6 mb-3">
-                    <!-- Card -->
-                    <div class="card h-100">
-                        @include('admin-views.partials._most-rated-products',['most_rated_products'=>$data['most_rated_products']])
-                    </div>
-                    <!-- End Card -->
-                </div>
-
-                <div class="col-lg-6 mb-3">
-                    <!-- Card -->
-                    <div class="card h-100">
-                        @include('admin-views.partials._top-customer',['top_customer'=>$data['top_customer']])
-                    </div>
-                    <!-- End Card -->
-                </div>
-
             </div>
         </div>
     @else
@@ -306,7 +344,8 @@
             <div class="page-header">
                 <div class="row align-items-center">
                     <div class="col-12 mb-2 mb-sm-0">
-                        <h3 class="text-center" style="color: gray">{{\App\CPU\translate('hi')}} {{auth('admin')->user()->name}}, {{\App\CPU\translate('welcome_to_dashboard')}}.</h3>
+                        <h3 class="text-center" style="color: gray">{{ \App\CPU\translate('hi') }}
+                            {{ auth('admin')->user()->name }}, {{ \App\CPU\translate('welcome_to_dashboard') }}.</h3>
                     </div>
                 </div>
             </div>
@@ -316,10 +355,11 @@
 @endsection
 
 @push('script')
-    <script src="{{asset('public/assets/back-end')}}/vendor/chart.js/dist/Chart.min.js"></script>
-    <script src="{{asset('public/assets/back-end')}}/vendor/chart.js.extensions/chartjs-extensions.js"></script>
+    <script src="{{ asset('public/assets/back-end') }}/vendor/chart.js/dist/Chart.min.js"></script>
+    <script src="{{ asset('public/assets/back-end') }}/vendor/chart.js.extensions/chartjs-extensions.js"></script>
     <script
-        src="{{asset('public/assets/back-end')}}/vendor/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js"></script>
+        src="{{ asset('public/assets/back-end') }}/vendor/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js">
+    </script>
 @endpush
 
 
@@ -329,7 +369,7 @@
         // =======================================================
         Chart.plugins.unregister(ChartDataLabels);
 
-        $('.js-chart').each(function () {
+        $('.js-chart').each(function() {
             $.HSCore.components.HSChartJS.init($(this));
         });
 
@@ -342,15 +382,17 @@
             type: 'doughnut',
             data: {
                 labels: [
-                    '{{\App\CPU\translate('customer')}} ',
-                    '{{\App\CPU\translate('store')}} ',
-                    '{{\App\CPU\translate('product')}} ',
-                    '{{\App\CPU\translate('order')}} ',
-                    '{{\App\CPU\translate('brand')}} ',
+                    '{{ \App\CPU\translate('customer') }} ',
+                    '{{ \App\CPU\translate('store') }} ',
+                    '{{ \App\CPU\translate('product') }} ',
+                    '{{ \App\CPU\translate('order') }} ',
+                    '{{ \App\CPU\translate('brand') }} ',
                 ],
                 datasets: [{
-                    label: '{{\App\CPU\translate('business')}}',
-                    data: ['{{$data['customer']}}', '{{$data['store']}}', '{{$data['product']}}', '{{$data['order']}}', '{{$data['brand']}}'],
+                    label: '{{ \App\CPU\translate('business') }}',
+                    data: ['{{ $data['customer'] }}', '{{ $data['store'] }}', '{{ $data['product'] }}',
+                        '{{ $data['order'] }}', '{{ $data['brand'] }}'
+                    ],
                     backgroundColor: [
                         '#041562',
                         '#DA1212',
@@ -379,17 +421,17 @@
                 }
             });
             $.post({
-                url: '{{route('admin.dashboard.order-stats')}}',
+                url: '{{ route('admin.dashboard.order-stats') }}',
                 data: {
                     statistics_type: type
                 },
-                beforeSend: function () {
+                beforeSend: function() {
                     $('#loading').show()
                 },
-                success: function (data) {
+                success: function(data) {
                     $('#order_stats').html(data.view)
                 },
-                complete: function () {
+                complete: function() {
                     $('#loading').hide()
                 }
             });
@@ -402,23 +444,21 @@
                 }
             });
             $.post({
-                url: '{{route('admin.dashboard.business-overview')}}',
+                url: '{{ route('admin.dashboard.business-overview') }}',
                 data: {
                     business_overview: type
                 },
-                beforeSend: function () {
+                beforeSend: function() {
                     $('#loading').show()
                 },
-                success: function (data) {
+                success: function(data) {
                     console.log(data.view)
                     $('#business-overview-board').html(data.view)
                 },
-                complete: function () {
+                complete: function() {
                     $('#loading').hide()
                 }
             });
         }
     </script>
-
 @endpush
-

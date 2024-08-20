@@ -1,15 +1,15 @@
 <style>
     .navbar-vertical .nav-link {
-        color: #6c757d;
-        /* font-weight: bold; */
-    }
+    color: #9a9a9a;
+    font-weight: bold;
+}
 
     .navbar .nav-link:hover {
         color: #6c757d;
     }
 
     .navbar .active > .nav-link, .navbar .nav-link.active, .navbar .nav-link.show, .navbar .show > .nav-link {
-        color: #6c757d;
+        color: #ffffff;
     }
 
     .navbar-vertical .active .nav-indicator-icon, .navbar-vertical .nav-link:hover .nav-indicator-icon, .navbar-vertical .show > .nav-link > .nav-indicator-icon {
@@ -35,6 +35,7 @@
     .nav-indicator-icon {
         margin-left: {{Session::get('direction') === "rtl" ? '6px' : ''}};
     }
+    .navbar{background: #091731;}
 </style>
 
 <div id="sidebarMain">

@@ -4,22 +4,22 @@
     }
 </style>
 <div class="col-lg-4 col-md-4 col-sm-6 col-12 mb-3">
-    <div class="card card-body card-hover-shadow h-100 text-color-1 text-center" style="background-color: #EEEEEE;">
-        <h1 class="p-2 text-color-1">{{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($data['commission_earned']))}}</h1>
+    <div class="card card-body card-hover-shadow h-100 text-color-1 text-center text-white" style="background-color: #c46800;">
+        <h1 class="p-2 text-white">{{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($data['commission_earned']))}}</h1>
         <div class="text-uppercase">{{\App\CPU\translate('commission_earned')}}</div>
     </div>
 </div>
 
 <div class="col-lg-4 col-md-4 col-sm-6 col-12 mb-3">
-    <div class="card card-body card-hover-shadow h-100 text-color-1 text-center" style="background-color: #EEEEEE;">
-        <h1 class="p-2 text-color-1">{{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($data['delivery_charge_earned']))}}</h1>
+    <div class="card card-body card-hover-shadow h-100 text-white text-center" style="background-color: #4584ff;">
+        <h1 class="p-2 text-white">{{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($data['delivery_charge_earned']))}}</h1>
         <div class="text-uppercase">{{\App\CPU\translate('delivery_charge_earned')}}</div>
     </div>
 </div>
 
 <div class="col-lg-4 col-md-4 col-sm-6 col-12 mb-3">
-    <div class="card card-body card-hover-shadow h-100 text-color-1 text-center" style="background-color: #EEEEEE;">
-        <h1 class="p-2 text-color-1">{{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($data['pending_amount']))}}</h1>
+    <div class="card card-body card-hover-shadow h-100 text-white text-center" style="background-color: #c46800;">
+        <h1 class="p-2 text-white">{{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($data['pending_amount']))}}</h1>
         <div class="text-uppercase">{{\App\CPU\translate('pending_amount')}}</div>
     </div>
 </div>

@@ -1,5 +1,5 @@
 <div id="headerMain" class="d-none">
-    <header id="header" style="background-color: #AE1C9A"
+    <header id="header" style="background-color: #082355"
             class="navbar navbar-expand-lg navbar-fixed navbar-height navbar-flush navbar-container navbar-bordered">
 
         <div class="navbar-nav-wrap">

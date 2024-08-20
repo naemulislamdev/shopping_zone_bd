@@ -570,99 +570,46 @@
                     <div class="row">
                         <div class="col mb-3">
                             <a data-bs-toggle="offcanvas" href="#clientReviewAdd" role="button"
-                            aria-controls="clientReviewAdd" class="btn btn-sm btn-primary float-right mr-1">Write a review <i class="fa fa-pencil-square-o"></i> </a>
+                                aria-controls="clientReviewAdd" class="btn btn-sm btn-primary float-right mr-1">Write a
+                                review <i class="fa fa-pencil-square-o"></i> </a>
                         </div>
                         @include('layouts.front-end.partials.client_review_canvas')
                     </div>
                     <div class="c-review-slider owl-carousel owl-theme">
-                        <div class="item">
-                            <div class="customer-review-box text-center">
-                                <img src="{{ asset('public/assets/front-end') }}/images/slider/customer-review/img1.jpg"
-                                    alt="">
-                                <div class="customer-name">
-                                    <h3>Theodore Handle</h3>
-                                    <span>CEO</span>
-                                </div>
-                                <div class="customer-sms">
-                                    <p>How you use the city or town name is up to you. All results may be freely used in
-                                        any work.</p>
-                                </div>
-                                <div class="customer-review">
-                                    <i class="fa fa-star-half-o"></i>
-                                    <i class="fa fa-star-half-o"></i>
-                                    <i class="fa fa-star-half-o"></i>
-                                    <i class="fa fa-star-half-o"></i>
-                                    <i class="fa fa-star-half-o"></i>
-                                    <i class="fa fa-star-half-o"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="customer-review-box text-center">
-                                <img src="{{ asset('public/assets/front-end') }}/images/slider/customer-review/img1.jpg"
-                                    alt="">
-                                <div class="customer-name">
-                                    <h3>Theodore Handle</h3>
-                                    <span>CEO</span>
-                                </div>
-                                <div class="customer-sms">
-                                    <p>How you use the city or town name is up to you. All results may be freely used in
-                                        any work.</p>
-                                </div>
-                                <div class="customer-review">
-                                    <i class="fa fa-star-half-o"></i>
-                                    <i class="fa fa-star-half-o"></i>
-                                    <i class="fa fa-star-half-o"></i>
-                                    <i class="fa fa-star-half-o"></i>
-                                    <i class="fa fa-star-half-o"></i>
-                                    <i class="fa fa-star-half-o"></i>
+                        <?php $clientReviews = \App\ClientReview::where('status', 0)->get() ?>
+                        @foreach ($clientReviews as $review)
+                            <?php
+                                // Calculate the number of full stars
+                                $fullStars = floor($review['rating']);
+                                // Determine if there is a half star
+                                $halfStar = $review['rating'] - $fullStars >= 0.5;
+                                // Calculate the number of empty stars
+                                $emptyStars = 5 - $fullStars - ($halfStar ? 1 : 0);
+                            ?>
+                            <div class="item">
+                                <div class="customer-review-box text-center">
+                                    <img src="{{ asset('public/assets/front-end') }}/images/slider/customer-review/img1.jpg"
+                                        alt="">
+                                    <div class="customer-name">
+                                        <h3>{{ htmlspecialchars($review['name']) }}</h3>
+                                    </div>
+                                    <div class="customer-sms">
+                                        <p>{{ htmlspecialchars($review['comment']) }}</p>
+                                    </div>
+                                    <div class="customer-review">
+                                        @for ($i = 0; $i < $fullStars; $i++)
+                                            <i class="fa fa-star"></i>
+                                        @endfor
+                                        @if ($halfStar)
+                                            <i class="fa fa-star-half-o"></i>
+                                        @endif
+                                        @for ($i = 0; $i < $emptyStars; $i++)
+                                            <i class="fa fa-star-o"></i>
+                                        @endfor
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="item">
-                            <div class="customer-review-box text-center">
-                                <img src="{{ asset('public/assets/front-end') }}/images/slider/customer-review/img1.jpg"
-                                    alt="">
-                                <div class="customer-name">
-                                    <h3>Theodore Handle</h3>
-                                    <span>CEO</span>
-                                </div>
-                                <div class="customer-sms">
-                                    <p>How you use the city or town name is up to you. All results may be freely used in
-                                        any work.</p>
-                                </div>
-                                <div class="customer-review">
-                                    <i class="fa fa-star-half-o"></i>
-                                    <i class="fa fa-star-half-o"></i>
-                                    <i class="fa fa-star-half-o"></i>
-                                    <i class="fa fa-star-half-o"></i>
-                                    <i class="fa fa-star-half-o"></i>
-                                    <i class="fa fa-star-half-o"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="customer-review-box text-center">
-                                <img src="{{ asset('public/assets/front-end') }}/images/slider/customer-review/img1.jpg"
-                                    alt="">
-                                <div class="customer-name">
-                                    <h3>Theodore Handle</h3>
-                                    <span>CEO</span>
-                                </div>
-                                <div class="customer-sms">
-                                    <p>How you use the city or town name is up to you. All results may be freely used in
-                                        any work.</p>
-                                </div>
-                                <div class="customer-review">
-                                    <i class="fa fa-star-half-o"></i>
-                                    <i class="fa fa-star-half-o"></i>
-                                    <i class="fa fa-star-half-o"></i>
-                                    <i class="fa fa-star-half-o"></i>
-                                    <i class="fa fa-star-half-o"></i>
-                                    <i class="fa fa-star-half-o"></i>
-                                </div>
-                            </div>
-                        </div>
+                        @endforeach
                     </div>
                 </div>
             </div>

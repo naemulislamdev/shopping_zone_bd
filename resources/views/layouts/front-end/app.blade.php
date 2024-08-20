@@ -541,26 +541,6 @@
             });
         }
 
-        function quickView(product_id) {
-            $.get({
-                url: '{{ route('quick-view') }}',
-                dataType: 'json',
-                data: {
-                    product_id: product_id
-                },
-                beforeSend: function() {
-                    $('#loading').show();
-                },
-                success: function(data) {
-                    $('#quick-view').modal('show');
-                    $('#quick-view-modal').empty().html(data.view);
-                },
-                complete: function() {
-                    $('#loading').hide();
-                },
-            });
-        }
-
         function addToCart(form_id) {
             if (form_id) {
                 $.ajaxSetup({

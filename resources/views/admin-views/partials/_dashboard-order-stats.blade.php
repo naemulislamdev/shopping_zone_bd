@@ -1,16 +1,16 @@
 <div class="col-sm-6 col-lg-3 mb-3 mb-lg-5">
     <!-- Card -->
-    <a class="card card-hover-shadow h-100" href="{{route('admin.orders.list',['pending'])}}" style="background: #FFFFFF">
+    <a class="card bg-primary card-hover-shadow h-100" href="{{route('admin.orders.list',['pending'])}}" style="color: #FFFFFF">
         <div class="card-body">
             <div class="flex-between align-items-center mb-1">
                 <div style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};">
-                    <h6 class="card-subtitle" style="color: #F14A16!important;">{{\App\CPU\translate('pending')}}</h6>
-                    <span class="card-title h2" style="color: #F14A16!important;">
+                    <h6 class="card-subtitle" style="color: #ffffff!important;">{{\App\CPU\translate('pending')}}</h6>
+                    <span class="card-title h2" style="color: #ffffff!important;">
                         {{$data['pending']}}
                     </span>
                 </div>
                 <div class="mt-2">
-                    <i class="tio-shopping-cart" style="font-size: 30px;color: #F14A16;"></i>
+                    <i class="tio-shopping-cart" style="font-size: 30px;color: #ffffff;"></i>
                 </div>
             </div>
             <!-- End Row -->
@@ -21,18 +21,17 @@
 
 <div class="col-sm-6 col-lg-3 mb-3 mb-lg-5">
     <!-- Card -->
-    <a class="card card-hover-shadow h-100" href="{{route('admin.orders.list',['confirmed'])}}" style="background: #FFFFFF;">
+    <a class="card bg-success card-hover-shadow h-100" href="{{route('admin.orders.list',['confirmed'])}}">
         <div class="card-body">
             <div class="flex-between align-items-center mb-1">
                 <div style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};">
-                    <h6 class="card-subtitle" style="color: #F14A16!important;">{{\App\CPU\translate('confirmed')}}</h6>
-                     <span class="card-title h2" style="color: #F14A16!important;">
+                    <h6 class="card-subtitle" style="color: #ffffff!important;">{{\App\CPU\translate('confirmed')}}</h6>
+                     <span class="card-title h2" style="color: #ffffff!important;">
                          {{$data['confirmed']}}
                      </span>
                 </div>
-
                 <div class="mt-2">
-                    <i class="tio-checkmark-circle" style="font-size: 30px;color: #F14A16"></i>
+                    <i class="tio-checkmark-circle" style="font-size: 30px;color: #ffffff"></i>
                 </div>
             </div>
             <!-- End Row -->
@@ -43,18 +42,18 @@
 
 <div class="col-sm-6 col-lg-3 mb-3 mb-lg-5">
     <!-- Card -->
-    <a class="card card-hover-shadow h-100" href="{{route('admin.orders.list',['processing'])}}" style="background: #FFFFFF">
+    <a class="card bg-warning card-hover-shadow h-100" href="{{route('admin.orders.list',['processing'])}}">
         <div class="card-body">
             <div class="flex-between align-items-center gx-2 mb-1">
                 <div style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};">
-                    <h6 class="card-subtitle" style="color: #F14A16!important;">{{\App\CPU\translate('Processing')}}</h6>
-                    <span class="card-title h2" style="color: #F14A16!important;">
+                    <h6 class="card-subtitle" style="color: #ffffff!important;">{{\App\CPU\translate('Processing')}}</h6>
+                    <span class="card-title h2" style="color: #ffffff!important;">
                         {{$data['processing']}}
                     </span>
                 </div>
 
                 <div class="mt-2">
-                    <i class="tio-time" style="font-size: 30px;color: #F14A16"></i>
+                    <i class="tio-time" style="font-size: 30px;color: #ffffff"></i>
                 </div>
             </div>
             <!-- End Row -->
@@ -65,18 +64,18 @@
 
 <div class="col-sm-6 col-lg-3 mb-3 mb-lg-5">
     <!-- Card -->
-    <a class="card card-hover-shadow h-100" href="{{route('admin.orders.list',['out_for_delivery'])}}" style="background: #FFFFFFff">
+    <a class="card bg-secondary card-hover-shadow h-100" href="{{route('admin.orders.list',['out_for_delivery'])}}">
         <div class="card-body">
             <div class="flex-between align-items-center gx-2 mb-1">
                 <div style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};">
-                    <h6 class="card-subtitle" style="color: #F14A16!important;">{{\App\CPU\translate('out_for_delivery')}}</h6>
-                    <span class="card-title h2" style="color: #F14A16!important;">
+                    <h6 class="card-subtitle" style="color: #ffffff!important;">{{\App\CPU\translate('out_for_delivery')}}</h6>
+                    <span class="card-title h2" style="color: #ffffff!important;">
                         {{$data['out_for_delivery']}}
                     </span>
                 </div>
 
                 <div class="mt-2">
-                    <i class="tio-bike" style="font-size: 30px;color: #F14A16"></i>
+                    <i class="tio-bike" style="font-size: 30px;color: #ffffff"></i>
                 </div>
             </div>
             <!-- End Row -->

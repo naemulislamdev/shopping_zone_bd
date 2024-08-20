@@ -389,11 +389,10 @@
                                                     <div class="card-body">
                                                         <div class="size-img-box">
                                                             @if ($product['size_chart'])
-                                                            <img
-                                                            src="{{ \App\CPU\ProductManager::product_image_path('thumbnail') }}/{{ $product['size_chart'] }}"
-                                                            class="img-fluid" alt="Product size chart image">
+                                                                <img src="{{ \App\CPU\ProductManager::product_image_path('thumbnail') }}/{{ $product['size_chart'] }}"
+                                                                    class="img-fluid" alt="Product size chart image">
                                                             @else
-                                                            <span>Size chart are not available.</span>
+                                                                <span>Size chart are not available.</span>
                                                             @endif
                                                         </div>
                                                     </div>
@@ -763,9 +762,9 @@
                 <!-- Your product columns go here -->
                 @if (count($relatedProducts) > 0)
                     @foreach ($relatedProducts as $key => $product)
-                        <div class="col-md-3 col-sm-6 product-column" data-category="category3">
-                            <div class="product-box product-box-col-3" data-category="category3">
-                                <div class="product-image2 product-image2-col-3" data-category="category3">
+                        <div class="col-md-2 col-sm-6 product-column" data-category="category3">
+                            <div class="product-box product-box-col-2" data-category="category3">
+                                <div class="product-image2 product-image2-col-2" data-category="category3">
                                     @if ($product->discount > 0)
                                         <div class="discount-box float-end">
                                             <span>
@@ -809,6 +808,19 @@
                                             <span>{{ \App\CPU\Helpers::currency_converter($product->unit_price) }}</span>
                                         @endif
                                     </div>
+                                </div>
+                                @php($overallRating = \App\CPU\ProductManager::get_overall_rating($product->reviews))
+                                <div class="rating-show justify-content-between text-center">
+                                    <span class="d-inline-block font-size-sm text-body">
+                                        @for ($inc = 0; $inc < 5; $inc++)
+                                            @if ($inc < $overallRating[0])
+                                                <i class="fa fa-star" style="color:#fea569 !important"></i>
+                                            @else
+                                                <i class="fa fa-star-o" style="color:#fea569 !important"></i>
+                                            @endif
+                                        @endfor
+                                        <label class="badge-style">( {{ $product->reviews_count }} )</label>
+                                    </span>
                                 </div>
                             </div>
                         </div>
