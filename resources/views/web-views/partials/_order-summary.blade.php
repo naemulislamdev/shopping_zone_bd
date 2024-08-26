@@ -8,11 +8,11 @@
         @php($total_discount_on_product = 0)
         @if (session()->has('cart') && count(session()->get('cart')) > 0)
             @foreach (session('cart') as $key => $cartItem)
-
+            @php($sub_total += ($cartItem['price'] * $cartItem['quantity'])-($cartItem['quantity']*$cartItem['discount']))
                 @php($total_tax += $cartItem['tax'] * $cartItem['quantity'])
                 @php($total_shipping_cost += $cartItem['shipping_cost'])
                 @php($total_discount_on_product += $cartItem['discount'] * $cartItem['quantity'])
-                @php($sub_total += ($cartItem['price'] * $cartItem['quantity'])-$total_discount_on_product)
+
             @endforeach
         @else
             <span>Empty Cart</span>
@@ -25,15 +25,16 @@
             <td>Shipping:</td>
             <td>{{ \App\CPU\Helpers::currency_converter($total_shipping_cost) }}</td>
         </tr>
+        <tr class="summary-subtotal">
         @if (session()->has('coupon_discount'))
-            <div class="d-flex justify-content-between">
-                <span class="cart_title">Coupon Discount</span>
-                <span class="cart_value" id="coupon-discount-amount">
+            <td class="d-flex">Coupon Discount</td>
+                <td id="coupon-discount-amount">
                     -
                     {{ session()->has('coupon_discount') ? \App\CPU\Helpers::currency_converter(session('coupon_discount')) : 0 }}
-                </span>
-            </div>
+                </td>
+
             @php($coupon_dis = session('coupon_discount'))
+        </tr>
         @else
             <div class="mt-2">
                 <form class="needs-validation" method="post" novalidate id="coupon-code-ajax">
@@ -46,6 +47,7 @@
                     </button>
                 </form>
             </div>
+
             @php($coupon_dis = 0)
         @endif
 

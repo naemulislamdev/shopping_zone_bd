@@ -451,18 +451,7 @@
                         </div>
                     </td>
                 @endif
-                @if ($order->billingAddress)
-                    <td valign="top">
-                        <span class="h2" >{{\App\CPU\translate('billing_address')}}: </span>
-                        <div class="h4 montserrat-normal-600">
-                            <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->billingAddress ? $order->billingAddress['contact_person_name'] : ""}}</p>
-                            <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->billingAddress ? $order->billingAddress['phone'] : ""}}</p>
-                            <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->billingAddress ? $order->billingAddress['address'] : ""}}</p>
-                            <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->billingAddress ? $order->billingAddress['city'] : ""}} {{$order->billingAddress ? $order->billingAddress['zip'] : ""}}</p>
 
-                        </div>
-                    </td>
-                @endif
             </tr>
         </table>
     </section>
@@ -541,7 +530,9 @@
     <table style="width: 100%;">
         <tr>
             <th style="text-align: left; vertical-align: text-top; width:40%;">
-                <h3>Social Page : {{$order->socialpage['name']}}</h3>
+                @if(!empty($order->socialpage['name']))
+                <h3>Social Page : {{@$order->socialpage['name']}}</h3>
+                @endif
                 <hr>
                 <h4 style="color: #130505 !important; margin:0px;">{{\App\CPU\translate('payment_details')}}</h4>
                 <p style="color: #414141 !important ; padding-top:5px;">Payment Status : {{$order->payment_status}}

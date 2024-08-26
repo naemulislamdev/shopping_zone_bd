@@ -97,7 +97,7 @@
 
                     <div class="row">
                         <div class="col-12 col-md-6 mt-4">
-                             
+
                                                       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenterAdvance">
               Advanced Payment
             </button>
@@ -710,29 +710,7 @@ th {
 
                             <hr>
 
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h5>{{\App\CPU\translate('billing_address')}}</h5>
 
-                            </div>
-
-                            @if($order->billingAddress)
-                                @php($billing=$order->billingAddress)
-                            @else
-                                @php($billing=json_decode($order['billing_address_data']))
-                            @endif
-
-                            <span class="d-block">{{\App\CPU\translate('Name')}} :
-                                <strong>{{$billing? $billing->contact_person_name : \App\CPU\translate('empty')}}</strong><br>
-
-                                {{\App\CPU\translate('City')}}:
-                                <strong>{{$billing ? $billing->city : \App\CPU\translate('empty')}}</strong><br>
-                                {{\App\CPU\translate('zip_code')}} :
-                                <strong>{{$billing ? $billing->zip  : \App\CPU\translate('empty')}}</strong><br>
-                                {{\App\CPU\translate('address')}} :
-                                <strong>{{$billing ? $billing->address  : \App\CPU\translate('empty')}}</strong><br>
-                                {{\App\CPU\translate('Phone')}}:
-                                <strong>{{$billing ? $billing->phone  : \App\CPU\translate('empty')}}</strong>
-                            </span>
                         </div>
                         @else
                                 <div class="card-body">
