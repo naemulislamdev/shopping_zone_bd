@@ -1,6 +1,6 @@
 <style>
     .navbar-vertical .nav-link {
-    color: #9a9a9a;
+    color: #f3f3f3;
     font-weight: bold;
 }
 
@@ -13,7 +13,7 @@
     }
 
     .navbar-vertical .active .nav-indicator-icon, .navbar-vertical .nav-link:hover .nav-indicator-icon, .navbar-vertical .show > .nav-link > .nav-indicator-icon {
-        color: rgb(43, 36, 36);
+        color: #1164ff;
     }
 
     .nav-subtitle {

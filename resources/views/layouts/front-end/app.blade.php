@@ -158,10 +158,10 @@
                                     <li><a href="{{ route('customer.auth.login') }}">Login</a></li>
                                 @endif
                                 <li>
-                                        <select name="language" class="form-control" style="padding: 2px 6px; height:30px;">
-                                            <option value="en">English</option>
-                                            <option value="bd">Bangla</option>
-                                        </select>
+                                    <select name="language" class="form-control" style="padding: 2px 6px; height:30px;">
+                                        <option value="en">English</option>
+                                        <option value="bd">Bangla</option>
+                                    </select>
                                 </li>
                             </ul>
 
@@ -541,7 +541,7 @@
             });
         }
 
-        function addToCart(form_id) {
+        function addToCart(form_id, redirect_to_checkout=false) {
             if (form_id) {
                 $.ajaxSetup({
                     headers: {
@@ -571,7 +571,6 @@
                             });
                             return false;
                         }
-                        $('.call-when-done').click();
 
                         toastr.success('Item has been added in your cart!', {
                             CloseButton: true,
@@ -584,6 +583,10 @@
 
                         $('#total_cart_count').text(data.count);
                         updateNavCart();
+                        if(redirect_to_checkout)
+                        {
+                            location.href = "{{ route('shop-cart') }}";
+                        }
                     },
                     complete: function() {
                         $('#loading').hide();
@@ -599,8 +602,8 @@
         }
 
         function buy_now(form_id) {
-            addToCart(form_id);
-            location.href = "{{ route('shop-cart') }}";
+            addToCart(form_id, true);
+            // location.href = "{{ route('shop-cart') }}";
         }
 
         function currency_change(currency_code) {
@@ -924,6 +927,38 @@
             if (!container.is(e.target) && container.has(e.target).length === 0) {
                 container.hide();
             }
+        });
+    </script>
+    {{-- products search --}}
+    <script>
+        $(document).ready(function() {
+            $('#searchInput').on('keyup', function() {
+                var query = $(this).val();
+                if (query.length >= 2) { // Start searching after 2 characters
+                    $.ajax({
+                        url: "{{ route('product_search') }}", // The route that handles search
+                        type: "GET",
+                        data: {
+                            'query': query
+                        },
+                        success: function(data) {
+                            console.log(data);
+                            if (data.products) {
+
+                                $('#searchResultProducts').html(data.products); // Display the results
+                            } else {
+                                $('#searchResultProducts').html('');
+                            }
+                            if (data.categories) {
+                                $('#searchResultCategories').html(data.categories);
+                            } else {
+                                $('#searchResultCategories').html('');
+                            }
+
+                        }
+                    });
+                }
+            });
         });
     </script>
     @stack('scripts')

@@ -20,7 +20,7 @@
             <div class="row mb-3">
                 <div class="col text-center">
                     <div class="section-heading-title">
-                        <h3>{{$categoryName}}</h3>
+                        <h3>{{str_replace("_"," ",$data['data_from'])}} {{\App\CPU\translate('products')}} {{ isset($brand_name) ? '('.$brand_name.')' : ''}}</h3>
                         <div class="heading-border"></div>
                     </div>
                     <div class="grid-controls">
@@ -70,11 +70,9 @@
                 {{-- {{ count($products) }} --}}
                 <div class="row">
                     <div class="col-12">
-                        <nav class="d-flex justify-content-between pt-2" aria-label="Page navigation" id="paginator-ajax">
-                            @include('web-views.products._ajax-paginator', [
-                                'page' => $data['page_no'],
-                                'data' => $data,
-                            ])
+                        <nav class="d-flex justify-content-between pt-2" aria-label="Page navigation"
+                             id="paginator-ajax">
+                            {!! $products->links() !!}
                         </nav>
                     </div>
                 </div>
@@ -84,28 +82,28 @@
                 </div>
             @endif
 
-            <div class="row my-3">
+            {{-- <div class="row my-3">
                 <div class="col-md-12">
                     <div class="big-banner">
                         <img src="{{ asset('public/asstes/front-end') }}/images/product-banner/main-banner3.jpg"
                             alt="">
                     </div>
                 </div>
-            </div>
+            </div> --}}
         </div>
     </section>
 @endsection
 @push('scripts')
     <script>
         //When scroll display block in filter section other wise display none
-        window.addEventListener('scroll', function() {
-            const header = document.getElementById('filter-box');
-            if (window.scrollY > 100) {
-                header.classList.add('scrolled');
-            } else {
-                header.classList.remove('scrolled');
-            }
-        });
+        // window.addEventListener('scroll', function() {
+        //     const header = document.getElementById('filter-box');
+        //     if (window.scrollY > 100) {
+        //         header.classList.add('scrolled');
+        //     } else {
+        //         header.classList.remove('scrolled');
+        //     }
+        // });
     </script>
 
     <script>
@@ -138,24 +136,26 @@
             let min = $('#min_price').val();
             let max = $('#max_price').val();
             $.get({
-                url: '{{ url('/') }}/products',
+                url: '{{url('/')}}/products',
                 data: {
-                    id: '{{ $data['id'] }}',
-                    name: '{{ $data['name'] }}',
-                    data_from: '{{ $data['data_from'] }}',
-                    sort_by: '{{ $data['sort_by'] }}',
+                    id: '{{$data['id']}}',
+                    name: '{{$data['name']}}',
+                    data_from: '{{$data['data_from']}}',
+                    sort_by: '{{$data['sort_by']}}',
                     min_price: min,
                     max_price: max,
                 },
                 dataType: 'json',
-                beforeSend: function() {
+                beforeSend: function () {
                     $('#loading').show();
                 },
-                success: function(response) {
+                success: function (response) {
+                    console.log(response);
+
                     $('#ajax-products').html(response.view);
-                    $('#paginator-ajax').html(response.paginator);
+                    console.log(response.total_product);
                 },
-                complete: function() {
+                complete: function () {
                     $('#loading').hide();
                 },
             });

@@ -97,13 +97,7 @@
 
                     <div class="row">
                         <div class="col-12 col-md-6 mt-4">
-                                <label class="badge badge-info">{{\App\CPU\translate('linked_orders')}}
-                                            : {{$linked_orders->count()}}</label><br>
-                                        @foreach($linked_orders as $linked)
-                                            <a href="{{route('admin.orders.details',[$linked['id']])}}"
-                                               class="btn btn-secondary">{{\App\CPU\translate('ID')}}
-                                                :{{$linked['id']}}</a>
-                                        @endforeach
+                             
                                                       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenterAdvance">
               Advanced Payment
             </button>
@@ -154,7 +148,7 @@ th {
                             <option value="Nagad">Nagad</option>
                             <option value="Bank">Bank</option>
                           </select>
-                        </div> 
+                        </div>
                   </div>
                   <div class="col-md-6">
                       <div class="form-group">
@@ -163,7 +157,7 @@ th {
                   </div>
                   </div>
               </div>
-      
+
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -212,12 +206,12 @@ th {
         <td>{{$value->order_id}}</td>
         <td>
         Order : {{json_decode($value->details)->order }}, Discount: {{ json_decode($value->details)->discount }}
-       
+
         </td>
         <td>{{$value->created_by}}</td>
         <td>{{date('d M Y H:i:s',strtotime($value->created_at))}}</td>
         </tr>
-         
+
          @endforeach
          </table>
       </div>
@@ -349,7 +343,7 @@ th {
                                     <div class="col col-md-2 align-self-center  p-0 product-name">
                                         <p> {{\App\CPU\translate('Discount')}}</p>
                                     </div>
-                                  
+
                                     <div class="col col-md-2 align-self-center text-right  ">
                                         <p> {{\App\CPU\translate('Subtotal')}}</p>
                                     </div>
@@ -464,7 +458,7 @@ th {
                                                 <h5>{{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($detail['tax']))}}</h5>
                                             </div>
                                             <div class="col col-md-2 align-self-center  p-0 product-name">
-                                                
+
                                                  <a class="btn btn-primary" data-toggle="modal" href="{{route('admin.orders.detailsProduct',$detail['id'])}}" data-target="#exampleModal{{$detail['id']}}">
                                                      <h5 style="color:white"> - {{\App\CPU\BackEndHelper::usd_to_currency($detail['discount'])}}</h5>
                                                  </a>
@@ -479,7 +473,7 @@ th {
                                     </div>
                                 </div>
                                 {{-- seller info old --}}
-                                
+
                                 <!--Discount Modal Start-->
  <div class="modal fade" id="exampleModal{{$detail->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel{{$detail['id']}}" aria-hidden="true">
           <div class="modal-dialog" role="document">
@@ -495,7 +489,7 @@ th {
                     @csrf
           <input class="form-control" type="hidden" name="id" value="{{$detail['id']}}">
          <div class="row">
-             
+
              <div class="col-md-6">
                  DISCOUNT: <input class="form-control" placeholder="Add or Edit Discount" type="number" value="{{\App\CPU\Convert::default(@$detail->discount)}}" name="discount" id="discount">
              </div>
@@ -503,13 +497,13 @@ th {
                  Quantity: <input class="form-control" placeholder="Add or Edit qty" type="number" value="{{@$detail->qty}}" name="qty" id="qty">
              </div>
          </div>
-         
+
        </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
   <button type="submit" id="submit" value="submit" class="btn btn-danger">Update</button>
   </div>
-      
+
 </form>
     </div>
   </div>
@@ -815,9 +809,9 @@ th {
         </div>
     </div>
     <!-- End Modal -->
-    
-    
-    
+
+
+
 @endsection
 
 @push('script_2')

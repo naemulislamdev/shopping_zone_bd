@@ -104,7 +104,7 @@ class OrderController extends Controller
      public function detailsProduct($id)
     {
         $detailsProduct = OrderDetail::findOrFail($id);
-        // dd($order);
+        // dd($detailsProduct);
         return view('admin-views.order.order-details', compact('detailsProduct'));
     }
 
@@ -241,10 +241,9 @@ class OrderController extends Controller
     {
         $order = Order::with('details', 'shipping', 'seller')->where(['id' => $id])->first();
 
-        $linked_orders = Order::where(['order_group_id' => $order['order_group_id']])
-            ->whereNotIn('order_group_id', ['def-order-group'])
-            ->whereNotIn('id', [$order['id']])
-            ->get();
+
+
+            // dd($order);
 
         $shipping_method = Helpers::get_business_settings('shipping_method');
         $delivery_men = DeliveryMan::where('is_active', 1)->when($order->seller_is == 'admin', function ($query) {
@@ -259,7 +258,7 @@ class OrderController extends Controller
          $orderHistories = OrderHistory::where('order_id',$id)->get();
         if($order->order_type == 'default_type')
         {
-            return view('admin-views.order.order-details', compact('shipping_address','order', 'linked_orders', 'delivery_men','orderHistories'));
+            return view('admin-views.order.order-details', compact('shipping_address','order','delivery_men','orderHistories'));
         }else{
             return view('admin-views.pos.order.order-details', compact('order'));
         }

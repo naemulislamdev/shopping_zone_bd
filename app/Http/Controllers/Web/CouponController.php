@@ -22,10 +22,11 @@ class CouponController extends Controller
             ->where('status', '=', 1)
             ->whereDate('start_date', '<=', date('y-m-d'))
             ->whereDate('expire_date', '>=', date('y-m-d'))->first();
-    
+
         if ($coupon) {
             $total = 0;
-            foreach (CartManager::get_cart() as $cart) {
+            $carts = session()->has('cart') ? session()->get('cart'):0;
+            foreach ($carts as $cart) {
                 $product_subtotal = $cart['price'] * $cart['quantity'];
                 $total += $product_subtotal;
             }

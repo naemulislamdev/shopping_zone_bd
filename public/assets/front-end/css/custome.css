@@ -866,17 +866,25 @@ header.scrolled .header-icon > a > .fa {
 }
 .product-box:hover{box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;}
 /*--------------------- Product filter section -----------------------*/
-.filter-box{
+/* .filter-box{
     display: none;
+} */
+.category-filter-box{
+    display: block;
+    position: fixed;
+    left: 0;
+    top: 22%;
+    z-index: 999999;
+    transition: 0.3s;
 }
-.filter-box.scrolled{
+/* .filter-box.scrolled{
     display: block;
     position: fixed;
     left: 0;
     top: 10%;
     z-index: 999999;
     transition: 0.3s;
-}
+} */
 .price-input {
   width: 100%;
   display: flex;
