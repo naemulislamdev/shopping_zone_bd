@@ -150,10 +150,7 @@
                     $('#loading').show();
                 },
                 success: function (response) {
-                    console.log(response);
-
                     $('#ajax-products').html(response.view);
-                    console.log(response.total_product);
                 },
                 complete: function () {
                     $('#loading').hide();
