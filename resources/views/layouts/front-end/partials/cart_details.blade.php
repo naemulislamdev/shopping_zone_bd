@@ -72,36 +72,6 @@
                         <form action="{{ route('customer.product.checkout.order')}}" method="POST">
                             @csrf
                             <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <div class="form-group">
-                                        <label>Name <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control"
-                                            placeholder="Enter your name" name="name" value="{{ old('name')}}">
-                                            @error('name')
-                                            <span class="text-danger">{{$message}}</span>
-                                            @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <div class="form-group">
-                                        <label>Phone <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control"
-                                            placeholder="Enter your phone" name="phone" value="{{ old('phone')}}">
-                                            @error('phone')
-                                            <span class="text-danger">{{$message}}</span>
-                                            @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-12 mb-3">
-                                    <div class="form-group">
-                                        <label>Email <span class="text-danger">*</span></label>
-                                        <input type="email" class="form-control"
-                                            placeholder="Enter your email" name="email" value="{{ old('email')}}">
-                                            @error('email')
-                                            <span class="text-danger">{{$message}}</span>
-                                            @enderror
-                                    </div>
-                                </div>
                                 <div class="col-md-6">
                                     <label class="text-danger">Choose Shipping Method</label>
                                     <select class="form-control" id="shipping_method_id"
@@ -124,6 +94,37 @@
                                         </select>
                                     </div>
                                 </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-group">
+                                        <label>Name <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control"
+                                            placeholder="Enter your name" name="name" value="{{ old('name')}}">
+                                            @error('name')
+                                            <span class="text-danger">{{$message}}</span>
+                                            @enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-group">
+                                        <label>Phone <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control"
+                                            placeholder="Enter your phone" name="phone" value="{{ old('phone')}}">
+                                            @error('phone')
+                                            <span class="text-danger">{{$message}}</span>
+                                            @enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <div class="form-group">
+                                        <label>Email </label>
+                                        <input type="email" class="form-control"
+                                            placeholder="Enter your email" name="email" value="{{ old('email')}}">
+                                            @error('email')
+                                            <span class="text-danger">{{$message}}</span>
+                                            @enderror
+                                    </div>
+                                </div>
+
                                 <div class="col-md-12 mb-3">
                                     <div class="form-group">
                                         <label>Shipping Address <span class="text-danger">*</span></label>

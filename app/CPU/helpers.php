@@ -79,6 +79,53 @@ class Helpers
         return $user;
     }
 
+    public static function get_customer_check($request = null)
+    {
+        $user = null;
+        if (auth('customer')->check()) {
+            $user = auth('customer')->user(); // for web
+        } elseif ($request != null && $request->user() != null) {
+            $user = $request->user(); //for api
+        } elseif (session()->has('customer_id')) {
+            $user = User::find(session('customer_id'));
+        }elseif ($request->phone) {
+            $oldCustomer = User::where('phone', $request->phone)->first();
+            $remember = true;
+            if ($oldCustomer) {
+                // Old user but not authenticated, log them in
+                auth('customer')->login($oldCustomer, $remember);
+                $user = auth('customer')->user();
+            } else {
+                // New user, create an account and log them in
+                $email = $request->phone . '_bd@gmail.com';
+                if ($request->email) {
+                    $email = $request->email;
+                }
+
+                $password = bcrypt($request->phone);
+
+                // Create a new user
+                $newUser = User::create([
+                    'f_name' => $request->name,
+                    'l_name' => 'bd' . rand(),
+                    'email' => $email,
+                    'phone' => $request->phone,
+                    'password' => $password
+                ]);
+
+                // Log in the new user
+                auth('customer')->login($newUser, $remember);
+                $user = auth('customer')->user();
+            }
+        }
+
+        if ($user == null) {
+            $user = 'offline';
+        }
+
+        return $user;
+    }
+
     public static function coupon_discount($request)
     {
         $discount = 0;
@@ -94,7 +141,7 @@ class Helpers
 
         if (isset($coupon)) {
             $total = 0;
-            foreach (CartManager::get_cart(CartManager::get_cart_group_ids($request)) as $cart) {
+            foreach ($request['carts'] as $cart) {
                 $product_subtotal = $cart['price'] * $cart['quantity'];
                 $total += $product_subtotal;
             }

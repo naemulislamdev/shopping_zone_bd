@@ -48,6 +48,7 @@
                                                     class="js-example-responsive form-control"
                                                     name="banner_type" required>
                                                 <option value="Main Banner">{{ \App\CPU\translate('Main Banner')}}</option>
+                                                <option value="Mobile Banner">{{ \App\CPU\translate('Mobile Banner')}}</option>
                                                 <option value="Footer Banner">{{ \App\CPU\translate('Footer Banner')}}</option>
                                                 <option value="Popup Banner">{{ \App\CPU\translate('Popup Banner')}}</option>
                                                 <option value="Main Section Banner">{{ \App\CPU\translate('Main Section Banner')}}</option>
@@ -72,9 +73,9 @@
                                                     class="js-example-responsive form-control"
                                                     name="product_id">
                                                 @foreach(\App\Model\Product::active()->get() as $product)
-                                                    
+
                                                         <option value="{{$product['id']}}">{{$product['name']}}</option>
-                                                    
+
                                                 @endforeach
                                             </select>
                                         </div>
@@ -209,7 +210,7 @@
                                         <td>
                                             <a class="btn btn-primary btn-sm edit"
                                                 title="{{ \App\CPU\translate('Edit')}}"
-                                                href="{{route('admin.banner.edit',[$banner['id']])}}" style="cursor: pointer;"> 
+                                                href="{{route('admin.banner.edit',[$banner['id']])}}" style="cursor: pointer;">
                                                 <i class="tio-edit"></i>
                                             </a>
                                             <a class="btn btn-danger btn-sm delete"

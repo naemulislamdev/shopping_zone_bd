@@ -1364,7 +1364,7 @@
         }
     });
 
-    $('#order_place').submit(function(eventObj) {
+    $('#order_place_exchange').submit(function(eventObj) {
         if($('#customer').val())
         {
             $(this).append('<input type="hidden" name="user_id" value="'+$('#customer').val()+'" /> ');

@@ -99,7 +99,7 @@
                                             class="text-truncate">{{\App\CPU\translate('pos')}}</span>
                                     </a>
                                 </li>
-                                <li class="nav-item {{Request::is('admin/pos/orders/*')?'active':''}}">
+                                <li class="nav-item {{Request::is('admin/pos/orders*')?'active':''}}">
                                     <a class="nav-link " href="{{route('admin.pos.orders')}}" title="{{\App\CPU\translate('orders')}}">
                                         <span class="tio-circle nav-indicator-icon"></span>
                                         <span class="text-truncate">{{\App\CPU\translate('orders')}}
@@ -109,7 +109,7 @@
                                     </span>
                                     </a>
                                 </li>
-                                 <li class="nav-item {{Request::is('admin/pos/*')?'active':''}}">
+                                 <li class="nav-item {{Request::is('admin/pos/exchange-orders*')?'active':''}}">
                                     <a class="nav-link " href="{{route('admin.pos.exchange-orders')}}" title="Exchange {{\App\CPU\translate('orders')}}">
                                         <span class="tio-circle nav-indicator-icon"></span>
                                         <span class="text-truncate">Exchange {{\App\CPU\translate('orders')}}
@@ -548,9 +548,18 @@
                                 </span>
                                 </a>
                             </li>
-                            <li class="navbar-vertical-aside-has-menu {{Request::is('admin/reviews*')?'active':''}}">
+                            <li class="navbar-vertical-aside-has-menu {{Request::is('admin/reviews/list')?'active':''}}">
                                 <a class="js-navbar-vertical-aside-menu-link nav-link"
                                    href="{{route('admin.reviews.list')}}">
+                                    <i class="tio-folder-special nav-icon"></i>
+                                    <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
+                                    Products {{\App\CPU\translate('Reviews')}}
+                                </span>
+                                </a>
+                            </li>
+                            <li class="navbar-vertical-aside-has-menu {{Request::is('admin/reviews/customer-list')?'active':''}}">
+                                <a class="js-navbar-vertical-aside-menu-link nav-link"
+                                   href="{{route('admin.reviews.clientList')}}">
                                     <i class="tio-folder-special nav-icon"></i>
                                     <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
                                     {{\App\CPU\translate('Customer')}} {{\App\CPU\translate('Reviews')}}

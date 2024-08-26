@@ -661,7 +661,7 @@ class POSController extends Controller
                 'view' => view('admin-views.pos._cart',compact('cart_id'))->render()
             ]);
         } elseif ($request->type == 'percent' && $request->discount > 100) {
-            Toastr::error(\App\CPU\translate('Extra_discount_can_not_be_more_than_100_percent'));
+    Toastr::error(\App\CPU\translate('Extra_discount_can_not_be_more_than_100_percent'));
             return response()->json([
                 'extra_discount' =>"amount_low",
                 'view' => view('admin-views.pos._cart',compact('cart_id'))->render()
@@ -749,6 +749,12 @@ class POSController extends Controller
     public function place_order(Request $request)
     {
         // dd( $request->all());
+        $this->validate($request, [
+            'shipping_method_id' => 'required',
+            'type' => 'required',
+            'courier' => 'required',
+            'social_page_id' => 'required',
+        ]);
         $cart_id = session('current_user');
         $user_id = 0;
         $user_type = 'wc';
@@ -869,7 +875,8 @@ class POSController extends Controller
         DB::table('orders')->insertGetId($or);
 
         session()->forget($cart_id);
-        session()->forget(session(['shipping_cost','shipping_method_id']));
+        session()->forget(session('shipping_cost'));
+        session()->forget(session('shipping_method_id'));
         session(['last_order' => $order_id]);
         Toastr::success(\App\CPU\translate('order_placed_successfully'));
         return back();
@@ -877,7 +884,13 @@ class POSController extends Controller
 
     public function exchange_place_order(Request $request)
     {
-
+        // $request->dd();
+        $this->validate($request, [
+            'shipping_method_id' => 'required',
+            'type' => 'required',
+            'courier' => 'required',
+            'social_page_id' => 'required',
+        ]);
         $cart_id = session('current_user');
         $user_id = 0;
         $user_type = 'wc';
@@ -1005,10 +1018,12 @@ class POSController extends Controller
         DB::table('order_exchanges')->insertGetId($or);
 
         session()->forget($cart_id);
-        session()->forget(session(['shipping_cost','shipping_method_id','previous_order_id']));
+        session()->forget('shipping_cost');
+        session()->forget('previous_order_id');
+        session()->forget('shipping_method_id');
         session(['last_order' => $order_id]);
         Toastr::success(\App\CPU\translate('order_placed_successfully'));
-        return back();
+        return redirect()->route('admin.pos.exchange-orders');
     }
 
     public function store_keys(Request $request)

@@ -240,59 +240,88 @@ class OrderManager
         if (Order::find($order_id)) {
             $order_id = Order::orderBy('id', 'DESC')->first()->id + 1;
         }
+        $address_id = session('address_id') ? session('address_id') : null;
+        $billing_address_id = session('billing_address_id') ? session('billing_address_id') : null;
+        $coupon_code = session()->has('coupon_code') ? session('coupon_code') : 0;
+        $discount = session()->has('coupon_discount') ? session('coupon_discount') : 0;
+        $order_note = session()->has('order_note') ? session('order_note') : null;
 
         $req = array_key_exists('request', $data) ? $data['request'] : null;
-        $req1 = array_key_exists('request', $data) ? $data['cart'] : null;
-        // return response()->json(['order_id'=>$req1,translate('order_placed_successfully')], 200);
         if ($req != null) {
             if (session()->has('coupon_code') == false) {
                 $coupon_code = $req->has('coupon_code') ? $req['coupon_code'] : null;
-                $discount = $req->has('coupon_code') ? Helpers::coupon_discount($req) : 0;
+                $discount = $req->has('coupon_code') ? Helpers::coupon_discount($req) : $discount;
             }
-
+            if (session()->has('address_id') == false) {
+                $address_id = $req->has('address_id') ? $req['address_id'] : null;
+            }
         }
-        $user = Helpers::get_customer_check($req);
-        $shippingAddress = new ShippingAddress();
-        $shippingAddress->customer_id = auth('customer')->id();
-        $shippingAddress->contact_person_name = $req->name;
-        $shippingAddress->address = $req->address;
-        $shippingAddress->city = 'city';
-        $shippingAddress->phone = $req->phone;
-        $shippingAddress->created_at = now();
-        $shippingAddress->save();
+        $user = Helpers::get_customer($req);
+
+        if ($discount > 0) {
+            $discount = round($discount / count(CartManager::get_cart_group_ids($req)), 2);
+        }
+
+        $cart_group_id = $data['cart_group_id'];
+        $seller_data = Cart::where(['cart_group_id' => $cart_group_id])->first();
+
+        $shipping_method = CartShipping::where(['cart_group_id' => $cart_group_id])->first();
+        if (isset($shipping_method)) {
+            $shipping_method_id = $shipping_method->shipping_method_id;
+        } else {
+            $shipping_method_id = 0;
+        }
+
+        $shipping_model = Helpers::get_business_settings('shipping_method');
+        if ($shipping_model == 'inhouse_shipping') {
+            $admin_shipping = ShippingType::where('seller_id', 0)->first();
+            $shipping_type = isset($admin_shipping) == true ? $admin_shipping->shipping_type : 'order_wise';
+        } else {
+            if ($seller_data->seller_is == 'admin') {
+                $admin_shipping = ShippingType::where('seller_id', 0)->first();
+                $shipping_type = isset($admin_shipping) == true ? $admin_shipping->shipping_type : 'order_wise';
+            } else {
+                $seller_shipping = ShippingType::where('seller_id', $seller_data->seller_id)->first();
+                $shipping_type = isset($seller_shipping) == true ? $seller_shipping->shipping_type : 'order_wise';
+            }
+        }
 
         $or = [
             'id' => $order_id,
             'verification_code' => rand(100000, 999999),
             'customer_id' => $user->id,
+            'seller_id' => $seller_data->seller_id,
+            'seller_is' => $seller_data->seller_is,
             'customer_type' => 'customer',
             'payment_status' => $data['payment_status'],
             'order_status' => $data['order_status'],
-            'payment_method' => $req->payment_method,
+            'payment_method' => $data['payment_method'],
             'transaction_ref' => $data['transaction_ref'],
+            'order_group_id' => $data['order_group_id'],
             'discount_amount' => $discount,
             'discount_type' => $discount == 0 ? null : 'coupon_discount',
             'coupon_code' => $coupon_code,
-            'order_amount' => CartManager::cart_grand_total($data['cart']) - $discount,
-            'shipping_address' => $shippingAddress->id,
-            'shipping_address_data' => ShippingAddress::find($shippingAddress->id),
-            'billing_address' => $shippingAddress->id,
-            'billing_address_data' => ShippingAddress::find($shippingAddress->id),
-            'shipping_cost' => CartManager::get_shipping_cost($req->shipping_method_id),
-            'shipping_method_id' => $req->shipping_method_id,
+            'order_amount' => CartManager::cart_grand_total($cart_group_id) - $discount,
+            'shipping_address' => $address_id,
+            'shipping_address_data' => ShippingAddress::find($address_id),
+            'billing_address' => $billing_address_id,
+            'billing_address_data' => ShippingAddress::find($billing_address_id),
+            'shipping_cost' => CartManager::get_shipping_cost($data['cart_group_id']),
+            'shipping_method_id' => $shipping_method_id,
+            'shipping_type' => $shipping_type,
             'created_at' => now(),
             'updated_at' => now(),
-            'order_note' => $req->order_note
+            'order_note' => $order_note
         ];
 
         DB::table('orders')->insertGetId($or);
 
-        foreach ($req['cart'] as $c) {
+        foreach (CartManager::get_cart($data['cart_group_id']) as $c) {
             $product = Product::where(['id' => $c['product_id']])->first();
             $or_d = [
                 'order_id' => $order_id,
                 'product_id' => $c['product_id'],
-                'seller_id' => $product->added_by == 'seller' ? $product->user_id : '0',
+                'seller_id' => $c['seller_id'],
                 'product_details' => $product,
                 'qty' => $c['quantity'],
                 'price' => $c['price'],
@@ -370,10 +399,10 @@ class OrderManager
             DB::table('admin_wallets')->where('admin_id', $order['seller_id'])->increment('pending_amount', $order['order_amount']);
         }
 
-        if ($order->seller_is == 'admin') {
-            $seller = Admin::find($order->seller_id);
+        if ($seller_data->seller_is == 'admin') {
+            $seller = Admin::find($seller_data->seller_id);
         } else {
-            $seller = Seller::find($order->seller_id);
+            $seller = Seller::find($seller_data->seller_id);
         }
 
         try {

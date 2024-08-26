@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\User;
 use App\CPU\Helpers;
 use App\Model\Review;
+use App\ClientReview;
 use App\Model\Product;
 use App\CPU\ProductManager;
 use Illuminate\Http\Request;
@@ -59,6 +60,17 @@ class ReviewsController extends Controller
 
         return view('admin-views.reviews.list', compact('reviews', 'search', 'products', 'customers', 'from', 'to', 'customer_id', 'product_id', 'status'));
     }
+
+    function clientList(Request $request)
+    {
+        // return 1;
+
+        $data['clients']= ClientReview::latest()->paginate(Helpers::pagination_limit());
+        // dd($data);
+
+        return view('admin-views.reviews.customer-review-list', compact('data'));
+    }
+
     public function export(Request $request)
     {
 
@@ -68,7 +80,7 @@ class ReviewsController extends Controller
         $from = $request['from'];
         $to = $request['to'];
 
-        
+
 
         $data = Review::with(['product', 'customer'])
             ->when($product_id != null, function ($q) use ($request) {
@@ -84,7 +96,7 @@ class ReviewsController extends Controller
                 $query->whereBetween('created_at', [$from . ' 00:00:00', $to . ' 23:59:59']);
             })
             ->get();
-        
+
 
 
         if($data->count()==0){
@@ -98,6 +110,14 @@ class ReviewsController extends Controller
     public function status(Request $request)
     {
         $review = Review::find($request->id);
+        $review->status = $request->status;
+        $review->save();
+        Toastr::success('Review status updated!');
+        return back();
+    }
+    public function reviewstatus(Request $request)
+    {
+        $review = ClientReview::find($request->id);
         $review->status = $request->status;
         $review->save();
         Toastr::success('Review status updated!');

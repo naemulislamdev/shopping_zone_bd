@@ -132,7 +132,7 @@ class WebController extends Controller
                 }
             }
         }
-        
+
 
         return view('web-views.home', compact('featured_products', 'topRated', 'bestSellProduct', 'latest_products', 'categories', 'brands', 'deal_of_the_day', 'top_sellers', 'home_categories', 'productCounts'));
     }
@@ -386,6 +386,7 @@ class WebController extends Controller
     public function shop_cart()
     {
         if (session()->has('cart') && count(session('cart')) > 0) {
+            // dd(session('cart'));
             return view('web-views.shop-cart');
         }
         Toastr::info('No items in your basket!');

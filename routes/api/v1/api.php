@@ -54,7 +54,7 @@ Route::group(['namespace' => 'api\v1', 'prefix' => 'v1', 'middleware' => ['api_l
         Route::get('allCart', 'CartController@cartView');
         Route::get('cart','CartController@cartGroupId');
         Route::post('add', 'CartController@add_to_cart');
-        
+
         Route::put('update', 'CartController@update_cart');
         Route::delete('remove', 'CartController@remove_from_cart');
         Route::delete('Cartremove/{id}', 'CartController@Cartremove_from_cart');
@@ -193,6 +193,9 @@ Route::group(['namespace' => 'api\v1', 'prefix' => 'v1', 'middleware' => ['api_l
             Route::post('loyalty-exchange-currency', 'UserLoyaltyController@loyalty_exchange_currency');
         });
     });
+    Route::group(['prefix' => 'order'], function () {
+        Route::post('place', 'OrderController@place_order');
+    });
 
     Route::group(['prefix' => 'order'], function () {
         Route::get('track', 'OrderController@track_order');
@@ -218,7 +221,7 @@ Route::group(['namespace' => 'api\v1', 'prefix' => 'v1', 'middleware' => ['api_l
        Route::get('landing-view', 'LandingPagesController@landing_view');
        Route::get('/{landing_slug}', 'LandingPagesController@landpagesdeal');
     });
-    
+
 
     //map api
     Route::group(['prefix' => 'mapapi'], function () {

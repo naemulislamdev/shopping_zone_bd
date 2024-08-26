@@ -41,6 +41,7 @@
                                                     class="js-example-responsive form-control"
                                                     name="banner_type" required>
                                                 <option value="Main Banner" {{$banner['banner_type']=='Main Banner'?'selected':''}}>Main Banner</option>
+                                                <option value="Mobile Banner" {{$banner['banner_type']=='Mobile Banner'?'selected':''}}>Mobile Banner</option>
                                                 <option value="Footer Banner" {{$banner['banner_type']=='Footer Banner'?'selected':''}}>Footer Banner</option>
                                                 <option value="Popup Banner" {{$banner['banner_type']=='Popup Banner'?'selected':''}}>Popup Banner</option>
                                                 <option value="Main Section Banner" {{$banner['banner_type']=='Main Section Banner'?'selected':''}}>{{ \App\CPU\translate('Main Section Banner')}}</option>
@@ -65,9 +66,9 @@
                                                     class="js-example-responsive form-control"
                                                     name="product_id">
                                                 @foreach(\App\Model\Product::active()->get() as $product)
-                                                
+
                                                     <option value="{{$product['id']}}" {{$banner['resource_id']==$product['id']?'selected':''}}>{{$product['name']}}</option>
-                                                
+
                                                 @endforeach
                                             </select>
                                         </div>

@@ -11,6 +11,7 @@ use Barryvdh\Debugbar\Twig\Extension\Debug;
 use Cassandra\Collection;
 use Illuminate\Support\Str;
 use App\Model\ShippingType;
+use App\Model\ShippingMethod;
 use App\Model\CategoryShippingCost;
 
 class CartManager
@@ -80,7 +81,7 @@ class CartManager
 
     public static function get_cart_group_ids($request = null)
     {
-        $user = Helpers::get_customer($request);
+        $user = Helpers::get_customer_check($request);
         if ($user == 'offline') {
             if (session()->has('offline_cart') == false) {
                 session()->put('offline_cart', collect([]));
@@ -93,19 +94,11 @@ class CartManager
         return $cart_ids;
     }
 
-    public static function get_shipping_cost($group_id = null)
+    public static function get_shipping_cost($id = null)
     {
-        $cost = 0;
-        if ($group_id == null) {
-            $order_wise_shipping_cost = CartShipping::whereIn('cart_group_id', CartManager::get_cart_group_ids())->sum('shipping_cost');
-            $cart_shipping_cost = Cart::whereIn('cart_group_id', CartManager::get_cart_group_ids())->sum('shipping_cost');
-            $cost = $order_wise_shipping_cost + $cart_shipping_cost;
-        } else {
-            $data = CartShipping::where('cart_group_id', $group_id)->first();
-            $order_wise_shipping_cost = isset($data) ? $data->shipping_cost : 0;
-            $cart_shipping_cost = Cart::where('cart_group_id', $group_id)->sum('shipping_cost');
-            $cost = $order_wise_shipping_cost + $cart_shipping_cost;
-        }
+
+            $cost = ShippingMethod::where('id', $id)->first()->cost;
+
         return $cost;
     }
 

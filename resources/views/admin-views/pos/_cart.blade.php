@@ -141,7 +141,7 @@
             <div class="col-12 d-flex justify-content-between">
                 <dt  class="col-sm-6">Shipping Cost :
                     <select class="form-control" id="shipping_method_id"
-                    onchange="set_shipping_id(this.value)">
+                    onchange="set_shipping_id(this.value)" name="shipping_method_id">
                     <option selected disabled>Select Shipping Method</option>
                     @foreach (\App\Model\ShippingMethod::where(['status' => 1])->get() as $shipping)
                         <option value="{{ $shipping['id'] }}"
@@ -287,6 +287,7 @@
                             <input type="number" class="form-control" name="amount" min="0" step="0.01"
                                     value="{{\App\CPU\BackEndHelper::usd_to_currency($total+$total_tax_amount+$total_shipping_cost-$coupon_discount)}}"
                                     readonly>
+                                    <input type="hidden" name="shipping_method_id" value="{{session('shipping_method_id')}}">
                         </div>
                         <div class="form-group col-6">
                             <label class="input-label" for="">Payment {{\App\CPU\translate('type')}}</label>

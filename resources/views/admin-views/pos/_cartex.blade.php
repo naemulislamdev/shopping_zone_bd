@@ -178,7 +178,7 @@
                         class="fa fa-times-circle "></i> {{\App\CPU\translate('Cancel')}} </a>
             </div>
             <div class="col-md-6">
-                <button id="submit_order" type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#paymentModal"><i class="fa fa-shopping-bag"></i>
+                <button id="submit_order" type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#paymentModalExchange"><i class="fa fa-shopping-bag"></i>
                     {{\App\CPU\translate('Order')}} </button>
             </div>
         </div>
@@ -269,7 +269,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="paymentModal" tabindex="-1">
+    <div class="modal fade" id="paymentModalExchange" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -279,7 +279,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{route('admin.pos.exchange-order')}}" id='order_place' method="post" class="row">
+                    <form action="{{route('admin.pos.exchange-order')}}" id='order_place_exchange' method="post" class="row">
                         @csrf
                         <div class="form-group col-6">
                             <label class="input-label" for="">{{\App\CPU\translate('amount')}}({{\App\CPU\currency_symbol()}})</label>
@@ -287,6 +287,7 @@
                                     value="{{(\App\CPU\BackEndHelper::usd_to_currency($total+$total_tax_amount+$total_shipping_cost-$coupon_discount)-session('previousOrderAmount'))}}"
                                     readonly>
                                     <input type="hidden" name="previous_order_id" value="{{session('previous_order_id')}}">
+                                    <input type="hidden" name="shipping_method_id" value="{{session('shipping_method_id')}}">
                         </div>
                         <div class="form-group col-6">
                             <label class="input-label" for="">Payment {{\App\CPU\translate('type')}}</label>

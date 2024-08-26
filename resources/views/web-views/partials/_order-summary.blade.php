@@ -8,10 +8,11 @@
         @php($total_discount_on_product = 0)
         @if (session()->has('cart') && count(session()->get('cart')) > 0)
             @foreach (session('cart') as $key => $cartItem)
-                @php($sub_total += $cartItem['price'] * $cartItem['quantity'])
+
                 @php($total_tax += $cartItem['tax'] * $cartItem['quantity'])
                 @php($total_shipping_cost += $cartItem['shipping_cost'])
                 @php($total_discount_on_product += $cartItem['discount'] * $cartItem['quantity'])
+                @php($sub_total += ($cartItem['price'] * $cartItem['quantity'])-$total_discount_on_product)
             @endforeach
         @else
             <span>Empty Cart</span>
@@ -50,7 +51,7 @@
 
         <tr class="summary-total">
             <td>Total:</td>
-            <td>{{ \App\CPU\Helpers::currency_converter($sub_total + $total_tax + $total_shipping_cost - $coupon_dis - $total_discount_on_product) }}
+            <td>{{ \App\CPU\Helpers::currency_converter($sub_total + $total_tax + $total_shipping_cost - $coupon_dis) }}
             </td>
         </tr><!-- End .summary-total -->
     </tbody>

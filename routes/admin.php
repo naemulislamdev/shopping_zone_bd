@@ -218,9 +218,11 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
         });
         Route::group(['prefix' => 'reviews', 'as' => 'reviews.','middleware'=>['module:business_section']], function () {
             Route::get('list', 'ReviewsController@list')->name('list')->middleware('actch');
+            Route::get('customer-list', 'ReviewsController@clientList')->name('clientList')->middleware('actch');
             Route::get('export', 'ReviewsController@export')->name('export')->middleware('actch');
             //Route::get('export', 'ReviewsController@export')->name('export')->middleware('actch');
             Route::get('status/{id}/{status}', 'ReviewsController@status')->name('status');
+            Route::get('reviewstatus/{id}/{status}', 'ReviewsController@reviewstatus')->name('reviewstatus');
         });
 
         Route::group(['prefix' => 'customer', 'as' => 'customer.','middleware'=>['module:user_section']], function () {

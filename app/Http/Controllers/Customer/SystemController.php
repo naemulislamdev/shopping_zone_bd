@@ -203,12 +203,13 @@ class SystemController extends Controller
     }
     public function productCheckoutOrder(Request $request)
     {
-        // dd($request->all());
+        // $request->dd();
         $this->validate($request, [
             'name' => 'required|string',
             'email' => 'nullable|email',
             'address' => 'required|string',
             'phone' => 'required|string',
+            'shipping_method_id' => 'required',
             'payment_method' => 'required|in:cash_on_delivery,online_payment'
         ]);
         // Check if user is authenticated
@@ -255,25 +256,29 @@ class SystemController extends Controller
             $shippingAddress->city = 'city';
             $shippingAddress->phone = $request->phone;
             $shippingAddress->created_at = now();
-            $shippingAddress->updated_at = now();
             $shippingAddress->save();
 
             ///order table code
             $discount = session()->has('coupon_discount') ? session('coupon_discount') : 0;
+            $coupon_code = session()->has('coupon_code') ? session('coupon_code') : 0;
             $or = [
-                'id' => 100000 + Order::all()->count() + 1,
-                'customer_id' => auth('customer')->id(),
-                'customer_type' => 'customer',
-                'payment_status' => 'unpaid',
-                'order_status' => 'pending',
-                'payment_method' => $request->payment_method,
-                'transaction_ref' => null,
-                'discount_amount' => $discount,
-                'discount_type' => $discount == 0 ? null : 'coupon_discount',
-                'order_amount' => CartManager::cart_grand_total(session('cart')) - $discount,
-                'shipping_address' => $shippingAddress->id,
-                'created_at' => now(),
-                'updated_at' => now()
+            'id' => 100000 + Order::all()->count() + 1,
+            'verification_code' => rand(100000, 999999),
+            'customer_id' => auth('customer')->id(),
+            'customer_type' => 'customer',
+            'payment_status' => 'unpaid',
+            'order_status' => 'pending',
+            'payment_method' => $request->payment_method,
+            'transaction_ref' => null,
+            'coupon_code' => $coupon_code,
+            'discount_amount' => $discount,
+            'discount_type' => $discount == 0 ? null : 'coupon_discount',
+            'order_amount' => CartManager::cart_grand_total(session('cart')) - $discount,
+            'shipping_address' => $shippingAddress->id,
+            'shipping_address_data' => ShippingAddress::find($shippingAddress->id),
+            'shipping_method_id' => $request->shipping_method_id,
+            'shipping_cost' => CartManager::get_shipping_cost($request->shipping_method_id),
+            'created_at' => now()
             ];
 
             $order_id = DB::table('orders')->insertGetId($or);
@@ -295,8 +300,7 @@ class SystemController extends Controller
                     'delivery_status' => 'pending',
                     'shipping_method_id' => $c['shipping_method_id'],
                     'payment_status' => 'unpaid',
-                    'created_at' => now(),
-                    'updated_at' => now()
+                    'created_at' => now()
                 ];
 
                 if ($c['variant'] != null) {
@@ -313,9 +317,9 @@ class SystemController extends Controller
                     ]);
                 }
 
-                Product::where(['id' => $product['id']])->update([
-                    'current_stock' => $product['current_stock'] - $c['quantity']
-                ]);
+                // Product::where(['id' => $product['id']])->update([
+                //     'current_stock' => $product['current_stock'] - $c['quantity']
+                // ]);
 
                 DB::table('order_details')->insert($or_d);
             }
