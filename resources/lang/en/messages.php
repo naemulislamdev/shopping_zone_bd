@@ -1747,4 +1747,6 @@
   5 => '5',
   'Logout _successfully!!' => 'Logout  successfully!!',
   'Mobile Banner' => 'Mobile Banner',
+  'updated_successfully!' => 'Updated successfully!',
+  'delivery_info' => 'Delivery info',
 );

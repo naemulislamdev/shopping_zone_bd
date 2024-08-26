@@ -75,7 +75,7 @@
                                 <div class="col-md-6">
                                     <label class="text-danger">Choose Shipping Method</label>
                                     <select class="form-control" id="shipping_method_id"
-                                        onchange="set_shipping_id(this.value)">
+                                        onchange="set_shipping_id(this.value)" name="shipping_method_id">
                                         <option selected disabled>Select Shipping Method</option>
                                         @foreach (\App\Model\ShippingMethod::where(['status' => 1])->get() as $shipping)
                                             <option value="{{ $shipping['id'] }}"
@@ -130,6 +130,13 @@
                                         <label>Shipping Address <span class="text-danger">*</span></label>
                                         <textarea class="form-control" placeholder="Enter your shipping address" name="address">{{old('address')}}</textarea>
                                         @error('address')
+                                            <span class="text-danger">{{$message}}</span>
+                                            @enderror
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Note </label>
+                                        <textarea class="form-control" placeholder="Enter your Note" name="order_note">{{old('order_note')}}</textarea>
+                                        @error('order_note')
                                             <span class="text-danger">{{$message}}</span>
                                             @enderror
                                     </div>

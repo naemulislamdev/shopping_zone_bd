@@ -269,6 +269,7 @@ class SystemController extends Controller
             'payment_status' => 'unpaid',
             'order_status' => 'pending',
             'payment_method' => $request->payment_method,
+            'order_note' => $request->order_note,
             'transaction_ref' => null,
             'coupon_code' => $coupon_code,
             'discount_amount' => $discount,
