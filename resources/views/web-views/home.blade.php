@@ -63,7 +63,7 @@
     <!------Start Product section----->
     <section class="py-3">
         <div class="container">
-            @include('layouts.front-end.partials.product_filter')
+            {{-- @include('layouts.front-end.partials.product_filter') --}}
 
             <div class="row mb-3">
                 <div class="col text-center">

@@ -52,11 +52,6 @@
                             {{ \App\CPU\translate('Dashboard') }}</h1>
                         <p>{{ \App\CPU\translate('Welcome_message') }}.</p>
                     </div>
-                    <div style="height: 25px">
-                        <label class="badge badge-soft-success">
-                            {{ \App\CPU\translate('Software version') }} : {{ env('SOFTWARE_VERSION') }}
-                        </label>
-                    </div>
                 </div>
             </div>
             <!-- End Page Header -->
@@ -396,9 +391,9 @@
                     backgroundColor: [
                         '#041562',
                         '#DA1212',
-                        '#EEEEEE',
-                        '#11468F',
-                        '#000000',
+                        '#ff4560',
+                        '#775dd0',
+                        '#00e396',
                     ],
                     hoverOffset: 4
                 }]

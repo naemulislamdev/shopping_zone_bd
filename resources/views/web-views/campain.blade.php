@@ -185,19 +185,21 @@
                                                     <div class="col-12">
                                                         <h4>Color</h4>
                                                     </div>
-                                                    @foreach (json_decode($product->colors) as $key => $color)
-                                                        <div class="col-md-3">
-                                                            <div class="v-color-box">
-                                                                <input type="radio"
-                                                                    id="{{ $product->id }}-color-{{ $key }}"
-                                                                    checked name="color" value="{{ $color }}"
-                                                                    @if ($key == 0) checked @endif>
-                                                                <label style="background: {{ $color }}"
-                                                                    for="{{ $product->id }}-color-{{ $key }}"
-                                                                    class="color-label"></label>
-                                                            </div>
+                                                    <div class="col-12">
+                                                        <div class="d-flex">
+                                                            @foreach (json_decode($product->colors) as $key => $color)
+                                                                <div class="v-color-box">
+                                                                    <input type="radio"
+                                                                        id="{{ $product->id }}-color-{{ $key }}"
+                                                                        name="color" value="{{ $color }}"
+                                                                        @if ($key == 0) checked @endif>
+                                                                    <label style="background: {{ $color }}"
+                                                                        for="{{ $product->id }}-color-{{ $key }}"
+                                                                        class="color-label"></label>
+                                                                </div>
+                                                            @endforeach
                                                         </div>
-                                                    @endforeach
+                                                    </div>
                                                 </div>
                                             @endif
 
@@ -208,19 +210,22 @@
                                                             <h4 style="font-size: 18px; margin:0;">{{ $choice->title }}
                                                             </h4>
                                                         </div>
-                                                        @foreach ($choice->options as $key => $option)
-                                                            <div class="col-md-4">
-                                                                <div class="v-size-box">
-                                                                    <input type="radio"
-                                                                        id="{{ $choice->name }}-{{ $option }}"
-                                                                        checked name="{{ $choice->name }}"
-                                                                        value="{{ $option }}"
-                                                                        @if ($key == 0) checked @endif>
-                                                                    <label for="{{ $choice->name }}-{{ $option }}"
-                                                                        class="size-label">{{ $option }}</label>
-                                                                </div>
+                                                        <div class="col-12">
+                                                            <div class="d-flex">
+                                                                @foreach ($choice->options as $key => $option)
+                                                                    <div class="v-size-box">
+                                                                        <input type="radio"
+                                                                            id="{{ $product->id }}-size-{{ $key }}"
+                                                                            name="{{ $choice->name }}"
+                                                                            value="{{ $option }}"
+                                                                            @if ($key == 0) checked @endif>
+                                                                        <label
+                                                                            for="{{ $product->id }}-size-{{ $key }}"
+                                                                            class="size-label">{{ $option }}</label>
+                                                                    </div>
+                                                                @endforeach
                                                             </div>
-                                                        @endforeach
+                                                        </div>
                                                     </div>
                                                 @endforeach
                                             @endif
@@ -271,14 +276,14 @@
                 </div>
             @endif
 
-            <div class="row my-3">
+            {{-- <div class="row my-3">
                 <div class="col-md-12">
                     <div class="big-banner">
                         <img src="{{ asset('public/asstes/front-end') }}/images/product-banner/main-banner3.jpg"
                             alt="">
                     </div>
                 </div>
-            </div>
+            </div> --}}
         </div>
     </section>
 @endsection

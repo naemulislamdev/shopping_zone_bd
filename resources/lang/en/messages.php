@@ -1746,4 +1746,5 @@
   'Weite a Review' => 'Weite a Review',
   5 => '5',
   'Logout _successfully!!' => 'Logout  successfully!!',
+  'Invoice' => 'Invoice',
 );

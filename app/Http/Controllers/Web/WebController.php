@@ -132,10 +132,62 @@ class WebController extends Controller
                 }
             }
         }
-        
+
 
         return view('web-views.home', compact('featured_products', 'topRated', 'bestSellProduct', 'latest_products', 'categories', 'brands', 'deal_of_the_day', 'top_sellers', 'home_categories', 'productCounts'));
     }
+    //Products Search on ajax
+    public function searchProducts(Request $request)
+    {
+        $query = $request->input('query');
+        $products = Product::active()->where('name', 'LIKE', "%{$query}%")->get();
+        $categories = Category::where('position', 0)->where('name', 'LIKE', "%{$query}%")->priority()->get();
+
+        $output = '';
+        if(count($products) > 0){
+            foreach($products as $product){
+                $image = asset('storage/app/public/product/thumbnail/') .'/'. $product->thumbnail;
+                $price = Helpers::currency_converter($product->unit_price);
+                $output .= '
+                <a href="'. route('product', $product->slug) .'">
+                <div class="product-item d-flex">
+                    <div class="mr-2 se-product-res"><img src="'.$image.'" alt="'.$product->name.'" /></div>
+                   <div class="se-product-content-res">
+                    <h5>'.$product->name.'</h5>
+                    <p>'.$price.'</p>
+                   </div>
+                </div>
+                </a>
+                ';
+            }
+        } else {
+            $output .= '<p>No products found</p>';
+        }
+
+        //categories loop
+        $cates = '<div class="mb-2"><p class="text-center text-bold">Our popular categories</p></div>';
+        if(count($categories) > 0){
+            foreach($categories as $category){
+                $cates .= '
+                <div class="category-item">
+                    <div>
+                    <a  href="'. route('products', ['id' => $category['id'], 'data_from' => 'category', 'page' => 1]) .'">
+                    <p>'.$category->name.'</p>
+                    </a>
+                    </div>
+                </div>
+                ';
+            }
+        } else {
+            $cates .= '<p>No categories found</p>';
+        }
+
+        return response()->json([
+            'products' => $output,
+            'categories' => $cates
+        ]);
+    }
+
     //shop function
     public function shop()
     {
@@ -576,8 +628,8 @@ class WebController extends Controller
 
     public function products(Request $request)
     {
-        $request['sort_by'] == null ? $request['sort_by'] == 'latest' : $request['sort_by'];
-
+        //dd($request->all());
+        $sort_by = $request->get('sort_by') ?? 'latest';
         $porduct_data = Product::active()->with(['reviews']);
 
         if ($request['data_from'] == 'category') {
@@ -643,8 +695,8 @@ class WebController extends Controller
         }
 
         if ($request['data_from'] == 'featured_deal') {
-            $featured_deal_id = FlashDeal::where(['status' => 1])->where(['deal_type' => 'feature_deal'])->pluck('id')->first();
-            $featured_deal_product_ids = FlashDealProduct::where('flash_deal_id', $featured_deal_id)->pluck('product_id')->toArray();
+            $featured_deal_id = FlashDeal::where(['status'=>1])->where(['deal_type'=>'feature_deal'])->pluck('id')->first();
+            $featured_deal_product_ids = FlashDealProduct::where('flash_deal_id',$featured_deal_id)->pluck('product_id')->toArray();
             $query = Product::with(['reviews'])->active()->whereIn('id', $featured_deal_product_ids);
         }
 
@@ -656,7 +708,8 @@ class WebController extends Controller
                 }
             })->pluck('id');
 
-            if ($product_ids->count() == 0) {
+            if($product_ids->count()==0)
+            {
                 $product_ids = Translation::where('translationable_type', 'App\Model\Product')
                     ->where('key', 'name')
                     ->where(function ($q) use ($key) {
@@ -665,31 +718,39 @@ class WebController extends Controller
                         }
                     })
                     ->pluck('translationable_id');
+
+
             }
 
             $query = $porduct_data->WhereIn('id', $product_ids);
+
         }
 
         if ($request['data_from'] == 'discounted') {
             $query = Product::with(['reviews'])->active()->where('discount', '!=', 0);
         }
 
-        if ($request['sort_by'] == 'latest') {
-            $fetched = $query->latest();
-        } elseif ($request['sort_by'] == 'low-high') {
-            $fetched = $query->orderBy('unit_price', 'ASC');
-        } elseif ($request['sort_by'] == 'high-low') {
-            $fetched = $query->orderBy('unit_price', 'DESC');
-        } elseif ($request['sort_by'] == 'a-z') {
-            $fetched = $query->orderBy('name', 'ASC');
-        } elseif ($request['sort_by'] == 'z-a') {
-            $fetched = $query->orderBy('name', 'DESC');
-        } else {
-            $fetched = $query->latest();
-        }
+        // Apply sorting
+    if ($sort_by === 'latest') {
+        $query = $query->latest();
+    } elseif ($sort_by === 'low-high') {
+        $query = $query->orderBy('unit_price', 'ASC');
+    } elseif ($sort_by === 'high-low') {
+        $query = $query->orderBy('unit_price', 'DESC');
+    } elseif ($sort_by === 'a-z') {
+        $query = $query->orderBy('name', 'ASC');
+    } elseif ($sort_by === 'z-a') {
+        $query = $query->orderBy('name', 'DESC');
+    } else {
+        $query = $query->latest();
+    }
 
-        if ($request['min_price'] != null || $request['max_price'] != null) {
-            $fetched = $fetched->whereBetween('unit_price', [Helpers::convert_currency_to_usd($request['min_price']), Helpers::convert_currency_to_usd($request['max_price'])]);
+        if ($request->get('min_price') !== null && $request->get('max_price') !== null) {
+            $min_price = Helpers::convert_currency_to_usd($request->get('min_price'));
+            $min = $min_price;
+            $max_price = Helpers::convert_currency_to_usd($request->get('max_price'));
+            $max = $max_price;
+            $query = $query->whereBetween('unit_price', [$min_price, $max_price]);
         }
 
         $data = [
@@ -702,12 +763,15 @@ class WebController extends Controller
             'max_price' => $request['max_price'],
         ];
 
-        $products = $fetched->paginate(20)->appends($data);
+        $products = $query->paginate(20)->appends($data);
 
         if ($request->ajax()) {
 
             return response()->json([
-                'total_product' => $products->total(),
+                'min'=> $min,
+                'max'=> $max,
+                'query'=> $products,
+                'total_product'=> $products->count(),
                 'view' => view('web-views.products._ajax-products', compact('products'))->render()
             ], 200);
         }
@@ -716,16 +780,16 @@ class WebController extends Controller
         }
         if ($request['data_from'] == 'brand') {
             $brand_data = Brand::active()->find((int)$request['id']);
-            if ($brand_data) {
+            if($brand_data) {
                 $data['brand_name'] = $brand_data->name;
-            } else {
+            }else {
                 Toastr::warning(translate('not_found'));
                 return redirect('/');
             }
         }
-        $categoryName = Category::find((int)$request['id'])->name;
 
-        return view('web-views.category_wise_product', compact('products', 'data', 'categoryName'), $data);
+
+        return view('web-views.category_wise_product', compact('products', 'data'), $data);
     }
     public function videoShopping($slug)
     {

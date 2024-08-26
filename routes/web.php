@@ -66,6 +66,8 @@ Route::group(['namespace' => 'Web','middleware'=>['maintenance_mode']], function
     Route::get('products', 'WebController@products')->name('products');
     Route::get('orderDetails', 'WebController@orderdetails')->name('orderdetails');
     Route::get('discounted-products', 'WebController@discounted_products')->name('discounted-products');
+    Route::get('/product_search', 'WebController@searchProducts')->name('product_search');
+
 
     Route::post('review-list-product','WebController@review_list_product')->name('review-list-product');
     //Chat with seller from product details
