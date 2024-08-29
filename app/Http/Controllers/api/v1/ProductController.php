@@ -60,11 +60,11 @@ class ProductController extends Controller
 
     public function get_searched_products($key)
     {
-        
+
         return Product::where('name','Like',"%$key%")->get();
         // return response()->json($products, 200);
     }
-    
+
     public function get_Appsearch_products(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -88,11 +88,20 @@ class ProductController extends Controller
     public function get_product($slug)
     {
         $product = Product::with(['reviews.customer'])->where(['slug' => $slug])->first();
+
+        if(!$product){
+            $product = Product::with(['reviews.customer'])->where(['id' => $slug])->first();
+        }
+
+
         if (isset($product)) {
             $product = Helpers::product_data_formatting($product, false);
         }
         return response()->json($product, 200);
     }
+
+
+
     public function get_product_discount($slug,$id)
     {
         $todayDate=Carbon::today()->toDateString();
@@ -108,7 +117,7 @@ class ProductController extends Controller
     {
         $products = ProductManager::get_best_selling_products($request['limit'], $request['offset']);
         $products['products'] = Helpers::product_data_formatting($products['products'], true);
-        
+
         return response()->json($products, 200);
     }
 
@@ -218,7 +227,7 @@ class ProductController extends Controller
         $methods = ShippingMethod::where(['status' => 1])->get();
         return response()->json($methods, 200);
     }
-    
+
     public function get_shipping_methods_id(Request $request,$id)
     {
         $methods = ShippingMethod::where(['id' => $id])->get();
@@ -231,7 +240,7 @@ class ProductController extends Controller
         $products['products'] = Helpers::product_data_formatting($products['products'], true);
         return response()->json($products, 200);
     }
-    
+
     public function price_reanges(Request $request){
         $min_price = Product::orderBy('unit_price', 'ASC');
         $max_price = Product::orderBy('unit_price', 'DESC');
@@ -239,17 +248,17 @@ class ProductController extends Controller
         $filter_max_price = $request->max_price;
         $range = [$filter_min_price, $filter_max_price];
         $products = Product::whereBetween('unit_price', $range)->get();
-        
-        
+
+
         return response()->json($products, 200);
-            
+
     }
-    
+
     public function colorSearch($key){
        return Product::where('variation','Like',"%$key%")->get();
-            
+
     }
-    
+
     public function Color(){
         return Color::all();
     }

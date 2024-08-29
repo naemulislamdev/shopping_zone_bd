@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Validator;
 
 class BannerController extends Controller
 {
-    public function get_banners(Request $request)
+    public function get_banners_old(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'banner_type' => 'required'
@@ -27,6 +27,8 @@ class BannerController extends Controller
             $banners = Banner::where(['published' => 1, 'banner_type' => 'Main Banner'])->get();
         } elseif ($request['banner_type'] == 'main_section_banner') {
             $banners = Banner::where(['published' => 1, 'banner_type' => 'Main Section Banner'])->get();
+        }elseif ($request['banner_type'] == 'popup_banner') {
+            $banners = Banner::where(['published' => 1, 'banner_type' => 'Popup Banner'])->get();
         }else {
             $banners = Banner::where(['published' => 1, 'banner_type' => 'Footer Banner'])->get();
         }
@@ -40,7 +42,25 @@ class BannerController extends Controller
             }
             $data[] = $banner;
         }
-      
+
+        return response()->json($data, 200);
+
+    }
+
+    public function get_banners(Request $request)
+    {
+
+            $data['main_banner'] = Banner::where(['published' => 1, 'banner_type' => 'Main Banner'])->get();
+
+            $data['main_section_banner'] = Banner::where(['published' => 1, 'banner_type' => 'Main Section Banner'])->get();
+
+            $data['popup_banner'] = Banner::where(['published' => 1, 'banner_type' => 'Popup Banner'])->get();
+
+            $data['mobile_banner'] = Banner::where(['published' => 1, 'banner_type' => 'Mobile Banner'])->get();
+            $data['footer_banner'] = Banner::where(['published' => 1, 'banner_type' => 'Footer Banner'])->get();
+
+
+
         return response()->json($data, 200);
 
     }

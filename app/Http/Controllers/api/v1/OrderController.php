@@ -25,14 +25,15 @@ class OrderController extends Controller
     public function track_order(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'order_id' => 'required'
+            'order_id' => 'required',
+            'phone_number' => 'required'
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
 
-        return response()->json(OrderManager::track_order($request['order_id']), 200);
+        return response()->json(OrderManager::track_order($request), 200);
     }
     public function order_cancel(Request $request)
     {
@@ -58,19 +59,23 @@ class OrderController extends Controller
     }
     public function place_order(Request $request)
     {
-
-
+// $json = $request['cart'];
+// return response()->json(['order_id'=>$json,translate('order_placed_successfully')], 200);
+        // return response()->json([
+        //     'message' => 'Order placed successfully!',
+        //     'order' => $request['cart']
+        // ], 200);
         // $unique_id = $request->user()->id . '-' . rand(000001, 999999) . '-' . time();
         $order_ids = [];
             $data = [
                 'order_status' => 'pending',
+                'order_type' => 'apps',
                 'payment_status' => 'unpaid',
                 'transaction_ref' => '',
                 'request' => $request,
-                'cart' => $request['cart'],
             ];
 
-            // return response()->json(['order_id'=>$data,translate('order_placed_successfully')], 200);
+
             $order_id = OrderManager::generate_order($data);
 
             // return response()->json($order_id, 200);

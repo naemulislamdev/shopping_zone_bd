@@ -4,7 +4,7 @@ namespace App\CPU;
 
 use App\Model\Admin;
 use App\Model\AdminWallet;
-use App\Model\Cart;
+use App\User;
 use App\Model\CartShipping;
 use App\Model\Order;
 use App\Model\OrderDetail;
@@ -21,11 +21,15 @@ use Illuminate\Support\Str;
 
 class OrderManager
 {
-    public static function track_order($order_id)
+    public static function track_order($request)
     {
-        $order = Order::where(['id' => $order_id])->first();
-        $order['billing_address_data'] = json_decode($order['billing_address_data']);
-        $order['shipping_address_data'] = json_decode($order['shipping_address_data']);
+        $user_id = User::where('phone',$request['phone_number'])->first()->id;
+        $order = Order::where('id',$request['order_id'])->whereHas('details',function ($query) use($user_id){
+            $query->where('customer_id',$user_id);
+        })->first();
+        if (!isset($order)) {
+            return response()->json(['errors' => "Order Not Found"], 404);
+        }
         return $order;
     }
 
@@ -242,8 +246,7 @@ class OrderManager
         }
 
         $req = array_key_exists('request', $data) ? $data['request'] : null;
-        $req1 = array_key_exists('request', $data) ? $data['cart'] : null;
-        // return response()->json(['order_id'=>$req1,translate('order_placed_successfully')], 200);
+        // return response()->json(['order'=>$req['cart'],translate('order_placed_successfully')], 200);
         if ($req != null) {
             if (session()->has('coupon_code') == false) {
                 $coupon_code = $req->has('coupon_code') ? $req['coupon_code'] : null;
@@ -268,12 +271,13 @@ class OrderManager
             'customer_type' => 'customer',
             'payment_status' => $data['payment_status'],
             'order_status' => $data['order_status'],
+            'order_type' => $data['order_type'],
             'payment_method' => $req->payment_method,
             'transaction_ref' => $data['transaction_ref'],
             'discount_amount' => $discount,
             'discount_type' => $discount == 0 ? null : 'coupon_discount',
             'coupon_code' => $coupon_code,
-            'order_amount' => CartManager::cart_grand_total($data['cart']) - $discount,
+            'order_amount' => CartManager::cart_grand_total($req['cart']) - $discount,
             'shipping_address' => $shippingAddress->id,
             'shipping_address_data' => ShippingAddress::find($shippingAddress->id),
             'billing_address' => $shippingAddress->id,
@@ -300,7 +304,7 @@ class OrderManager
                 'discount' => $c['discount'] * $c['quantity'],
                 'discount_type' => 'discount_on_product',
                 'variant' => $c['variant'],
-                'variation' => $c['variations'],
+                'variation' => json_encode($c['variations']),
                 'delivery_status' => 'pending',
                 'shipping_method_id' => null,
                 'payment_status' => 'unpaid',
@@ -339,8 +343,6 @@ class OrderManager
             DB::table('order_transactions')->insert([
                 'transaction_id' => OrderManager::gen_unique_id(),
                 'customer_id' => $order['customer_id'],
-                'seller_id' => $order['seller_id'],
-                'seller_is' => $order['seller_is'],
                 'order_id' => $order_id,
                 'order_amount' => $order_amount,
                 'seller_amount' => $order_amount - $commission,

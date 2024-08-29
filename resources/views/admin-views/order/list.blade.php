@@ -42,7 +42,7 @@
                                                     $query->where('added_by', 'admin');
                                                     });
                                             });
-                                            })->where('order_type','default_type')->where(['order_status'=>'pending'])->count()}}
+                                            })->whereIn('order_type',['default_type','apps'])->where(['order_status'=>'pending'])->count()}}
                                         </span>
                                     </div>
                                     <div class="mt-2">
@@ -69,7 +69,7 @@
                                                     $query->where('added_by', 'admin');
                                                     });
                                                 });
-                                            })->where('order_type','default_type')->where(['order_status'=>'confirmed'])->count()}}
+                                            })->whereIn('order_type',['default_type','apps'])->where(['order_status'=>'confirmed'])->count()}}
                                         </span>
                                     </div>
 
@@ -97,7 +97,7 @@
                                                     $query->where('added_by', 'admin');
                                                     });
                                                 });
-                                            })->where('order_type','default_type')->where(['order_status'=>'processing'])->count()}}
+                                            })->whereIn('order_type',['default_type','apps'])->where(['order_status'=>'processing'])->count()}}
                                         </span>
                                     </div>
 
@@ -125,7 +125,7 @@
                                                     $query->where('added_by', 'admin');
                                                     });
                                                 });
-                                            })->where('order_type','default_type')->where(['order_status'=>'out_for_delivery'])->count()}}
+                                            })->whereIn('order_type',['default_type','apps'])->where(['order_status'=>'out_for_delivery'])->count()}}
                                         </span>
                                     </div>
 
@@ -154,7 +154,7 @@
                                                         $query->where('added_by', 'admin');
                                                         });
                                                     });
-                                                })->where('order_type','default_type')->where(['order_status'=>'delivered'])->count()}}
+                                                })->whereIn('order_type',['default_type','apps'])->where(['order_status'=>'delivered'])->count()}}
                                             </span>
                                         </div>
                                         <div>
@@ -180,7 +180,7 @@
                                                         $query->where('added_by', 'admin');
                                                         });
                                                     });
-                                                })->where('order_type','default_type')->where(['order_status'=>'canceled'])->count()}}
+                                                })->whereIn('order_type',['default_type','apps'])->where(['order_status'=>'canceled'])->count()}}
                                             </span>
                                         </div>
                                         <span class="icon icon-sm icon-soft-secondary icon-circle ml-3">
@@ -204,7 +204,7 @@
                                                         $query->where('added_by', 'admin');
                                                         });
                                                     });
-                                                })->where('order_type','default_type')->where(['order_status'=>'returned'])->count()}}
+                                                })->whereIn('order_type',['default_type','apps'])->where(['order_status'=>'returned'])->count()}}
                                             </span>
                                         </div>
                                         <span class="icon icon-sm icon-soft-secondary icon-circle ml-3">
@@ -229,7 +229,7 @@
                                                         $query->where('added_by', 'admin');
                                                         });
                                                     });
-                                                })->where('order_type','default_type')->where(['order_status'=>'failed'])->count()}}
+                                                })->whereIn('order_type',['default_type','apps'])->where(['order_status'=>'failed'])->count()}}
                                             </span>
                                         </div>
                                         <span class="icon icon-sm icon-soft-secondary icon-circle ml-3">
@@ -420,6 +420,7 @@
                             <th>{{\App\CPU\translate('Status')}}</th>
                             <th>{{\App\CPU\translate('Total')}}</th>
                             <th>{{\App\CPU\translate('Order')}} {{\App\CPU\translate('Status')}} </th>
+                            <th>{{\App\CPU\translate('Order')}} {{\App\CPU\translate('Type')}} </th>
                             <th>{{\App\CPU\translate('Action')}}</th>
                         </tr>
                     </thead>
@@ -443,7 +444,7 @@
                                     <label class="badge badge-danger">{{\App\CPU\translate('invalid_customer_data')}}</label>
                                 @endif
                             </td>
-                            
+
                             <td>
                                 @if($order->customer)
                                     <a class="text-body text-capitalize"
@@ -500,6 +501,21 @@
                                       </span>
                                 @endif
                             </td>
+                            <td class="text-capitalize">
+                                @if($order['order_type']=='default_type')
+                                <span class="badge badge-soft-info">
+                                    <span class=" bg-info"
+                                          style="{{Session::get('direction') === "rtl" ? 'margin-right: 0;margin-left: .4375rem;' : 'margin-left: 0;margin-right: .4375rem;'}}"></span>WEB
+                                  </span>
+                                  @else
+                                  <span class="badge badge-soft-info">
+                                    <span class="bg-info"
+                                          style="{{Session::get('direction') === "rtl" ? 'margin-right: 0;margin-left: .4375rem;' : 'margin-left: 0;margin-right: .4375rem;'}}"></span>{{$order['order_type']}}
+                                  </span>
+                                  @endif
+
+
+                        </td>
                             <td>
 
                                 <a class="btn btn-primary btn-sm mr-1" title="{{\App\CPU\translate('view')}}"
@@ -510,6 +526,7 @@
                                         class="tio-download"></i> </a>
 
                             </td>
+
                         </tr>
                     @endforeach
                     </tbody>

@@ -141,17 +141,19 @@ class CartManager
     public static function cart_grand_total($cart) // needed
     {
         $total = 0;
+        // return response()->json(['order_id'=>$cart,translate('order_placed_successfully')], 200);
         if (!empty($cart)) {
             foreach ($cart as $item) {
                 $product_subtotal = ($item['price'] * $item['quantity'])
                     + ($item['tax'] * $item['quantity'])
-                    + $item['shipping_cost']
                     - $item['discount']* $item['quantity'];
                 $total += $product_subtotal;
             }
         }
         return $total;
     }
+
+
 
     public static function cart_clean($request = null) // no need
     {
