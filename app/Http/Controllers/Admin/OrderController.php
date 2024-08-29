@@ -95,7 +95,7 @@ class OrderController extends Controller
                                 ->whereDate('created_at', '<=',$to);
                     });
 
-        $orders = $orders->where('order_type','default_type')->orderBy('id','desc')->paginate(500)->appends(['search'=>$request['search'],'from'=>$request['from'],'to'=>$request['to']]);
+        $orders = $orders->whereIn('order_type',['apps','default_type',])->orderBy('id','desc')->paginate(500)->appends(['search'=>$request['search'],'from'=>$request['from'],'to'=>$request['to']]);
         return view('admin-views.order.list', compact('orders', 'search','from','to','status'));
     }
 

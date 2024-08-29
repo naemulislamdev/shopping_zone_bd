@@ -88,7 +88,7 @@ class Helpers
             $user = $request->user(); //for api
         } elseif (session()->has('customer_id')) {
             $user = User::find(session('customer_id'));
-        }elseif ($request->phone) {
+        } elseif ($request->phone) {
             $oldCustomer = User::where('phone', $request->phone)->first();
             $remember = true;
             if ($oldCustomer) {
@@ -96,26 +96,48 @@ class Helpers
                 auth('customer')->login($oldCustomer, $remember);
                 $user = auth('customer')->user();
             } else {
-                // New user, create an account and log them in
-                $email = $request->phone . '_bd@gmail.com';
+
                 if ($request->email) {
                     $email = $request->email;
+                    $oldCustomer = User::where('email', $request->email)->first();
+                    $remember = true;
+                    if ($oldCustomer) {
+                        // Old user but not authenticated, log them in
+                        auth('customer')->login($oldCustomer, $remember);
+                        $user = auth('customer')->user();
+                    } else {
+                        $password = bcrypt($request->phone);
+                        // Create a new user
+                        $newUser = User::create([
+                            'f_name' => $request->name,
+                            'l_name' => 'bd' . rand(),
+                            'email' => $email,
+                            'phone' => $request->phone,
+                            'password' => $password
+                        ]);
+
+                        // Log in the new user
+                        auth('customer')->login($newUser, $remember);
+                        $user = auth('customer')->user();
+                    }
+                } else {
+                    // New user, create an account and log them in
+                    $email = $request->phone . '_bd@gmail.com';
+                    $password = bcrypt($request->phone);
+
+                    // Create a new user
+                    $newUser = User::create([
+                        'f_name' => $request->name,
+                        'l_name' => 'bd' . rand(),
+                        'email' => $email,
+                        'phone' => $request->phone,
+                        'password' => $password
+                    ]);
+
+                    // Log in the new user
+                    auth('customer')->login($newUser, $remember);
+                    $user = auth('customer')->user();
                 }
-
-                $password = bcrypt($request->phone);
-
-                // Create a new user
-                $newUser = User::create([
-                    'f_name' => $request->name,
-                    'l_name' => 'bd' . rand(),
-                    'email' => $email,
-                    'phone' => $request->phone,
-                    'password' => $password
-                ]);
-
-                // Log in the new user
-                auth('customer')->login($newUser, $remember);
-                $user = auth('customer')->user();
             }
         }
 
@@ -247,7 +269,7 @@ class Helpers
             $attributes = [];
             if (json_decode($data['attributes']) != null) {
                 foreach (json_decode($data['attributes']) as $attribute) {
-                    $attributes[] = (integer)$attribute;
+                    $attributes[] = (int)$attribute;
                 }
             }
             $data['attributes'] = $attributes;
@@ -255,9 +277,9 @@ class Helpers
             foreach (json_decode($data['variation'], true) as $var) {
                 $variation[] = [
                     'type' => $var['type'],
-                    'price' => (double)$var['price'],
+                    'price' => (float)$var['price'],
                     'sku' => $var['sku'],
-                    'qty' => (integer)$var['qty'],
+                    'qty' => (int)$var['qty'],
                 ];
             }
             $data['variation'] = $variation;
@@ -469,7 +491,8 @@ class Helpers
     {
         $key = BusinessSetting::where(['type' => 'push_notification_key'])->first()->value;
         $url = "https://fcm.googleapis.com/fcm/send";
-        $header = array("authorization: key=" . $key . "",
+        $header = array(
+            "authorization: key=" . $key . "",
             "content-type: application/json"
         );
 
@@ -523,7 +546,8 @@ class Helpers
         $key = BusinessSetting::where(['type' => 'push_notification_key'])->first()->value;
 
         $url = "https://fcm.googleapis.com/fcm/send";
-        $header = ["authorization: key=" . $key . "",
+        $header = [
+            "authorization: key=" . $key . "",
             "content-type: application/json",
         ];
 
@@ -590,7 +614,8 @@ class Helpers
             $objects = scandir($dir);
             foreach ($objects as $object) {
                 if ($object != "." && $object != "..") {
-                    if (filetype($dir . "/" . $object) == "dir") Helpers::remove_dir($dir . "/" . $object); else unlink($dir . "/" . $object);
+                    if (filetype($dir . "/" . $object) == "dir") Helpers::remove_dir($dir . "/" . $object);
+                    else unlink($dir . "/" . $object);
                 }
             }
             reset($objects);
@@ -632,13 +657,13 @@ class Helpers
         } else {
             $oldValue = env($envKey);
         }
-//        $oldValue = var_export(env($envKey), true);
+        //        $oldValue = var_export(env($envKey), true);
 
         if (strpos($str, $envKey) !== false) {
             $str = str_replace("{$envKey}={$oldValue}", "{$envKey}={$envValue}", $str);
 
-//            dd("{$envKey}={$envValue}");
-//            dd($str);
+            //            dd("{$envKey}={$envValue}");
+            //            dd($str);
         } else {
             $str .= "{$envKey}={$envValue}\n";
         }
@@ -710,7 +735,6 @@ class Helpers
         } else {
             return 25;
         }
-
     }
 
     public static function gen_mpdf($view, $file_prefix, $file_postfix)

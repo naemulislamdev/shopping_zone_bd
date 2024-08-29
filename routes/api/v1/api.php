@@ -204,6 +204,7 @@ Route::group(['namespace' => 'api\v1', 'prefix' => 'v1', 'middleware' => ['api_l
 
     Route::group(['prefix' => 'banners'], function () {
         Route::get('/', 'BannerController@get_banners');
+        Route::get('old/', 'BannerController@get_banners_old');
     });
 
     Route::group(['prefix' => 'seller'], function () {

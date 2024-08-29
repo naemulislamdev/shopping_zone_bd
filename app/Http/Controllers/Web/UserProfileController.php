@@ -304,6 +304,7 @@ class UserProfileController extends Controller
 
     public function track_order_result(Request $request)
     {
+
         $user =  auth('customer')->user();
         if(!isset($user)){
             $user_id = User::where('phone',$request->phone_number)->first()->id;
@@ -325,7 +326,7 @@ class UserProfileController extends Controller
             }
 
         }
-
+// dd($orderDetails);
 
         if (isset($orderDetails)){
             return view('web-views.order-tracking', compact('orderDetails'));
