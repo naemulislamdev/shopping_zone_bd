@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web;
 
 use App\ClientReview;
+use App\CPU\BackEndHelper;
 use App\CPU\Helpers;
 use App\CPU\OrderManager;
 use App\CPU\ProductManager;
@@ -144,17 +145,17 @@ class WebController extends Controller
         $categories = Category::where('position', 0)->where('name', 'LIKE', "%{$query}%")->priority()->get();
 
         $output = '';
-        if(count($products) > 0){
-            foreach($products as $product){
-                $image = asset('storage/app/public/product/thumbnail/') .'/'. $product->thumbnail;
+        if (count($products) > 0) {
+            foreach ($products as $product) {
+                $image = asset('storage/app/public/product/thumbnail/') . '/' . $product->thumbnail;
                 $price = Helpers::currency_converter($product->unit_price);
                 $output .= '
-                <a href="'. route('product', $product->slug) .'">
+                <a href="' . route('product', $product->slug) . '">
                 <div class="product-item d-flex">
-                    <div class="mr-2 se-product-res"><img src="'.$image.'" alt="'.$product->name.'" /></div>
+                    <div class="mr-2 se-product-res"><img src="' . $image . '" alt="' . $product->name . '" /></div>
                    <div class="se-product-content-res">
-                    <h5>'.$product->name.'</h5>
-                    <p>'.$price.'</p>
+                    <h5>' . $product->name . '</h5>
+                    <p>' . $price . '</p>
                    </div>
                 </div>
                 </a>
@@ -166,13 +167,13 @@ class WebController extends Controller
 
         //categories loop
         $cates = '<div class="mb-2"><p class="text-center text-bold">Our popular categories</p></div>';
-        if(count($categories) > 0){
-            foreach($categories as $category){
+        if (count($categories) > 0) {
+            foreach ($categories as $category) {
                 $cates .= '
                 <div class="category-item">
                     <div>
-                    <a  href="'. route('products', ['id' => $category['id'], 'data_from' => 'category', 'page' => 1]) .'">
-                    <p>'.$category->name.'</p>
+                    <a  href="' . route('products', ['id' => $category['id'], 'data_from' => 'category', 'page' => 1]) . '">
+                    <p>' . $category->name . '</p>
                     </a>
                     </div>
                 </div>
@@ -203,14 +204,15 @@ class WebController extends Controller
     public function outlets()
     {
         $branchs = Branch::where('status', 1)->get();
-        return view('web-views.outlets',compact('branchs'));
+        return view('web-views.outlets', compact('branchs'));
     }
     //checkout function
     // public function checkout(){
     //     return view('frontend.checkout');
     // }
-    public function clientReview(Request $request){
-        if(auth('customer')->check()){
+    public function clientReview(Request $request)
+    {
+        if (auth('customer')->check()) {
             $request->validate([
                 'client_name' => 'required|string|max:50',
                 'client_comment' => 'required|string|max:200',
@@ -223,17 +225,16 @@ class WebController extends Controller
                 'customer_id' => auth('customer')->id(),
                 'status' => false
             ]);
-            if($ClientReview){
+            if ($ClientReview) {
                 Toastr::success('Review is created successfully!');
-            }else{
+            } else {
                 Toastr::warning('Something want wrong!');
             }
             return back();
-        }else{
+        } else {
             Toastr::warning('Login first as a customer!');
             return back();
         }
-
     }
 
     public function flash_deals($id)
@@ -620,7 +621,7 @@ class WebController extends Controller
 
 
 
-            return view('web-views.products.details', compact('product','categorySlug', 'countWishlist', 'countOrder', 'relatedProducts', 'deal_of_the_day'));
+            return view('web-views.products.details', compact('product', 'categorySlug', 'countWishlist', 'countOrder', 'relatedProducts', 'deal_of_the_day'));
         }
 
         Toastr::error(translate('not_found'));
@@ -696,8 +697,8 @@ class WebController extends Controller
         }
 
         if ($request['data_from'] == 'featured_deal') {
-            $featured_deal_id = FlashDeal::where(['status'=>1])->where(['deal_type'=>'feature_deal'])->pluck('id')->first();
-            $featured_deal_product_ids = FlashDealProduct::where('flash_deal_id',$featured_deal_id)->pluck('product_id')->toArray();
+            $featured_deal_id = FlashDeal::where(['status' => 1])->where(['deal_type' => 'feature_deal'])->pluck('id')->first();
+            $featured_deal_product_ids = FlashDealProduct::where('flash_deal_id', $featured_deal_id)->pluck('product_id')->toArray();
             $query = Product::with(['reviews'])->active()->whereIn('id', $featured_deal_product_ids);
         }
 
@@ -709,8 +710,7 @@ class WebController extends Controller
                 }
             })->pluck('id');
 
-            if($product_ids->count()==0)
-            {
+            if ($product_ids->count() == 0) {
                 $product_ids = Translation::where('translationable_type', 'App\Model\Product')
                     ->where('key', 'name')
                     ->where(function ($q) use ($key) {
@@ -719,12 +719,9 @@ class WebController extends Controller
                         }
                     })
                     ->pluck('translationable_id');
-
-
             }
 
             $query = $porduct_data->WhereIn('id', $product_ids);
-
         }
 
         if ($request['data_from'] == 'discounted') {
@@ -732,25 +729,23 @@ class WebController extends Controller
         }
 
         // Apply sorting
-    if ($sort_by === 'latest') {
-        $query = $query->latest();
-    } elseif ($sort_by === 'low-high') {
-        $query = $query->orderBy('unit_price', 'ASC');
-    } elseif ($sort_by === 'high-low') {
-        $query = $query->orderBy('unit_price', 'DESC');
-    } elseif ($sort_by === 'a-z') {
-        $query = $query->orderBy('name', 'ASC');
-    } elseif ($sort_by === 'z-a') {
-        $query = $query->orderBy('name', 'DESC');
-    } else {
-        $query = $query->latest();
-    }
+        if ($sort_by === 'latest') {
+            $query = $query->latest();
+        } elseif ($sort_by === 'low-high') {
+            $query = $query->orderBy('unit_price', 'ASC');
+        } elseif ($sort_by === 'high-low') {
+            $query = $query->orderBy('unit_price', 'DESC');
+        } elseif ($sort_by === 'a-z') {
+            $query = $query->orderBy('name', 'ASC');
+        } elseif ($sort_by === 'z-a') {
+            $query = $query->orderBy('name', 'DESC');
+        } else {
+            $query = $query->latest();
+        }
 
         if ($request->get('min_price') !== null && $request->get('max_price') !== null) {
-            $min_price = Helpers::convert_currency_to_usd($request->get('min_price'));
-            $min = $min_price;
-            $max_price = Helpers::convert_currency_to_usd($request->get('max_price'));
-            $max = $max_price;
+            $min_price = BackEndHelper::currency_to_usd($request->get('min_price'));
+            $max_price = BackEndHelper::currency_to_usd($request->get('max_price'));
             $query = $query->whereBetween('unit_price', [$min_price, $max_price]);
         }
 
@@ -769,10 +764,6 @@ class WebController extends Controller
         if ($request->ajax()) {
 
             return response()->json([
-                'min'=> $min,
-                'max'=> $max,
-                'query'=> $products,
-                'total_product'=> $products->count(),
                 'view' => view('web-views.products._ajax-products', compact('products'))->render()
             ], 200);
         }
@@ -781,9 +772,9 @@ class WebController extends Controller
         }
         if ($request['data_from'] == 'brand') {
             $brand_data = Brand::active()->find((int)$request['id']);
-            if($brand_data) {
+            if ($brand_data) {
                 $data['brand_name'] = $brand_data->name;
-            }else {
+            } else {
                 Toastr::warning(translate('not_found'));
                 return redirect('/');
             }
