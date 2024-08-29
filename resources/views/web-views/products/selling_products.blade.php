@@ -144,12 +144,13 @@
                                                 </div>
                                             </div>
                                             @if (count(json_decode($product->colors)) > 0)
-                                                <div class="row">
-                                                    <div class="col-12">
-                                                        <h4>Color</h4>
-                                                    </div>
-                                                    @foreach (json_decode($product->colors) as $key => $color)
-                                                        <div class="col">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <h4>Color</h4>
+                                                </div>
+                                                <div class="col-12">
+                                                    <div class="d-flex">
+                                                        @foreach (json_decode($product->colors) as $key => $color)
                                                             <div class="v-color-box">
                                                                 <input type="radio"
                                                                     id="{{ $product->id }}-color-{{ $key }}"
@@ -159,20 +160,23 @@
                                                                     for="{{ $product->id }}-color-{{ $key }}"
                                                                     class="color-label"></label>
                                                             </div>
-                                                        </div>
-                                                    @endforeach
+                                                        @endforeach
+                                                    </div>
                                                 </div>
-                                            @endif
+                                            </div>
+                                        @endif
 
-                                            @if (count(json_decode($product->choice_options)) > 0)
-                                                @foreach (json_decode($product->choice_options) as $key => $choice)
-                                                    <div class="row mb-3">
-                                                        <div class="col-12">
-                                                            <h4 style="font-size: 18px; margin:0;">{{ $choice->title }}
-                                                            </h4>
-                                                        </div>
-                                                        @foreach ($choice->options as $key => $option)
-                                                            <div class="col">
+                                        @if (count(json_decode($product->choice_options)) > 0)
+                                            @foreach (json_decode($product->choice_options) as $key => $choice)
+                                                <div class="row mb-3">
+                                                    <div class="col-12">
+                                                        <h4 style="font-size: 18px; margin:0;">
+                                                            {{ $choice->title }}
+                                                        </h4>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="d-flex">
+                                                            @foreach ($choice->options as $key => $option)
                                                                 <div class="v-size-box">
                                                                     <input type="radio"
                                                                         id="{{ $product->id }}-size-{{ $key }}"
@@ -183,11 +187,12 @@
                                                                         for="{{ $product->id }}-size-{{ $key }}"
                                                                         class="size-label">{{ $option }}</label>
                                                                 </div>
-                                                            </div>
-                                                        @endforeach
+                                                            @endforeach
+                                                        </div>
                                                     </div>
-                                                @endforeach
-                                            @endif
+                                                </div>
+                                            @endforeach
+                                        @endif
                                             <div class="row">
                                                 <div class="col-md-10 mx-auto">
                                                     <div class="product-quantity d-flex align-items-center">
@@ -229,21 +234,11 @@
                     @endforeach
 
                 </div>
-                <hr class="my-3">
             @else
                 <div class="text-center pt-5">
                     <h2>Product Coming Soon!</h2>
                 </div>
             @endif
-
-            <div class="row my-3">
-                <div class="col-md-12">
-                    <div class="big-banner">
-                        <img src="{{ asset('public/frontend') }}/assets/images/product-banner/main-banner3.jpg"
-                            alt="">
-                    </div>
-                </div>
-            </div>
         </div>
     </section>
 @endsection

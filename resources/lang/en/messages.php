@@ -1749,4 +1749,5 @@
   'Mobile Banner' => 'Mobile Banner',
   'updated_successfully!' => 'Updated successfully!',
   'delivery_info' => 'Delivery info',
+  'Invalid Order Id or Phone Number' => 'Invalid Order Id or Phone Number',
 );

@@ -1,70 +1,72 @@
 <div class="row">
-    <div class="col-md-10 mx-auto">
+    <div class="col-md-10 mx-auto my-3">
         <div class="row">
             <div class="col-lg-8">
-                <table class="table table-cart table-mobile">
-                    <thead>
-                        <tr>
-                            <th>Image</th>
-                            <th>Product Name</th>
-                            <th>Price</th>
-                            <th>Quantity</th>
-                            <th>Total</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
+                <div style="overflow-y: auto; width:100%;">
+                    <table class="table table-cart table-mobile">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Product Name</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
 
-                    <tbody>
-                        @if (session()->has('cart') && count(session()->get('cart')) > 0)
-                            @foreach (session()->get('cart') as $key => $cartItem)
-                                <tr>
-                                    <td class="product-col">
-                                        <div class="checkout-product">
-                                            <a href="{{ route('product', $cartItem['slug']) }}">
-                                                <img src="{{ \App\CPU\ProductManager::product_image_path('thumbnail') }}/{{ $cartItem['thumbnail'] }}"
-                                                    alt="Product image">
-                                            </a>
-                                        </div>
-                                    </td>
-                                    <td><a
-                                            href="{{ route('product', $cartItem['slug']) }}">{{ Str::limit($cartItem['name'], 30) }}</a>
-                                    </td>
-                                    <td class="price-col">
-                                        {{ \App\CPU\Helpers::currency_converter($cartItem['price'] - $cartItem['discount']) }}
-                                    </td>
-                                    <td class="quantity-col">
-                                        <div class="product-quantity d-flex align-items-center">
-                                            <select name="quantity[{{ $key }}]"
-                                                id="cartQuantity{{ $key }}"
-                                                onchange="updateCartQuantity('{{ $key }}')">
-                                                @for ($i = 1; $i <= 100; $i++)
-                                                    <option value="{{ $i }}" <?php if ($cartItem['quantity'] == $i) {
-                                                        echo 'selected';
-                                                    } ?>>
-                                                        {{ $i }}
-                                                    </option>
-                                                @endfor
-                                            </select>
-                                        </div>
-                                    </td>
-                                    <td class="total-col">
-                                        {{ \App\CPU\Helpers::currency_converter(($cartItem['price'] - $cartItem['discount']) * $cartItem['quantity']) }}
-                                    </td>
-                                    <td class="remove-col"><a href="javascript:voide(0);"
-                                            onclick="removeFromCart({{ $key }})"
-                                            class="btn-remove"><i class="fa fa-trash-o"></i></a></td>
-                                </tr>
-                            @endforeach
-                        @else
-                            <div class="empty-cart-box">
-                                <i class="fa fa-shopping-bag"></i>
-                                <h4>Your cart is empty.</h4>
-                                <a href="/" class="btn btn-dark">Return to shop</a>
-                            </div>
-                        @endif
-                    </tbody>
-                </table><!-- End .table table-wishlist -->
-                <div class="card">
+                        <tbody>
+                            @if (session()->has('cart') && count(session()->get('cart')) > 0)
+                                @foreach (session()->get('cart') as $key => $cartItem)
+                                    <tr>
+                                        <td class="product-col">
+                                            <div class="checkout-product">
+                                                <a href="{{ route('product', $cartItem['slug']) }}">
+                                                    <img src="{{ \App\CPU\ProductManager::product_image_path('thumbnail') }}/{{ $cartItem['thumbnail'] }}"
+                                                        alt="Product image">
+                                                </a>
+                                            </div>
+                                        </td>
+                                        <td><a
+                                                href="{{ route('product', $cartItem['slug']) }}">{{ Str::limit($cartItem['name'], 30) }}</a>
+                                        </td>
+                                        <td class="price-col">
+                                            {{ \App\CPU\Helpers::currency_converter($cartItem['price'] - $cartItem['discount']) }}
+                                        </td>
+                                        <td class="quantity-col">
+                                            <div class="product-quantity d-flex align-items-center">
+                                                <select name="quantity[{{ $key }}]"
+                                                    id="cartQuantity{{ $key }}"
+                                                    onchange="updateCartQuantity('{{ $key }}')">
+                                                    @for ($i = 1; $i <= 100; $i++)
+                                                        <option value="{{ $i }}" <?php if ($cartItem['quantity'] == $i) {
+                                                            echo 'selected';
+                                                        } ?>>
+                                                            {{ $i }}
+                                                        </option>
+                                                    @endfor
+                                                </select>
+                                            </div>
+                                        </td>
+                                        <td class="total-col">
+                                            {{ \App\CPU\Helpers::currency_converter(($cartItem['price'] - $cartItem['discount']) * $cartItem['quantity']) }}
+                                        </td>
+                                        <td class="remove-col"><a href="javascript:voide(0);"
+                                                onclick="removeFromCart({{ $key }})"
+                                                class="btn-remove"><i class="fa fa-trash-o"></i></a></td>
+                                    </tr>
+                                @endforeach
+                            @else
+                                <div class="empty-cart-box">
+                                    <i class="fa fa-shopping-bag"></i>
+                                    <h4>Your cart is empty.</h4>
+                                    <a href="{{ route('home') }}" class="btn btn-dark">Return to shop</a>
+                                </div>
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card mb-3">
                     <div class="card-header">
                         <h4>Shipping Address</h4>
                     </div>

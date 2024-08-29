@@ -349,9 +349,9 @@
             </th>
             <th style="text-align: right">
                 <h1 style="color: #030303; margin-bottom: 0px; font-size: 30px;text-transform: capitalize">{{\App\CPU\translate('invoice')}}</h1>
-                @if($order['seller_is']!='admin' && $order['seller']->gst != null)
+                @if($order['seller_is']!='admin' && @$order['seller']->gst != null)
                     <h5 style="color: #030303; margin-bottom: 0px;text-transform: capitalize">{{\App\CPU\translate('GST')}}
-                        : {{ $order['seller']->gst }}</h5>
+                        : {{ @$order['seller']->gst }}</h5>
                 @endif
             </th>
         </tr>
@@ -392,7 +392,7 @@
                         <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->customer['phone']}}</p>
                         <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->shippingAddress ? $order->shippingAddress['address'] : ""}}</p>
                         <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->shippingAddress ? $order->shippingAddress['city'] : ""}} {{$order->shippingAddress ? $order->shippingAddress['zip'] : ""}}</p>
-                        
+
                     </div>
                 </td>
                 <td valign="top">
@@ -402,7 +402,7 @@
                         <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->billingAddress ? $order->billingAddress['phone'] : ""}}</p>
                         <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->billingAddress ? $order->billingAddress['address'] : ""}}</p>
                         <p style=" margin-top: 6px; margin-bottom:0px;">{{$order->billingAddress ? $order->billingAddress['city'] : ""}} {{$order->billingAddress ? $order->billingAddress['zip'] : ""}}</p>
-                        
+
                     </div>
                 </td>
             </tr>
@@ -416,9 +416,9 @@
             <tr>
                 <td valign="top">
                     <span class="h2" style="margin: 0px;">{{\App\CPU\translate('POS_order')}} </span>
-                    
+
                 </td>
-                
+
             </tr>
         </table>
     </section>
@@ -489,7 +489,7 @@
     } else {
         $extra_discount = $order['extra_discount'];
     }
-    
+
 ?>
 @php($shipping=$order['shipping_cost'])
 <div class="content-position-y" style=" display:block; height:auto !important;margin-top: 40px">

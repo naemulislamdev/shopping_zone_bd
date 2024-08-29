@@ -576,16 +576,9 @@
                         @include('layouts.front-end.partials.client_review_canvas')
                     </div>
                     <div class="c-review-slider owl-carousel owl-theme">
-                        <?php $clientReviews = \App\ClientReview::where('status', 0)->get() ?>
+                        <?php $clientReviews = \App\ClientReview::where('status', true)->get(); ?>
+
                         @foreach ($clientReviews as $review)
-                            <?php
-                                // Calculate the number of full stars
-                                $fullStars = floor($review['rating']);
-                                // Determine if there is a half star
-                                $halfStar = $review['rating'] - $fullStars >= 0.5;
-                                // Calculate the number of empty stars
-                                $emptyStars = 5 - $fullStars - ($halfStar ? 1 : 0);
-                            ?>
                             <div class="item">
                                 <div class="customer-review-box text-center">
                                     <img src="{{ asset('public/assets/front-end') }}/images/slider/customer-review/img1.jpg"
@@ -597,14 +590,8 @@
                                         <p>{{ htmlspecialchars($review['comment']) }}</p>
                                     </div>
                                     <div class="customer-review">
-                                        @for ($i = 0; $i < $fullStars; $i++)
-                                            <i class="fa fa-star"></i>
-                                        @endfor
-                                        @if ($halfStar)
-                                            <i class="fa fa-star-half-o"></i>
-                                        @endif
-                                        @for ($i = 0; $i < $emptyStars; $i++)
-                                            <i class="fa fa-star-o"></i>
+                                        @for ($i = 0; $i < 5; $i++)
+                                            <i class="fa fa-star{{ $i < $review->ratings ? '' : '-o' }}"></i>
                                         @endfor
                                     </div>
                                 </div>

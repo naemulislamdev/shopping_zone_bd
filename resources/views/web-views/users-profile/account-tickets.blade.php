@@ -244,7 +244,7 @@
                                                }
                                                })"
                                            id="delete" class=" marl">
-                                            <i class="czi-trash" style="font-size: 25px; color:#e81616;"></i>
+                                            <i class="fa fa-trash" style="font-size: 25px; color:#e81616;"></i>
                                         </a>
                                     </td>
                                 </tr>
