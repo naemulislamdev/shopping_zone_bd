@@ -87,6 +87,9 @@
         overflow-y: auto;
         width: 100%;
     }
+    .customer-review-box {
+        height: 300px;
+    }
 }
 @media (max-width: 570px){
     .grid-controls{display: none;}
@@ -98,6 +101,9 @@
 }
 
 @media (max-width: 480px) {
+    .main-slider {
+        height: 35vh;
+    }
     .header-icon {
         margin-top: -26px;
         display: flex;
@@ -139,6 +145,9 @@
     .grid-btn {
         padding: 3px 2px;
     }
+    .product-box-col-2 {
+        height: 417px;
+    }
     .product-box .title {
         font-size: 15px;
     }
@@ -158,6 +167,9 @@
     }
     .product-image2-col-3 {
         height: 237px;
+    }
+    .customer-review-box {
+        height: 390px;
     }
 
 }

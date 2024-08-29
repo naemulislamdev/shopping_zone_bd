@@ -121,7 +121,7 @@
                 <!-- Toolbar-->
                 <div
                     class="d-none d-lg-flex justify-content-between align-items-center pt-lg-3 pb-4 pb-lg-5 mb-lg-4">
-                    <div class="d-flex w-100 text-light text-center {{Session::get('direction') === "rtl" ? 'ml-3' : 'mr-3'}}">
+                    <div class="d-flex w-100 text-dark text-center {{Session::get('direction') === "rtl" ? 'ml-3' : 'mr-3'}}">
                         <div class="font-size-ms px-3">
                             <div class="font-weight-medium">{{\App\CPU\translate('Date Submitted')}}</div>
                             <div
@@ -138,44 +138,44 @@
                         </div>
                         <div class="font-size-ms px-3">
                             <div class="font-weight-medium" style="color:black">{{\App\CPU\translate('Priority')}}</div>
-                            <span class="badge badge-warning">{{$ticket['priority']}}</span>
+                            <span class="btn btn-sm btn-warning">{{$ticket['priority']}}</span>
                         </div>
                         <div class="font-size-ms px-3">
                             <div class="font-weight-medium" style="color: black">{{\App\CPU\translate('Status')}}</div>
                             @if($ticket['status']=='open')
-                                <span class="badge badge-secondary">{{$ticket['status']}}</span>
+                               <div> <span class="btn btn-sm btn-secondary">{{$ticket['status']}}</span></div>
                             @else
-                                <span class="badge badge-secondary">{{$ticket['status']}}</span>
+                                <div><span class="btn btn-sm btn-secondary">{{$ticket['status']}}</span></div>
                             @endif
                         </div>
                     </div>
                 </div>
                 <!-- Ticket details (visible on mobile)-->
-                <div class="d-flex d-lg-none flex-wrap bg-secondary text-center rounded-lg pt-4 px-4 pb-1 mb-4">
+                <div class="d-flex d-lg-none flex-wrap bg-secondary text-center text-white rounded-lg pt-4 px-4 pb-1 mb-4">
                     <div class="font-size-sm px-3 pb-3">
                         <div class="font-weight-medium">{{\App\CPU\translate('Date Submitted')}}</div>
                         <div
-                            class="text-muted">{{Carbon\Carbon::createFromFormat('Y-m-d H:i:s',$ticket['created_at'])->format('Y-m-d')}}</div>
+                            class="">{{Carbon\Carbon::createFromFormat('Y-m-d H:i:s',$ticket['created_at'])->format('Y-m-d')}}</div>
                     </div>
                     <div class="font-size-sm px-3 pb-3">
                         <div class="font-weight-medium">{{\App\CPU\translate('Last Updated')}}</div>
                         <div
-                            class="text-muted">{{Carbon\Carbon::createFromFormat('Y-m-d H:i:s',$ticket['updated_at'])->format('Y-m-d')}}</div>
+                            class="">{{Carbon\Carbon::createFromFormat('Y-m-d H:i:s',$ticket['updated_at'])->format('Y-m-d')}}</div>
                     </div>
                     <div class="font-size-sm px-3 pb-3">
                         <div class="font-weight-medium">{{\App\CPU\translate('Type')}}</div>
-                        <div class="text-muted">{{$ticket['type']}}</div>
+                        <div class="">{{$ticket['type']}}</div>
                     </div>
                     <div class="font-size-sm px-3 pb-3">
                         <div class="font-weight-medium">{{\App\CPU\translate('Priority')}}</div>
-                        <span class="badge badge-warning">{{$ticket['priority']}}</span>
+                        <span class="btn btn-sm btn-warning">{{$ticket['priority']}}</span>
                     </div>
                     <div class="font-size-sm px-3 pb-3">
                         <div class="font-weight-medium">{{\App\CPU\translate('Status')}}</div>
                         @if($ticket['status']=='open')
-                            <span class="badge btn btn-secondary">{{$ticket['status']}}</span>
+                            <span class="btn btn-sm btn-secondary">{{$ticket['status']}}</span>
                         @else
-                            <span class="badge btn btn-secondary">{{$ticket['status']}}</span>
+                            <span class="btn btn-sm btn-secondary">{{$ticket['status']}}</span>
                         @endif
                     </div>
                 </div>

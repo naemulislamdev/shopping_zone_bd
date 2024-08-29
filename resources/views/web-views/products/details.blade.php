@@ -204,7 +204,7 @@
                         @if ($categorySlug == 'video-shopping')
                             <div class="row">
                                 <div class="col-md-11">
-                                    <iframe src="{{ $embedUrl }}" width="500" height="700"
+                                    <iframe src="{{ $embedUrl }}" width="100%" height="700"
                                         style="border:none;overflow:hidden" scrolling="no" frameborder="0"
                                         allowfullscreen="true"
                                         allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>

@@ -306,7 +306,7 @@ header.scrolled .menu-area a {
   height: 100%;
   background: #fdfdfd;
   transition: 0.3s;
-  z-index: 9999;
+  z-index: 9999999;
   border-right: 1px solid #ddd;
   overflow: scroll;
 }
@@ -1102,6 +1102,7 @@ input[type="range"]::-moz-range-thumb {
   border-top-left-radius: 40px;
   border-bottom-right-radius: 40px;
   border: 3px solid #f26d21;
+  height: 267px;
 }
 .customer-review-box > img {
   width: 50px !important;

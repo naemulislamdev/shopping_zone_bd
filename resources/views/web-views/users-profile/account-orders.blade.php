@@ -154,23 +154,23 @@
                                     </td>
                                     <td class="bodytr">
                                         <a href="{{ route('account-order-details', ['id'=>$order->id]) }}"
-                                           class="btn btn-primary p-2">
+                                           class="btn btn-primary p-2 mb-2">
                                             <i class="fa fa-eye"></i> {{\App\CPU\translate('view')}}
                                         </a>
                                         @if($order['payment_method']=='cash_on_delivery' && $order['order_status']=='pending')
                                             <a href="javascript:"
                                                onclick="route_alert('{{ route('order-cancel',[$order->id]) }}','{{\App\CPU\translate('want_to_cancel_this_order?')}}')"
-                                               class="btn btn-danger p-2 top-margin">
+                                               class="btn btn-danger p-2 top-margin mb-2">
                                                 <i class="fa fa-trash"></i> {{\App\CPU\translate('cancel')}}
                                             </a>
                                         @else
-                                            <button class="btn btn-danger p-2 top-margin" onclick="cancel_message()">
+                                            <button class="btn btn-danger p-2 top-margin mb-2" onclick="cancel_message()">
                                                 <i class="fa fa-trash"></i> {{\App\CPU\translate('cancel')}}
                                             </button>
                                         @endif
                                         @if($order['order_status']=='confirmed')
                                         <a href="{{ route('submit-review', $order->sellerName->id) }}"
-                                            class="btn btn-primary p-2">
+                                            class="btn btn-primary p-2 mb-2">
                                              <i class="fa fa-eye"></i> {{\App\CPU\translate('Weite a Review')}}
                                          </a>
                                          @endif

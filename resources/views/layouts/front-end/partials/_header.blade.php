@@ -4,8 +4,9 @@
             <div class="col-md-2">
                 <!-- <a class="navbar-brand" href="index.html">Shopping Zone BD</a> -->
                 <a href="{{ route('home') }}">
-                    <img class="header-logo" src="{{ asset('public/assets/front-end') }}/images/logo/main-logo.png"
-                        alt="">
+                    <img class="header-logo" src="{{asset("storage/app/public/company")."/".$web_config['web_logo']->value}}"
+                    onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
+                    alt="{{$web_config['name']->value}}">
                 </a>
             </div>
             <div class="col-md-8">
@@ -89,15 +90,18 @@
 </header>
 
 
-
+<?php
+$company_mobile_logo = \App\Model\BusinessSetting::where('type', 'company_mobile_logo')->first()->value;
+?>
 
 <!--end header-->
 <!--start mobile menu-->
 <div class="mobile-menu">
     <div class="mm-logo" style="background: #fff; padding: 11px 18px;">
         <a href="{{ route('home') }}">
-            <img style="width:220px;" src="{{ asset('public/frontend') }}/assets/images/logo/main-logo.png"
-                alt="">
+            <img style="width:220px;" src="{{asset("storage/app/public/company/$company_mobile_logo")}}"
+            onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
+            alt="">
         </a>
         <div class="mm-cross-icon">
             <i class="fa fa-times mm-ci"></i>

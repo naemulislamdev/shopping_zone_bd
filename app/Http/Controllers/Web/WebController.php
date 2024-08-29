@@ -215,7 +215,7 @@ class WebController extends Controller
         if (auth('customer')->check()) {
             $request->validate([
                 'client_name' => 'required|string|max:50',
-                'client_comment' => 'required|string|max:200',
+                'client_comment' => 'required|string|max:400',
                 'rating' => 'required|string',
             ]);
             $ClientReview = ClientReview::create([
