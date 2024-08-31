@@ -14,7 +14,7 @@
         .label_1 {
             /*position: absolute;*/
             font-size: 10px;
-            background: #370665;
+            background: #f26d21;
             color: #ffffff;
             width: 80px;
             padding: 2px;
@@ -27,7 +27,7 @@
             text-align: center;
             border-radius: 6px;
             padding: 6px;
-            border: 2px solid #EEEEEE;
+            border: 2px solid #f26d21;
         }
 
         .icon-card {
@@ -35,6 +35,13 @@
             border-width: 30px;
             border-style: solid;
             border-color: red;
+        }
+        .border-bottom {
+    background: #f26d21;
+    border-radius: 5px;
+}
+        .border-bottom > h5{
+            color: #fff;
         }
     </style>
 @endpush
@@ -50,7 +57,6 @@
                         <h1 class="page-header-title"
                             style="text-align: {{ Session::get('direction') === 'rtl' ? 'right' : 'left' }};">
                             {{ \App\CPU\translate('Dashboard') }}</h1>
-                        <p>{{ \App\CPU\translate('Welcome_message') }}.</p>
                     </div>
                 </div>
             </div>

@@ -33,10 +33,15 @@
                         </form>
                         <!-- End Search -->
 
-                        <a href="{{ route('admin.brand.export') }}" class="btn btn-success">
-                            <i class="tio-download-to"></i>
-                            {{ \App\CPU\translate('Export') }}
-                        </a>
+                        <div>
+                            <a href="{{route('admin.brand.add-new')}}" class="btn btn-primary mr-2">
+                                {{ \App\CPU\translate('add_new') }}
+                            </a>
+                            <a href="{{ route('admin.brand.export') }}" class="btn btn-success">
+                                <i class="tio-download-to"></i>
+                                {{ \App\CPU\translate('Export') }}
+                            </a>
+                        </div>
                     </div>
                     <div class="card-body" style="padding: 0">
                         <div class="table-responsive">

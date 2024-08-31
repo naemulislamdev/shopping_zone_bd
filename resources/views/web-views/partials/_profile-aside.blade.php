@@ -28,6 +28,9 @@
     .price_sidebar {
         padding: 20px;
     }
+    .box-shadow-sm {
+    box-shadow: 0 0.125rem 0.3rem -0.0625rem rgba(0, 0, 0, 0.03), 0 0.275rem 0.75rem -0.0625rem rgba(0, 0, 0, 0.06) !important;
+}
 
     @media (max-width: 600px) {
 

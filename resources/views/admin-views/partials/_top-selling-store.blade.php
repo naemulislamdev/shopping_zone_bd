@@ -17,9 +17,7 @@
                      onclick="location.href='{{route('admin.sellers.view',$item['seller_id'])}}'"
                      style="padding-left: 6px;padding-right: 6px;cursor: pointer">
                     <div class="grid-card" style="min-height: 170px">
-                        <div class="label_1" style="width: 78px">
-                            {{\App\CPU\Helpers::currency_converter($item['count'])}} 
-                        </div>
+
                         <div class="text-center mt-3">
                             <img style="border-radius: 50%;width: 60px;height: 60px;border:2px solid #80808082;"
                                  onerror="this.src='{{asset('public/assets/back-end/img/160x160/img1.jpg')}}'"
@@ -27,6 +25,9 @@
                         </div>
                         <div class="text-center mt-2">
                             <span style="font-size: 10px">{{$shop['name']??'Not exist'}}</span>
+                        </div>
+                        <div class="label_1" style="width: 100%;">
+                            {{\App\CPU\Helpers::currency_converter($item['count'])}}
                         </div>
                     </div>
                 </div>

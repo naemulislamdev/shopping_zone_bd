@@ -55,7 +55,7 @@
                                     <input type="text" class="form-control" name="name" id="searchProduct"
                                         placeholder="Search Product">
                                     <div class="input-group-append">
-                                        <button type="submit" class="btn btn-primary"><i class="tio-search"></i></button>
+                                        <button type="submit" class="btn btn-primary" style="background: #f26d21; border:0px;"><i class="tio-search"></i></button>
                                     </div>
                                 </div>
                             </form>

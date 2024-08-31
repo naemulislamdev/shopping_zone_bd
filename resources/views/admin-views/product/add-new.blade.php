@@ -133,7 +133,7 @@
                                     </div>
 
                                     <div class="col-md-4">
-                                        <label for="name">{{ \App\CPU\translate('Brand') }}</label>
+                                        <label for="name">{{ \App\CPU\translate('Brand') }}</label> <a href="{{route('admin.brand.add-new')}}" target="_blank">add new</a>
                                         <select
                                             class="js-example-basic-multiple js-states js-example-responsive form-control"
                                             name="brand_id" required>

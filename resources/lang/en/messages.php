@@ -1750,4 +1750,6 @@
   'updated_successfully!' => 'Updated successfully!',
   'delivery_info' => 'Delivery info',
   'Invalid Order Id or Phone Number' => 'Invalid Order Id or Phone Number',
+  'management' => 'Management',
+  'Product settings' => 'Product settings',
 );
