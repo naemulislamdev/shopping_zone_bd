@@ -66,7 +66,7 @@ class CustomerController extends Controller
 
             $user->delete();
            return response()->json(['message' => translate('Your_account_deleted_successfully!!')],200);
-            
+
         }else{
             return response()->json(['message' =>'access_denied!!'],403);
         }
@@ -218,7 +218,7 @@ class CustomerController extends Controller
     public function get_order_list_last(Request $request)
     {
         $orders = Order::where(['customer_id' => $request->user()->id])->orderBy('id', 'DESC')->first();
-      
+
         return response()->json($orders, 200);
     }
 
@@ -232,7 +232,7 @@ class CustomerController extends Controller
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
 
-        $details = OrderDetail::where(['order_id' => $request['order_id']])->get();
+
         $order = Order::where(['id' => $request['order_id']])->first();
         // $orderInfo = array(
         //   'payment_status'=> $order->payment_status,
@@ -243,6 +243,7 @@ class CustomerController extends Controller
         //   'shipping_cost' => $order->shipping_cost,
         //   'shipping_address_data' => json_decode($order->shipping_address_data),
         //     );
+        $details = OrderDetail::where(['order_id' => $request['order_id']])->get();
         $details->map(function ($query) {
             $query['variation'] = json_decode($query['variation'], true);
             $query['product_details'] = Helpers::product_data_formatting(json_decode($query['product_details'], true));
