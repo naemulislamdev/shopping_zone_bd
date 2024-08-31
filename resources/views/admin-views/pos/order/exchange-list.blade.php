@@ -194,7 +194,7 @@
                                     href="{{route('admin.pos.order-exchange-details',['id'=>$order['id']])}}"><i
                                         class="tio-visible"></i></a>
                                 <a class="btn btn-info btn-sm mr-1" target="_blank" title="{{\App\CPU\translate('invoice')}}"
-                                    href="{{route('admin.orders.generate-invoice',[$order['id']])}}"><i
+                                    href="{{route('admin.orders.exchange-generate-invoice',[$order['id']])}}"><i
                                         class="tio-download"></i> </a>
 
 

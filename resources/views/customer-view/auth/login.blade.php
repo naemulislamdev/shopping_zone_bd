@@ -93,7 +93,7 @@
                             </div>
                             {{-- recaptcha --}}
                             @php($recaptcha = \App\CPU\Helpers::get_business_settings('recaptcha'))
-                            @if(isset($recaptcha) && $recaptcha['status'] == 1)
+                            @if(isset($recaptcha) && $recaptcha['status'] == 0)
                                 <div id="recaptcha_element" style="width: 100%;" data-type="image"></div>
                                 <br/>
                             @else

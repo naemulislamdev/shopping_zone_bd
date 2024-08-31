@@ -1750,4 +1750,9 @@
   'updated_successfully!' => 'Updated successfully!',
   'delivery_info' => 'Delivery info',
   'Invalid Order Id or Phone Number' => 'Invalid Order Id or Phone Number',
+  'Language Translate' => 'Language Translate',
+  'language_content_table' => 'Language content table',
+  'value' => 'Value',
+  'text_updated_successfully' => 'Text updated successfully',
+  'Key removed successfully' => 'Key removed successfully',
 );
