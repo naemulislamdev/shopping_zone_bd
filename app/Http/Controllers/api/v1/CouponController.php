@@ -12,7 +12,6 @@ class CouponController extends Controller
 {
     public function apply(Request $request)
     {
-
         try {
             $couponLimit = Order::where('customer_id', $request->user()->id)
                 ->where('coupon_code', $request['code'])->count();
@@ -22,6 +21,21 @@ class CouponController extends Controller
                 ->where('status', '=', 1)
                 ->whereDate('start_date', '<=', Carbon::parse()->toDateString())
                 ->whereDate('expire_date', '>=', Carbon::parse()->toDateString())->first();
+            //$coupon = Coupon::where(['code' => $request['code']])->first();
+        } catch (\Exception $e) {
+            return response()->json(['errors' => $e], 403);
+        }
+
+        return response()->json($coupon, 200);
+    }
+
+    public function couponList(Request $request)
+    {
+
+        try {
+            $coupon = Coupon::where('status', '=', 1)
+                ->whereDate('start_date', '<=', Carbon::parse()->toDateString())
+                ->whereDate('expire_date', '>=', Carbon::parse()->toDateString())->get();
             //$coupon = Coupon::where(['code' => $request['code']])->first();
         } catch (\Exception $e) {
             return response()->json(['errors' => $e], 403);

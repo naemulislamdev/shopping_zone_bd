@@ -113,7 +113,9 @@
 
                             <div class="col-6 pt-2">
                                 <h6 class="" style="color: #8a8a8a;">
-                                   page :  {{$order->socialpage['name']}}
+                                    @if(!empty($order->socialpage['name']))
+                <h3>Social Page : {{@$order->socialpage['name']}}</h3>
+                @endif
                                 </h6>
                                  <h6 class="" style="color: #8a8a8a;">
                                    Courier :  {{$order['delivery_service_name']}} ( <small>{{$order->shipping['title']}} {{$order->shipping['duration']}}</small> )
