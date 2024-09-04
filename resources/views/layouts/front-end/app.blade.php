@@ -142,7 +142,7 @@
             <div class="row">
                 <div class="col-md-6 text-right">
                     <div>
-                        <span class="topbar-contact">Hotline: <a href="tel:/0255020580">0255020580</a></span>
+                        <span class="topbar-contact">{{\App\CPU\translate('Hotline')}}: <a href="tel:{{ \App\CPU\Helpers::get_business_settings('company_phone') }}">{{ \App\CPU\Helpers::get_business_settings('company_phone') }}</a></span>
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -153,7 +153,7 @@
     <li class="nav-item dropdown">
         @php($local = session()->has('local') ? session('local') : 'en')
         @php($lang = \App\Model\BusinessSetting::where('type', 'language')->first())
-        <a class="nav-link " href="#" id="navbardrop" data-toggle="dropdown">
+        <a  href="#" id="navbardrop" data-toggle="dropdown">
             @foreach (json_decode($lang['value'], true) as $data)
             @if ($data['code'] == $local)
 
@@ -180,13 +180,12 @@
           @endforeach
         </div>
       </li>
-                                <li class="nav-item"><a href="#">Complain</a></li>
-                                <li class="nav-item"><a href="#">Place Manual Order</a></li>
-                                <li class="nav-item"><a href="{{ route('track-order.index') }}">Order Track</a></li>
+
+                                <li class="nav-item"><a href="{{ route('track-order.index') }}"> {{\App\CPU\translate('Order Track')}}</a></li>
                                 @if (auth('customer')->check())
-                                    <li class="nav-item"><a href="{{ route('user-account') }}">Profile</a></li>
+                                    <li class="nav-item"><a href="{{ route('user-account') }}">{{\App\CPU\translate('Profile')}}</a></li>
                                 @else
-                                    <li class="nav-item"><a href="{{ route('customer.auth.login') }}">Login</a></li>
+                                    <li class="nav-item"><a href="{{ route('customer.auth.login') }}">{{\App\CPU\translate('Login')}}</a></li>
                                 @endif
 
                             </ul>
@@ -209,7 +208,7 @@
     <div class="offcanvas offcanvas-end" tabindex="-1" id="shoppingCartOffcanvas"
         aria-labelledby="offcanvaShoppingCard">
         <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvaShoppingCard">SHOPPING CART</h5>
+            <h5 class="offcanvas-title" id="offcanvaShoppingCard">{{\App\CPU\translate('SHOPPING CART')}}</h5>
             <i class="fa fa-close offcanvasClose" data-bs-dismiss="offcanvas" aria-label="Close"></i>
         </div>
         <div class="offcanvas-body">

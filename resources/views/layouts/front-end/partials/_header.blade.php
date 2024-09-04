@@ -15,9 +15,9 @@
                 <nav class="navbar">
                     <div class="menu-area">
                         <ul>
-                            <li><a href="{{ route('home') }}">Home</a></li>
+                            <li><a href="{{ route('home') }}">{{\App\CPU\translate('Home')}}</a></li>
 
-                            <li class="dd-btn1"><a href="#"> Categories <i class="fa fa-angle-down"></i></a>
+                            <li class="dd-btn1"><a href="#">{{\App\CPU\translate('Categories')}}  <i class="fa fa-angle-down"></i></a>
                                 <div class="dropdown-menu1">
                                     <div class="row">
                                         @foreach ($categories as $category)
@@ -58,15 +58,15 @@
                                     </div>
                                 </div>
                             </li>
-                            <li><a href="{{ route('shop') }}">Shop</i></a>
+                            <li><a href="{{ route('shop') }}">{{\App\CPU\translate('Shop')}}</i></a>
                             </li>
-                            <li><a href="{{ route('video_shopping', 'video-shopping') }}">video shopping</i></a>
+                            <li><a href="{{ route('video_shopping', 'video-shopping') }}">{{\App\CPU\translate('video shopping')}}</i></a>
                             </li>
-                            <li><a href="{{ route('campain') }}">Campaign</i></a>
+                            <li><a href="{{ route('campain') }}">{{\App\CPU\translate('Campaign')}}</i></a>
                             </li>
-                            <li><a href="{{ route('selling.product') }}">Selling product</i></a>
+                            <li><a href="{{ route('selling.product') }}">{{\App\CPU\translate('Selling product')}}</i></a>
                             </li>
-                            <li><a href="{{ route('outlets') }}">Our outlets</i></a></li>
+                            <li><a href="{{ route('outlets') }}">{{\App\CPU\translate('Our outlets')}}</i></a></li>
                         </ul>
                     </div>
 
@@ -112,13 +112,13 @@ $company_mobile_logo = \App\Model\BusinessSetting::where('type', 'company_mobile
         <div class="accordion" id="accordionExample">
             <div class="menu-box">
                 <div class="menu-link">
-                    <a href="{{ route('home') }}"><i class="fa fa-ptab3 mr-2"></i> Home</a>
+                    <a href="{{ route('home') }}"><i class="fa fa-ptab3 mr-2"></i>{{\App\CPU\translate('Home')}}</a>
                 </div>
             </div>
             <div class="menu-box">
                 <div class="menu-link" id="headingOne">
                     <a class="mmenu-btn menu-link-active" type="button" data-toggle="collapse"
-                        data-target="#categories" aria-expanded="true">Categories<i class="fa fa-plus"></i></a>
+                        data-target="#categories" aria-expanded="true">{{\App\CPU\translate('Categories')}}<i class="fa fa-plus"></i></a>
                 </div>
                 <div id="categories" class="menu-body collapse" aria-labelledby="headingOne"
                     data-parent="#accordionExample">
@@ -173,28 +173,27 @@ $company_mobile_logo = \App\Model\BusinessSetting::where('type', 'company_mobile
             </div>
             <div class="menu-box">
                 <div class="menu-link">
-                    <a href="{{ route('shop') }}"><i class="fa fa-ptab3 mr-2"></i> Shop</a>
+                    <a href="{{ route('shop') }}"><i class="fa fa-ptab3 mr-2"></i> {{\App\CPU\translate('Shop')}}</a>
                 </div>
             </div>
             <div class="menu-box">
                 <div class="menu-link">
-                    <a href="{{ route('video_shopping', 'video-shopping') }}"><i class="fa fa-ptab3 mr-2"></i> Video
-                        Shopping</a>
+     <a href="{{ route('video_shopping', 'video-shopping') }}"><i class="fa fa-ptab3 mr-2"></i> {{\App\CPU\translate('Video Shopping')}}</a>
                 </div>
             </div>
             <div class="menu-box">
                 <div class="menu-link">
-                    <a href="{{ route('campain') }}"><i class="fa fa-ptab3 mr-2"></i>Campain</a>
+                    <a href="{{ route('campain') }}"><i class="fa fa-ptab3 mr-2"></i>{{\App\CPU\translate('Campain')}}</a>
                 </div>
             </div>
             <div class="menu-box">
                 <div class="menu-link">
-                    <a href="{{ route('selling.product') }}"><i class="fa fa-ptab3 mr-2"></i>Selling Product</a>
+                    <a href="{{ route('selling.product') }}"><i class="fa fa-ptab3 mr-2"></i>{{\App\CPU\translate('Selling Product')}}</a>
                 </div>
             </div>
             <div class="menu-box">
                 <div class="menu-link">
-                    <a href="{{ route('outlets') }}"><i class="fa fa-ptab3 mr-2"></i>Our Outlets</a>
+                    <a href="{{ route('outlets') }}"><i class="fa fa-ptab3 mr-2"></i>{{\App\CPU\translate('Our outlets')}}</a>
                 </div>
             </div>
         </div>
