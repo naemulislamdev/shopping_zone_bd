@@ -783,26 +783,11 @@ class WebController extends Controller
 
         return view('web-views.category_wise_product', compact('products', 'data'), $data);
     }
-    public function videoShopping($slug)
+    public function videoShopping()
     {
-        $signleCategory = Category::where('slug', $slug)->first();
-        if ($signleCategory) {
-
-            $porduct_data = Product::active()->with(['reviews']);
-
-            $products = $porduct_data->get();
-            $product_ids = [];
-            foreach ($products as $product) {
-                foreach (json_decode($product['category_ids'], true) as $category) {
-
-                    if ($category['id'] == $signleCategory['id']) {
-                        // dd(''.$signleCategory['id'].'');
-                        array_push($product_ids, $product['id']);
-                    }
-                }
-            }
-            $videoProducts = $porduct_data->whereIn('id', $product_ids)->get();
-            $categoryName = $signleCategory['name'];
+        $videoProducts = Product::active()->with(['reviews'])->where('video_shopping', true)->get();;
+        if ($videoProducts) {
+            $categoryName = 'Video Shopping';
             return view('web-views.video_shopping', compact('videoProducts', 'categoryName'));
         } else {
             Toastr::warning(translate('not_found'));

@@ -1586,4 +1586,5 @@
   'Copyright © 2024 - Shopping Zone BD All Rights Reserved. Desing &' => 'কপিরাইট © ২০২৪ - শপিং জোন বিডি সকল অধিকার সংরক্ষিত। ডিজাইন ও',
   'Profile info' => 'প্রোফাইল ইনফো',
   'Facebook Post' => 'ফেইসবুক পোস্ট',
+  'Company hotline' => 'হটলাইন',
 );

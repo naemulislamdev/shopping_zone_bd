@@ -616,12 +616,18 @@
                         </div>
                         <div class="col-md-6">
                             <div class="newslater-input">
-                                <div class="input-group mb-3 w-100">
-                                    <input type="text" class="form-control" placeholder="Enter email">
-                                    <div class="input-group-append">
-                                        <button type="submit" class="btn btn-dark" id="basic-addon2">Subscribe</button>
+                                <form action="{{ route('subscription') }}" method="post">
+                                    @csrf
+                                    <div class="input-group mb-3 w-100">
+                                        <input type="text" class="form-control"
+                                            placeholder="{{ \App\CPU\translate('Your Email Address') }}"
+                                            name="subscription_email" required>
+                                        <div class="input-group-append">
+                                            <button type="submit" class="btn btn-dark"
+                                                id="basic-addon2">{{ \App\CPU\translate('subscribe') }}</button>
+                                        </div>
                                     </div>
-                                </div>
+                                </form>
                             </div>
                         </div>
                     </div>

@@ -1787,4 +1787,5 @@
   'Copyright © 2024 - Shopping Zone BD All Rights Reserved. Desing &' => 'Copyright © 2024 - Shopping Zone BD All Rights Reserved. Desing &',
   'Profile info' => 'Profile info',
   'Facebook Post' => 'Facebook Post',
+  'Cash on delevery' => 'Cash on delevery',
 );

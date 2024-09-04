@@ -60,7 +60,7 @@
                             </li>
                             <li><a href="{{ route('shop') }}">{{\App\CPU\translate('Shop')}}</i></a>
                             </li>
-                            <li><a href="{{ route('video_shopping', 'video-shopping') }}">{{\App\CPU\translate('video shopping')}}</i></a>
+                            <li><a href="{{ route('video_shopping') }}">{{\App\CPU\translate('video shopping')}}</i></a>
                             </li>
                             <li><a href="{{ route('campain') }}">{{\App\CPU\translate('Campaign')}}</i></a>
                             </li>

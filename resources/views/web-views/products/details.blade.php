@@ -201,13 +201,13 @@
             <div class="row">
                 <div class="col-md-4 mb-3">
                     <div class="p-image">
-                        @if ($categorySlug == 'video-shopping')
+                        @if ($product->video_shopping == 1)
                             <div class="row">
                                 <div class="col-md-11">
-                                    <iframe src="{{ $embedUrl }}" width="100%" height="700"
-                                        style="border:none;overflow:hidden" scrolling="no" frameborder="0"
-                                        allowfullscreen="true"
-                                        allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
+                                        <iframe src="{{ $embedUrl }}" width="100%" height="700"
+                                            style="border:none;overflow:hidden" scrolling="no" frameborder="0"
+                                            allowfullscreen="true"
+                                            allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
                                 </div>
                             </div>
                         @else
@@ -229,6 +229,7 @@
                                                 <div class="item">
                                                     <a href="{{ asset("storage/app/public/product/$photo") }}">
                                                         <img src="{{ asset("storage/app/public/product/$photo") }}"
+                                                            data-image="{{ asset("storage/app/public/product/$photo") }}"
                                                             class="xzoom-gallery" alt="product image">
                                                     </a>
                                                 </div>
@@ -692,13 +693,13 @@
                                         alt="">
                                 </div>
                             </div>
-                            @if ($categorySlug != 'video-shopping')
+                            @if ($product->video_shopping == 0)
                                 @if ($product['video_url'])
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="video-product">
-                                                <iframe width="100%" height="360" src="{{ $product['video_url'] }}"
-                                                    title="Kurti" frameborder="0"
+                                                <iframe width="100%" height="360" src="{{ $embedUrl }}"
+                                                    title="{{ $product['name'] }}" frameborder="0"
                                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                                     referrerpolicy="strict-origin-when-cross-origin"
                                                     allowfullscreen></iframe>
