@@ -4,9 +4,10 @@
             <div class="col-md-2">
                 <!-- <a class="navbar-brand" href="index.html">Shopping Zone BD</a> -->
                 <a href="{{ route('home') }}">
-                    <img class="header-logo" src="{{asset("storage/app/public/company")."/".$web_config['web_logo']->value}}"
-                    onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
-                    alt="{{$web_config['name']->value}}">
+                    <img class="header-logo"
+                        src="{{ asset('storage/app/public/company') . '/' . $web_config['web_logo']->value }}"
+                        onerror="this.src='{{ asset('public/assets/front-end/img/image-place-holder.png') }}'"
+                        alt="{{ $web_config['name']->value }}">
                 </a>
             </div>
             <div class="col-md-8">
@@ -14,9 +15,9 @@
                 <nav class="navbar">
                     <div class="menu-area">
                         <ul>
-                            <li><a href="{{ route('home') }}">Home</a></li>
+                            <li><a href="{{ route('home') }}">{{\App\CPU\translate('Home')}}</a></li>
 
-                            <li class="dd-btn1"><a href="#"> Categories <i class="fa fa-angle-down"></i></a>
+                            <li class="dd-btn1"><a href="#">{{\App\CPU\translate('Categories')}}  <i class="fa fa-angle-down"></i></a>
                                 <div class="dropdown-menu1">
                                     <div class="row">
                                         @foreach ($categories as $category)
@@ -57,15 +58,15 @@
                                     </div>
                                 </div>
                             </li>
-                            <li><a href="{{ route('shop') }}">Shop</i></a>
+                            <li><a href="{{ route('shop') }}">{{\App\CPU\translate('Shop')}}</i></a>
                             </li>
-                            <li><a href="{{ route('video_shopping', 'video-shopping') }}">video shopping</i></a>
+                            <li><a href="{{ route('video_shopping', 'video-shopping') }}">{{\App\CPU\translate('video shopping')}}</i></a>
                             </li>
-                            <li><a href="{{ route('campain') }}">Campaign</i></a>
+                            <li><a href="{{ route('campain') }}">{{\App\CPU\translate('Campaign')}}</i></a>
                             </li>
-                            <li><a href="{{ route('selling.product') }}">Selling product</i></a>
+                            <li><a href="{{ route('selling.product') }}">{{\App\CPU\translate('Selling product')}}</i></a>
                             </li>
-                            <li><a href="{{ route('outlets') }}">Our outlets</i></a></li>
+                            <li><a href="{{ route('outlets') }}">{{\App\CPU\translate('Our outlets')}}</i></a></li>
                         </ul>
                     </div>
 
@@ -76,8 +77,9 @@
                 <div class="header-icon">
                     <a data-bs-toggle="offcanvas" href="#searchOffcanvas" role="button"
                         aria-controls="searchOffcanvas"><i class="fa fa-search" aria-hidden="true"></i></a>
-                    <a href="{{ route('wishlists')}}"><i class="fa fa-heart-o" aria-hidden="true"></i>
-                        <span class="badge badge-danger countWishlist">{{session()->has('wish_list')?count(session('wish_list')):0}}</span></a>
+                    <a href="{{ route('wishlists') }}"><i class="fa fa-heart-o" aria-hidden="true"></i>
+                        <span
+                            class="badge badge-danger countWishlist">{{ session()->has('wish_list') ? count(session('wish_list')) : 0 }}</span></a>
                     <a data-bs-toggle="offcanvas" href="#shoppingCartOffcanvas" role="button"
                         aria-controls="shoppingCartOffcanvas"><i class="fa fa-shopping-cart"
                             aria-hidden="true"></i><span class="badge badge-danger" id="total_cart_count">
@@ -99,9 +101,8 @@ $company_mobile_logo = \App\Model\BusinessSetting::where('type', 'company_mobile
 <div class="mobile-menu">
     <div class="mm-logo" style="background: #fff; padding: 11px 18px;">
         <a href="{{ route('home') }}">
-            <img style="width:220px;" src="{{asset("storage/app/public/company/$company_mobile_logo")}}"
-            onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
-            alt="">
+            <img style="width:220px;" src="{{ asset("storage/app/public/company/$company_mobile_logo") }}"
+                onerror="this.src='{{ asset('public/assets/front-end/img/image-place-holder.png') }}'" alt="">
         </a>
         <div class="mm-cross-icon">
             <i class="fa fa-times mm-ci"></i>
@@ -111,13 +112,13 @@ $company_mobile_logo = \App\Model\BusinessSetting::where('type', 'company_mobile
         <div class="accordion" id="accordionExample">
             <div class="menu-box">
                 <div class="menu-link">
-                    <a href="{{ route('home') }}"><i class="fa fa-ptab3 mr-2"></i> Home</a>
+                    <a href="{{ route('home') }}"><i class="fa fa-ptab3 mr-2"></i>{{\App\CPU\translate('Home')}}</a>
                 </div>
             </div>
             <div class="menu-box">
                 <div class="menu-link" id="headingOne">
                     <a class="mmenu-btn menu-link-active" type="button" data-toggle="collapse"
-                        data-target="#categories" aria-expanded="true">Categories<i class="fa fa-plus"></i></a>
+                        data-target="#categories" aria-expanded="true">{{\App\CPU\translate('Categories')}}<i class="fa fa-plus"></i></a>
                 </div>
                 <div id="categories" class="menu-body collapse" aria-labelledby="headingOne"
                     data-parent="#accordionExample">
@@ -172,28 +173,27 @@ $company_mobile_logo = \App\Model\BusinessSetting::where('type', 'company_mobile
             </div>
             <div class="menu-box">
                 <div class="menu-link">
-                    <a href="{{ route('shop') }}"><i class="fa fa-ptab3 mr-2"></i> Shop</a>
+                    <a href="{{ route('shop') }}"><i class="fa fa-ptab3 mr-2"></i> {{\App\CPU\translate('Shop')}}</a>
                 </div>
             </div>
             <div class="menu-box">
                 <div class="menu-link">
-                    <a href="{{ route('video_shopping', 'video-shopping') }}"><i class="fa fa-ptab3 mr-2"></i> Video
-                        Shopping</a>
+     <a href="{{ route('video_shopping', 'video-shopping') }}"><i class="fa fa-ptab3 mr-2"></i> {{\App\CPU\translate('Video Shopping')}}</a>
                 </div>
             </div>
             <div class="menu-box">
                 <div class="menu-link">
-                    <a href="{{ route('campain') }}"><i class="fa fa-ptab3 mr-2"></i>Campain</a>
+                    <a href="{{ route('campain') }}"><i class="fa fa-ptab3 mr-2"></i>{{\App\CPU\translate('Campain')}}</a>
                 </div>
             </div>
             <div class="menu-box">
                 <div class="menu-link">
-                    <a href="{{ route('selling.product') }}"><i class="fa fa-ptab3 mr-2"></i>Selling Product</a>
+                    <a href="{{ route('selling.product') }}"><i class="fa fa-ptab3 mr-2"></i>{{\App\CPU\translate('Selling Product')}}</a>
                 </div>
             </div>
             <div class="menu-box">
                 <div class="menu-link">
-                    <a href="{{ route('outlets') }}"><i class="fa fa-ptab3 mr-2"></i>Our Outlets</a>
+                    <a href="{{ route('outlets') }}"><i class="fa fa-ptab3 mr-2"></i>{{\App\CPU\translate('Our outlets')}}</a>
                 </div>
             </div>
         </div>

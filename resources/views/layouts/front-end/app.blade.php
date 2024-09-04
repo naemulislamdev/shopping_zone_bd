@@ -142,27 +142,52 @@
             <div class="row">
                 <div class="col-md-6 text-right">
                     <div>
-                        <span class="topbar-contact">Hotline: <a href="tel:/0255020580">0255020580</a></span>
+                        <span class="topbar-contact">{{\App\CPU\translate('Hotline')}}: <a href="tel:{{ \App\CPU\Helpers::get_business_settings('company_phone') }}">{{ \App\CPU\Helpers::get_business_settings('company_phone') }}</a></span>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="topbar-left">
                         <div class="topbar-box">
                             <ul>
-                                <li><a href="#">Complain</a></li>
-                                <li><a href="#">Place Manual Order</a></li>
-                                <li><a href="{{ route('track-order.index') }}">Order Track</a></li>
+                                    <!-- Dropdown -->
+    <li class="nav-item dropdown">
+        @php($local = session()->has('local') ? session('local') : 'en')
+        @php($lang = \App\Model\BusinessSetting::where('type', 'language')->first())
+        <a  href="#" id="navbardrop" data-toggle="dropdown">
+            @foreach (json_decode($lang['value'], true) as $data)
+            @if ($data['code'] == $local)
+
+                <img class="{{ Session::get('direction') === 'rtl' ? 'ml-2' : 'mr-2' }}"
+                    width="20"
+                    src="{{ asset('public/assets/front-end') }}/img/flags/{{ $data['code'] }}.png"
+                    alt="Eng">
+                    <span style="text-transform: capitalize">{{ $data['name'] }}</span>
+            @endif
+        @endforeach
+        </a>
+        <div class="dropdown-menu" style="z-index: 999999">
+            @foreach (json_decode($lang['value'], true) as $key => $data)
+            @if ($data['status'] == 1)
+
+          <a class="dropdown-item pb-1"  href="{{ route('lang', [$data['code']]) }}">
+          <img class="{{ Session::get('direction') === 'rtl' ? 'ml-2' : 'mr-2' }}"
+                                                            width="20"
+                                                            src="{{ asset('public/assets/front-end') }}/img/flags/{{ $data['code'] }}.png"
+                                                            alt="{{ $data['name'] }}" />
+          <span style="text-transform: capitalize">{{ $data['name'] }}</span>
+                                                    </a>
+          @endif
+          @endforeach
+        </div>
+      </li>
+
+                                <li class="nav-item"><a href="{{ route('track-order.index') }}"> {{\App\CPU\translate('Order Track')}}</a></li>
                                 @if (auth('customer')->check())
-                                    <li><a href="{{ route('user-account') }}">Profile</a></li>
+                                    <li class="nav-item"><a href="{{ route('user-account') }}">{{\App\CPU\translate('Profile')}}</a></li>
                                 @else
-                                    <li><a href="{{ route('customer.auth.login') }}">Login</a></li>
+                                    <li class="nav-item"><a href="{{ route('customer.auth.login') }}">{{\App\CPU\translate('Login')}}</a></li>
                                 @endif
-                                <li>
-                                    <select name="language" class="form-control" style="padding: 2px 6px; height:30px;">
-                                        <option value="en">English</option>
-                                        <option value="bd">Bangla</option>
-                                    </select>
-                                </li>
+
                             </ul>
 
                         </div>
@@ -183,7 +208,7 @@
     <div class="offcanvas offcanvas-end" tabindex="-1" id="shoppingCartOffcanvas"
         aria-labelledby="offcanvaShoppingCard">
         <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvaShoppingCard">SHOPPING CART</h5>
+            <h5 class="offcanvas-title" id="offcanvaShoppingCard">{{\App\CPU\translate('SHOPPING CART')}}</h5>
             <i class="fa fa-close offcanvasClose" data-bs-dismiss="offcanvas" aria-label="Close"></i>
         </div>
         <div class="offcanvas-body">
@@ -541,7 +566,7 @@
             });
         }
 
-        function addToCart(form_id, redirect_to_checkout=false) {
+        function addToCart(form_id, redirect_to_checkout = false) {
             if (form_id) {
                 $.ajaxSetup({
                     headers: {
@@ -583,8 +608,7 @@
 
                         $('#total_cart_count').text(data.count);
                         updateNavCart();
-                        if(redirect_to_checkout)
-                        {
+                        if (redirect_to_checkout) {
                             location.href = "{{ route('shop-cart') }}";
                         }
                     },
@@ -945,7 +969,8 @@
                             console.log(data);
                             if (data.products) {
 
-                                $('#searchResultProducts').html(data.products); // Display the results
+                                $('#searchResultProducts').html(data
+                                    .products); // Display the results
                             } else {
                                 $('#searchResultProducts').html('');
                             }

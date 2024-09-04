@@ -113,7 +113,7 @@
                                  <li class="nav-item {{Request::is('admin/pos/exchange-orders*')?'active':''}}">
                                     <a class="nav-link " href="{{route('admin.pos.exchange-orders')}}" title="Exchange {{\App\CPU\translate('orders')}}">
                                         <span class="tio-circle nav-indicator-icon"></span>
-                                        <span class="text-truncate">Exchange {{\App\CPU\translate('orders')}}
+                                        <span class="text-truncate"> {{\App\CPU\translate('exchange')}} {{\App\CPU\translate('orders')}}
                                         <span class="badge badge-info badge-pill ml-1">
                                             {{\App\Model\OrderExchange::where(['seller_is'=>'admin'])->where('order_type','EXCHANGE')->where(['order_status'=>'delivered'])->count()}}
                                         </span>
@@ -125,7 +125,7 @@
                                        href="{{route('admin.pospaymenttype.view')}}">
                                         <i class="tio-receipt-outlined nav-icon"></i>
                                         <span
-                                            class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Payment Method</span>
+                                            class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{\App\CPU\translate('Payment Method')}}</span>
                                     </a>
                                 </li>
 
@@ -326,7 +326,7 @@
                                    href="javascript:">
                                     <i class="tio-cube nav-icon"></i>
                                     <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                        Vendor {{\App\CPU\translate('Products')}}
+                                        {{\App\CPU\translate('Vendor')}} {{\App\CPU\translate('Products')}}
                                     </span>
                                 </a>
                                 <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
@@ -533,7 +533,7 @@
                                    href="{{route('admin.reviews.list')}}">
                                     <i class="tio-folder-special nav-icon"></i>
                                     <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                    Products {{\App\CPU\translate('Reviews')}}
+                                        {{\App\CPU\translate('Products')}} {{\App\CPU\translate('Reviews')}}
                                 </span>
                                 </a>
                             </li>
@@ -614,7 +614,7 @@
                                    href="javascript:">
                                     <i class="tio-shop-outlined nav-icon"></i>
                                     <span
-                                        class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Branch</span>
+                                        class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{\App\CPU\translate('Branch')}} </span>
                                 </a>
                                 <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
                                     style="display: {{Request::is('admin/branches*')?'block':'none'}}">
@@ -623,7 +623,8 @@
                                            href="{{route('admin.branches.create')}}">
                                             <span class="tio-circle nav-indicator-icon"></span>
                                             <span class="text-truncate">
-                                                Add New
+
+                                                {{\App\CPU\translate('Add New')}}
                                             </span>
                                         </a>
                                     </li>
@@ -645,7 +646,7 @@
                                    href="javascript:">
                                     <i class="tio-shop-outlined nav-icon"></i>
                                     <span
-                                        class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Couriers</span>
+                                        class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate"> {{\App\CPU\translate('Couriers')}}</span>
                                 </a>
                                 <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
                                     style="display: {{Request::is('admin/couriers*')?'block':'none'}}">
@@ -654,7 +655,8 @@
                                            href="{{route('admin.couriers.create')}}">
                                             <span class="tio-circle nav-indicator-icon"></span>
                                             <span class="text-truncate">
-                                                Add New
+
+                                                {{\App\CPU\translate('Add New')}}
                                             </span>
                                         </a>
                                     </li>
@@ -679,7 +681,7 @@
                                    href="javascript:">
                                     <i class="tio-shop-outlined nav-icon"></i>
                                     <span
-                                        class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">Social Page</span>
+                                        class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate"> {{\App\CPU\translate('Social Page')}}</span>
                                 </a>
                                 <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
                                     style="display: {{Request::is('admin/social-page*')?'block':'none'}}">
@@ -688,7 +690,8 @@
                                            href="{{route('admin.social-page.create')}}">
                                             <span class="tio-circle nav-indicator-icon"></span>
                                             <span class="text-truncate">
-                                                Add New
+                                                {{\App\CPU\translate('Add New')}}
+
                                             </span>
                                         </a>
                                     </li>
@@ -1143,7 +1146,7 @@
                                    href="{{route('admin.business-settings.facebook-post')}}">
                                     <i class="tio-facebook nav-icon"></i>
                                     <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                        Facebook Post
+                                        {{\App\CPU\translate('Facebook Post')}}
                                     </span>
                                 </a>
                             </li>
