@@ -167,6 +167,15 @@ Route::group(['namespace' => 'api\v1', 'prefix' => 'v1', 'middleware' => ['api_l
             Route::delete('remove', 'CustomerController@remove_from_wishlist');
         });
 
+         Route::group(['prefix' => 'order','middleware' => 'auth:api'], function () {
+            Route::get('list', 'CustomerController@get_order_list');
+            Route::get('list-last', 'CustomerController@get_order_list_last');
+            Route::get('details', 'CustomerController@get_order_details');
+            Route::post('place', 'OrderController@place_order');
+            Route::get('refund', 'OrderController@refund_request');
+            Route::post('refund-store', 'OrderController@store_refund');
+            Route::get('refund-details', 'OrderController@refund_details');
+        });
         Route::group(['prefix' => 'order'], function () {
             Route::get('list', 'CustomerController@get_order_list');
             Route::get('list-last', 'CustomerController@get_order_list_last');

@@ -383,15 +383,15 @@ class OrderManager
             DB::table('admin_wallets')->where('admin_id', $order['seller_id'])->increment('pending_amount', $order['order_amount']);
         }
 
-        if ($order->seller_is == 'admin') {
-            $seller = Admin::find($order->seller_id);
-        } else {
-            $seller = Seller::find($order->seller_id);
-        }
+        // if ($order->seller_is == 'admin') {
+        //     $seller = Admin::find($order->seller_id);
+        // } else {
+        //     $seller = Seller::find($order->seller_id);
+        // }
 
         try {
             $fcm_token = $user->cm_firebase_token;
-            $seller_fcm_token = $seller->cm_firebase_token;
+            // $seller_fcm_token = $seller->cm_firebase_token;
             if ($data['payment_method'] != 'cash_on_delivery') {
                 $value = Helpers::order_status_update_message('confirmed');
             } else {
@@ -406,7 +406,7 @@ class OrderManager
                     'image' => '',
                 ];
                 Helpers::send_push_notif_to_device($fcm_token, $data);
-                Helpers::send_push_notif_to_device($seller_fcm_token, $data);
+                // Helpers::send_push_notif_to_device($seller_fcm_token, $data);
             }
 
             $emailServices_smtp = Helpers::get_business_settings('mail_config');
@@ -415,7 +415,7 @@ class OrderManager
             }
             if ($emailServices_smtp['status'] == 1) {
                 Mail::to($user->email)->send(new \App\Mail\OrderPlaced($order_id));
-                Mail::to($seller->email)->send(new \App\Mail\OrderReceivedNotifySeller($order_id));
+                // Mail::to($seller->email)->send(new \App\Mail\OrderReceivedNotifySeller($order_id));
             }
         } catch (\Exception $exception) {
             //echo $exception;
