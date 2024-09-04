@@ -91,7 +91,7 @@
                                     <div class="form-group">
                                         <label>Choose Payment Method</label>
                                         <select class="form-control" name="payment_method">
-                                            <option value="cash_on_delivery">Cach on delevery</option>
+                                            <option value="cash_on_delivery">Cash on delevery</option>
                                             <option value="online_payment">online payment</option>
                                         </select>
                                     </div>

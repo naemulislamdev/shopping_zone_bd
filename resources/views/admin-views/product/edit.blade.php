@@ -185,7 +185,6 @@
                             <h4>{{\App\CPU\translate('Variation')}}</h4>
                         </div>
                         <div class="card-body">
-
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-md-6">
@@ -347,6 +346,7 @@
                               <table id="myTable" class="table table-bordered">
                                 <tr>
                                   <th>Start Day</th>
+                                  <th>End Day</th>
                                   <th>Discount(%)</th>
                                   <th>Action</th>
                                 </tr>
@@ -356,6 +356,11 @@
                                   <td>
 
                                    <input class="form-control" type="date" placeholder="start day" name="start_day[]" value={{$campaing_detalies->start_day}}  required>
+
+                                  </td>
+                                  <td>
+
+                                   <input class="form-control" type="date" placeholder="end day" name="end_day[]" value={{$campaing_detalies->end_day}}  required>
 
                                   </td>
 
@@ -423,12 +428,24 @@
                     <div class="card mt-2 rest-part">
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-md-12 mb-4">
+                                <div class="col-md-8 mb-4">
                                     <label class="control-label">{{\App\CPU\translate('Youtube video link')}}</label>
                                     <small class="badge badge-soft-danger"> ( {{\App\CPU\translate('optional, please provide embed link not direct link')}}. )</small>
                                     <input type="text" value="{{$product['video_url']}}" name="video_link"
                                            placeholder="{{\App\CPU\translate('EX')}} : https://www.youtube.com/embed/5R06LRdUCSE"
                                            class="form-control" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <div>
+                                        <label
+                                            class="control-label">{{ \App\CPU\translate('Video shopping') }}
+                                        </label>
+                                    </div>
+                                    <label class="switch">
+                                        <input type="checkbox" {{ $product->video_shopping ? 'checked':''}} class="status" value="{{ old('video_shopping') }}"
+                                            name="video_shopping">
+                                        <span class="slider round"></span>
+                                    </label>
                                 </div>
 
                                 <div class="col-md-6">
@@ -819,7 +836,7 @@
         };
 
         function add_fields() {
-          document.getElementById("myTable").insertRow(-1).innerHTML = '<tr><td><input type="date"  placeholder="start day" name="start_day[]" value="" class="form-control" required></td><td><input type="nubmer" placeholder="Discount" name="discountCam[]" value="" class="form-control" required> </td> </tr>';
+          document.getElementById("myTable").insertRow(-1).innerHTML = '<tr><td><input type="date"  placeholder="start day" name="start_day[]" value="" class="form-control" required></td><td><input type="date"  placeholder="end day" name="end_day[]" value="" class="form-control" required></td><td><input type="nubmer" placeholder="Discount" name="discountCam[]" value="" class="form-control" required> </td> </tr>';
         }
     </script>
 

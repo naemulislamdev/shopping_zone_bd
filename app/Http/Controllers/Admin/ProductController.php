@@ -245,6 +245,12 @@ class ProductController extends BaseController
 
         $p->video_provider = 'youtube';
         $p->video_url = $request->video_link;
+        $videoShopping =$request->has('video_shopping');
+        if($videoShopping == 1){
+            $p->video_shopping = true;
+        }else{
+            $p->video_shopping = false;
+        }
         $p->request_status = 1;
         $p->shipping_cost = BackEndHelper::currency_to_usd($request->shipping_cost);
         $p->multiply_qty = $request->multiplyQTY=='on'?1:0;
@@ -704,6 +710,12 @@ class ProductController extends BaseController
 
         $product->video_provider = 'youtube';
         $product->video_url = $request->video_link;
+        $videoShopping =$request->has('video_shopping');
+        if($videoShopping == 1){
+            $product->video_shopping = true;
+        }else{
+            $product->video_shopping = false;
+        }
         if ($product->added_by == 'seller' && $product->request_status == 2) {
             $product->request_status = 1;
         }
@@ -777,6 +789,7 @@ class ProductController extends BaseController
                     $campaing_detalie[] = [
                         'product_id' => $product->id,
                         'start_day' => $request['start_day'][$i],
+                        'end_day' => $request['end_day'][$i],
                         'discountCam' => $request['discountCam'][$i],
                         'auth_id' => auth('admin')->id(),
                     ];

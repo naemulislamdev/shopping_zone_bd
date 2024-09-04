@@ -1752,6 +1752,8 @@
   'Invalid Order Id or Phone Number' => 'Invalid Order Id or Phone Number',
   'management' => 'Management',
   'Product settings' => 'Product settings',
+  'Video shopping' => 'Video shopping',
+  'Company hotline' => 'Company hotline',
   'Language Translate' => 'Language Translate',
   'language_content_table' => 'Language content table',
   'value' => 'Value',
@@ -1785,4 +1787,5 @@
   'Copyright © 2024 - Shopping Zone BD All Rights Reserved. Desing &' => 'Copyright © 2024 - Shopping Zone BD All Rights Reserved. Desing &',
   'Profile info' => 'Profile info',
   'Facebook Post' => 'Facebook Post',
+  'Cash on delevery' => 'Cash on delevery',
 );

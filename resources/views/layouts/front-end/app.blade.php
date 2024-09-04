@@ -142,7 +142,7 @@
             <div class="row">
                 <div class="col-md-6 text-right">
                     <div>
-                        <span class="topbar-contact">{{\App\CPU\translate('Hotline')}}: <a href="tel:{{ \App\CPU\Helpers::get_business_settings('company_phone') }}">{{ \App\CPU\Helpers::get_business_settings('company_phone') }}</a></span>
+                        <span class="topbar-contact">{{\App\CPU\translate('Hotline')}}: <a href="tel:{{ \App\CPU\Helpers::get_business_settings('company_hotline') }}">{{ \App\CPU\Helpers::get_business_settings('company_hotline') }}</a></span>
                     </div>
                 </div>
                 <div class="col-md-6">
