@@ -79,7 +79,7 @@
                                     </div>
                                     <!-- End Custom Radio -->
                                 </div>
-    
+
                                 <div class="col-sm mb-2 mb-sm-0">
                                     <!-- Custom Radio -->
                                     <div class="form-control">
@@ -105,28 +105,28 @@
             </div>
 
             <div class="row col-12">
-                
+
                 <div class="col-12 col-md-6 mb-1">
                     <div class="card">
                         <div class="card-header">
                             <h5 class="text-center">{{\App\CPU\translate('apple_store')}} {{\App\CPU\translate('Status')}}</h5>
                         </div>
                         <div class="card-body" style="padding: 20px">
-    
+
                             @php($config=\App\CPU\Helpers::get_business_settings('download_app_apple_stroe'))
                             <form style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};"
                                   action="{{route('admin.business-settings.web-config.app-store-update',['download_app_apple_stroe'])}}"
                                   method="post">
                                 @csrf
                                 @if(isset($config))
-    
+
                                     <div class="form-group mb-2 mt-2">
                                         <input type="radio" name="status" value="1" {{$config['status']==1?'checked':''}}>
                                         <label
                                             style="padding-{{Session::get('direction') === "rtl" ? 'right' : 'left'}}: 10px">{{\App\CPU\translate('Active')}}</label>
                                         <br>
                                     </div>
-    
+
                                     <div class="form-group mb-2">
                                         <input type="radio" name="status" value="0" {{$config['status']==0?'checked':''}}>
                                         <label
@@ -139,7 +139,7 @@
                                         <input type="text" class="form-control" name="link" value="{{$config['link']}}"
                                                required>
                                     </div>
-    
+
                                     <button type="submit"
                                             class="btn btn-primary mb-2 float-right">{{\App\CPU\translate('Save')}}</button>
                                 @else
@@ -150,21 +150,21 @@
                         </div>
                     </div>
                 </div>
-    
+
                 <div class="col-12 col-md-6">
                     <div class="card">
                         <div class="card-header">
                             <h5 class="text-center">{{\App\CPU\translate('google_play_store')}} {{\App\CPU\translate('Status')}}</h5>
                         </div>
                         <div class="card-body" style="padding: 20px">
-    
+
                             @php($config=\App\CPU\Helpers::get_business_settings('download_app_google_stroe'))
                             <form style="text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};"
                                   action="{{route('admin.business-settings.web-config.app-store-update',['download_app_google_stroe'])}}"
                                   method="post">
                                 @csrf
                                 @if(isset($config))
-    
+
                                     <div class="form-group mb-2 mt-2">
                                         <input type="radio" name="status" value="1" {{$config['status']==1?'checked':''}}>
                                         <label
@@ -183,7 +183,7 @@
                                         <input type="text" class="form-control" name="link" value="{{$config['link']}}"
                                                required>
                                     </div>
-    
+
                                     <button type="submit"
                                             class="btn btn-primary mb-2 float-right">{{\App\CPU\translate('Save')}}</button>
                                 @else
@@ -339,12 +339,21 @@
                             <label
                                 class="input-label">{{\App\CPU\translate('shop_address')}}</label>
                             <input type="text" value="{{isset($shop_address)!=null?$shop_address:''}}"
-                                   name="shop_address" class="form-control" 
+                                   name="shop_address" class="form-control"
                                    placeholder="{{\App\CPU\translate('Your_shop_address')}}"
                                    required>
                         </div>
                     </div>
-                    
+                    <div class="col-md-4">
+                        @php($company_hotline=\App\Model\BusinessSetting::where('type','company_hotline')->first())
+                        <div class="form-group">
+                            <label class="input-label">{{\App\CPU\translate('Company hotline')}}</label>
+                            <input class="form-control" type="text" name="company_hotline"
+                                   value="{{ $company_hotline->value?$company_hotline->value:"" }}"
+                                   placeholder="New Hotline">
+                        </div>
+                    </div>
+
                 </div>
 
                 @php($tz=\App\Model\BusinessSetting::where('type','timezone')->first())
@@ -1284,7 +1293,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
 
                 </div>
                 <hr>

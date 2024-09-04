@@ -1752,4 +1752,6 @@
   'Invalid Order Id or Phone Number' => 'Invalid Order Id or Phone Number',
   'management' => 'Management',
   'Product settings' => 'Product settings',
+  'Video shopping' => 'Video shopping',
+  'Company hotline' => 'Company hotline',
 );

@@ -83,13 +83,13 @@ class BusinessSettingsController extends Controller
         // $about_us = BusinessSetting::where('type', 'about_us')->first();
         return view('admin-views.business-settings.social-media');
     }
-    
+
     public function facebook_post()
     {
         // $about_us = BusinessSetting::where('type', 'about_us')->first();
         return view('admin-views.business-settings.facebook-post');
     }
-    
+
 
     public function fetch(Request $request)
     {
@@ -239,6 +239,9 @@ class BusinessSettingsController extends Controller
         DB::table('business_settings')->updateOrInsert(['type' => 'company_phone'], [
             'value' => $request['company_phone']
         ]);
+        DB::table('business_settings')->updateOrInsert(['type' => 'company_hotline'], [
+            'value' => $request['company_hotline']
+        ]);
         // stock limit
         DB::table('business_settings')->updateOrInsert(['type' => 'stock_limit'], [
             'value' => $request['stock_limit']
@@ -274,7 +277,7 @@ class BusinessSettingsController extends Controller
         DB::table('business_settings')->updateOrInsert(['type' => 'decimal_point_settings'], [
             'value' => $request['decimal_point_settings']
         ]);
-        
+
         DB::table('business_settings')->updateOrInsert(['type' => 'shop_address'], [
             'value' => $request['shop_address']
         ]);
@@ -729,7 +732,7 @@ class BusinessSettingsController extends Controller
 
     public function product_approval(Request $request)
     {
-        
+
         DB::table('business_settings')->updateOrInsert(['type' => 'new_product_approval'], [
             'value' => $request->new_product_approval == 'on'?1:0
         ]);
@@ -848,7 +851,7 @@ class BusinessSettingsController extends Controller
         Toastr::success(\App\CPU\translate('google_tag_manager_id_updated'));
         return back();
     }
-    
+
     public function facebook_media_store(Request $request)
     {
         $social_media = new facebook_post;
@@ -860,7 +863,7 @@ class BusinessSettingsController extends Controller
             'success' => 1,
         ]);
     }
-    
+
     public function facebookget(Request $request)
     {
         if ($request->ajax()) {
@@ -868,8 +871,8 @@ class BusinessSettingsController extends Controller
             return response()->json($data);
         }
     }
-    
-    
+
+
     public function facebook_status_update(Request $request)
     {
 
@@ -881,23 +884,23 @@ class BusinessSettingsController extends Controller
             'success' => 1,
         ], 200);
     }
-    
+
      public function facebook_media_delete(Request $request)
     {
         $br = facebook_post::find($request->id);
         $br->delete();
         return response()->json();
     }
-    
+
     // Meta
-    
-    
+
+
      public function meta_post()
     {
         // $about_us = BusinessSetting::where('type', 'about_us')->first();
         return view('admin-views.business-settings.meta');
     }
-    
+
      public function meta(Request $request)
     {
         if ($request->ajax()) {
@@ -905,13 +908,13 @@ class BusinessSettingsController extends Controller
             return response()->json($data);
         }
     }
-    
+
     public function meta_post_edit(Request $request)
     {
         $data = metaAdd::where('id', $request->id)->first();
         return response()->json($data);
     }
-    
+
      public function meta_post_update(Request $request)
     {
         $social_media = metaAdd::find($request->id);
