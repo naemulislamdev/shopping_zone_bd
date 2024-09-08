@@ -121,6 +121,14 @@ class ProductController extends Controller
         return response()->json($products, 200);
     }
 
+    public function get_video_shopping(Request $request)
+    {
+        $products = ProductManager::get_video_shopping_products($request['limit'], $request['offset']);
+        $products['products'] = Helpers::product_data_formatting($products['products'], true);
+
+        return response()->json($products, 200);
+    }
+
     public function get_home_categories()
     {
         $categories = Category::where('home_status', true)->priority()->get();
