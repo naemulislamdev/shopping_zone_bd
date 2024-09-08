@@ -29,6 +29,18 @@ class ProductManager
         ];
     }
 
+    public static function get_video_shopping_products($limit = 10, $offset = 1)
+    {
+        $paginator = Product::where('video_shopping',1)->active()->with(['rating'])->latest()->paginate($limit, ['*'], 'page', $offset);
+        /*$paginator->count();*/
+        return [
+            'total_size' => $paginator->total(),
+            'limit' => (int)$limit,
+            'offset' => (int)$offset,
+            'products' => $paginator->items()
+        ];
+    }
+
     public static function get_featured_products($limit = 40, $offset = 1)
     {
         //change review to ratting

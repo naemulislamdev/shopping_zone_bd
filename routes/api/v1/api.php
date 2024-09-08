@@ -99,6 +99,7 @@ Route::group(['namespace' => 'api\v1', 'prefix' => 'v1', 'middleware' => ['api_l
         Route::get('social-share-link/{product_id}', 'ProductController@social_share_link');
         Route::post('reviews/submit', 'ProductController@submit_product_review')->middleware('auth:api');
         Route::get('best-sellings', 'ProductController@get_best_sellings');
+        Route::get('video-shopping', 'ProductController@get_video_shopping');
         Route::get('home-categories', 'ProductController@get_home_categories');
         Route::get('discounted-product', 'ProductController@get_discounted_product');
         // ProductCampaing
