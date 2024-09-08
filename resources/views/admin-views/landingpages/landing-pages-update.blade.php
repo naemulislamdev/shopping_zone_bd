@@ -42,17 +42,17 @@
                         </ul>
 
                         <div class="form-group">
-                            
-                            
+
+
 
                             <div class="row">
                                 <div class="col-md-12">
                                         <label for="name">Title</label>
                                         <input type="text" name="title" value='{{$landing_pages->title}}' class="form-control" id="title"/>
                                 </div>
-                                
+
                                 <div class="col-md-12 pt-3">
-                                    <label for="name">{{\App\CPU\translate('Main')}} {{\App\CPU\translate('Banner')}}</label><span class="badge badge-soft-danger">( {{\App\CPU\translate('ratio')}} 5:1 )</span>
+                                    <label for="name">{{\App\CPU\translate('Main')}} {{\App\CPU\translate('Banner')}}</label><span class="badge badge-soft-danger">( {{\App\CPU\translate('ratio')}} 1900x400 )</span>
                                     <div class="custom-file" style="text-align: left">
                                         <input type="file" name="image" id="customFileUpload" class="custom-file-input"
                                             accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
@@ -65,9 +65,9 @@
                                         onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'" src="{{asset('storage/app/public/deal')}}/{{$landing_pages->main_banner}}" alt="banner image"/>
                                     </center>
                                 </div>
-                                
+
                                 <div class="col-md-12 pt-3">
-                                    <label for="name">{{\App\CPU\translate('Main')}} {{\App\CPU\translate('Banner')}}</label><span class="badge badge-soft-danger">( {{\App\CPU\translate('ratio')}} 5:1 )</span>
+                                    <label for="name">{{\App\CPU\translate('Mid')}} {{\App\CPU\translate('Banner')}}</label><span class="badge badge-soft-danger">( {{\App\CPU\translate('ratio')}} 5:1 )</span>
                                     <div class="custom-file" style="text-align: left">
                                         <input type="file" name="image1" id="customFileUpload1" class="custom-file-input"
                                             accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
@@ -78,6 +78,34 @@
                                     <center>
                                         <img style="width:70%;border: 1px solid; border-radius: 10px; max-height:200px;" id="viewer1"
                                         onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'" src="{{asset('storage/app/public/deal')}}/{{$landing_pages->mid_banner}}" alt="banner image"/>
+                                    </center>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 pt-3">
+                                    <label for="name">{{\App\CPU\translate('Left Side')}} {{\App\CPU\translate('Banner')}}</label><span class="badge badge-soft-danger">( {{\App\CPU\translate('ratio')}} 5:1 )</span>
+                                    <div class="custom-file" style="text-align: left">
+                                        <input type="file" name="left_side_banner" id="leftImage" class="custom-file-input"
+                                            accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
+                                        <label class="custom-file-label" for="leftImage">{{\App\CPU\translate('choose')}} {{\App\CPU\translate('file')}}</label>
+                                    </div>
+
+                                    <center>
+                                        <img style="width:70%;border: 1px solid; border-radius: 10px; max-height:200px;" id="viewer2"
+                                        onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'" src="{{asset('storage/app/public/deal')}}/{{$landing_pages->left_side_banner}}" alt="banner image"/>
+                                    </center>
+                                </div>
+                                <div class="col-md-6 pt-3">
+                                    <label for="name">{{\App\CPU\translate('Right Side')}} {{\App\CPU\translate('Banner')}}</label><span class="badge badge-soft-danger">( {{\App\CPU\translate('ratio')}} 5:1 )</span>
+                                    <div class="custom-file" style="text-align: left">
+                                        <input type="file" name="right_side_banner" id="rightImage" class="custom-file-input"
+                                            accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
+                                        <label class="custom-file-label" for="rightImage">{{\App\CPU\translate('choose')}} {{\App\CPU\translate('file')}}</label>
+                                    </div>
+
+                                    <center>
+                                        <img style="width:70%;border: 1px solid; border-radius: 10px; max-height:200px;" id="viewer3"
+                                        onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'" src="{{asset('storage/app/public/deal')}}/{{$landing_pages->right_side_banner}}" alt="banner image"/>
                                     </center>
                                 </div>
                             </div>
@@ -115,7 +143,7 @@
         $("#customFileUpload").change(function () {
             readURL(this);
         });
-        
+
         function readURL1(input) {
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
@@ -131,6 +159,36 @@
         $("#customFileUpload1").change(function () {
             readURL1(this);
         });
+        function leftImage(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#viewer2').attr('src', e.target.result);
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $("#leftImage").change(function () {
+            leftImage(this);
+        });
+        function rightImage(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#viewer3').attr('src', e.target.result);
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $("#rightImage").change(function () {
+            rightImage(this);
+        });
 
         $(".js-example-theme-single").select2({
             theme: "classic"
@@ -140,12 +198,12 @@
             width: 'resolve'
         });
     </script>
-    
-    
+
+
 
     <!-- Page level custom scripts -->
 
-   
+
 
     <script>
         $(".lang_link").click(function (e) {

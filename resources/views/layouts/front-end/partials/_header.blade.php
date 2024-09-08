@@ -58,15 +58,27 @@
                                     </div>
                                 </div>
                             </li>
-                            <li><a href="{{ route('shop') }}">{{\App\CPU\translate('Shop')}}</i></a>
+                            <li><a href="{{ route('shop') }}">{{\App\CPU\translate('Shop')}}</a>
                             </li>
-                            <li><a href="{{ route('video_shopping') }}">{{\App\CPU\translate('video shopping')}}</i></a>
+                            <li><a href="{{ route('video_shopping') }}">{{\App\CPU\translate('video shopping')}}</a>
                             </li>
-                            <li><a href="{{ route('campain') }}">{{\App\CPU\translate('Campaign')}}</i></a>
+                            {{-- <li><a href="{{ route('campain') }}">{{\App\CPU\translate('Campaign')}}</i></a> --}}
+                            <li class="dd-btn1"><a href="#">{{\App\CPU\translate('Offer')}} <i class="fa fa-angle-down"></i></a>
+                                @php($landingPages = \App\Model\LandingPages::where('status',1)->get())
+                                <div class="dropdown-menu1 offer-dropdown">
+                                    <ul>
+                                        <li>
+                                            <a href="{{ route('campain') }}">{{\App\CPU\translate('Campaign')}}</i></a>
+                                        </li>
+                                        @foreach ($landingPages as $landingPage)
+                                        <li><a href="{{ route('landing_page',$landingPage->slug) }}">{{$landingPage->title}}</i></a></li>
+                                        @endforeach
+                                    </ul>
+                                </div>
                             </li>
-                            <li><a href="{{ route('selling.product') }}">{{\App\CPU\translate('Selling product')}}</i></a>
+                            <li><a href="{{ route('selling.product') }}">{{\App\CPU\translate('Selling product')}}</a>
                             </li>
-                            <li><a href="{{ route('outlets') }}">{{\App\CPU\translate('Our outlets')}}</i></a></li>
+                            <li><a href="{{ route('outlets') }}">{{\App\CPU\translate('Our outlets')}}</a></li>
                         </ul>
                     </div>
 

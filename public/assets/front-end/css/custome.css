@@ -228,7 +228,9 @@ header.scrolled .menu-area a {
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
 }
-.m-category-box{}
+.offer-dropdown {
+    width: 250px;
+}
 .m-category-box > a {
     color: var(--primary-color);
     font-weight: 700;
@@ -255,6 +257,9 @@ header.scrolled .menu-area a {
 
 .dropdown-menu1 ul li {
     list-style: revert;
+}
+.offer-dropdown ul li {
+    list-style: none;
 }
 
 .dropdown-menu1 ul li a {

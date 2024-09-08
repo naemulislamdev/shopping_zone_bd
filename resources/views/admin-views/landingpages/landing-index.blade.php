@@ -19,7 +19,7 @@
     </nav>
 
     <!-- Content Row -->
-    
+
     <div class="row">
         <div class="col-md-12">
             <div class="card">
@@ -43,7 +43,6 @@
                                 </li>
                             @endforeach
                         </ul>
-
                         <div class="form-group">
                             @foreach(json_decode($language) as $lang)
                                 <div class="row {{$lang != $default_lang ? 'd-none':''}} lang_form" id="{{$lang}}-form">
@@ -57,11 +56,10 @@
                                 </div>
                                 <input type="hidden" name="lang[]" value="{{$lang}}" id="lang">
                             @endforeach
-                            
 
                             <div class="row">
                                 <div class="col-md-12" style="padding-top: 20px;">
-                                    <label for="name">{{\App\CPU\translate('Main')}} {{\App\CPU\translate('Banner')}}</label><span class="badge badge-soft-danger">( {{\App\CPU\translate('ratio')}} 5:1 )</span>
+                                    <label for="name">{{\App\CPU\translate('Main')}} {{\App\CPU\translate('Banner')}}</label><span class="badge badge-soft-danger">( {{\App\CPU\translate('ratio')}} 1900x400 )</span>
                                     <div class="custom-file" style="text-align: left">
                                         <input type="file" name="image" id="customFileUpload" class="custom-file-input"
                                             accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
@@ -77,7 +75,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                              <div class="row">
                                 <div class="col-md-12" style="padding-top: 20px;">
                                     <label for="name">{{\App\CPU\translate('Mid')}} {{\App\CPU\translate('Banner')}}</label><span class="badge badge-soft-danger">( {{\App\CPU\translate('ratio')}} 5:1 )</span>
@@ -96,7 +94,25 @@
                                     </div>
                                 </div>
                             </div>
-                            
+                            <div class="row">
+                                <div class="col-md-6" style="padding-top: 20px;">
+                                    <label for="name">{{\App\CPU\translate('Left side')}} {{\App\CPU\translate('Banner')}}</label><span class="badge badge-soft-danger">( {{\App\CPU\translate('ratio')}} 5:1 )</span>
+                                    <div class="custom-file" style="text-align: left">
+                                        <input type="file" name="left_side_banner" id="customFileUpload1" class="custom-file-input"
+                                            accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
+                                        <label class="custom-file-label" for="customFileUpload1">{{\App\CPU\translate('choose')}} {{\App\CPU\translate('file')}}</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" style="padding-top: 20px;">
+                                    <label for="name">{{\App\CPU\translate('Right side')}} {{\App\CPU\translate('Banner')}}</label><span class="badge badge-soft-danger">( {{\App\CPU\translate('ratio')}} 5:1 )</span>
+                                    <div class="custom-file" style="text-align: left">
+                                        <input type="file" name="right_side_banner" id="customFileUpload1" class="custom-file-input"
+                                            accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
+                                        <label class="custom-file-label" for="customFileUpload1">{{\App\CPU\translate('choose')}} {{\App\CPU\translate('file')}}</label>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
 
                         <div class=" pl-0">
@@ -136,12 +152,12 @@
                             </thead>
                             <tbody>
                             @foreach($landing_page as $k=>$deal)
-                            
+
                                 <tr>
-                                    
+
                                     <td>{{$deal->title}}</td>
                                     <td>{{$deal->slug}}</td>
-                                    
+
                                     <td>
                                         <label class="switch">
                                             <input type="checkbox" class="status"
@@ -169,7 +185,7 @@
                     </div>
                 </div>
 
-               
+
                 @if(count($landing_page)==0)
                     <div class="text-center p-4">
                         <img class="mb-3" src="{{asset('public/assets/back-end')}}/svg/illustrations/sorry.svg" alt="Image Description" style="width: 7rem;">
@@ -179,7 +195,7 @@
             </div>
         </div>
     </div>
-    
+
 </div>
 @endsection
 
@@ -206,7 +222,7 @@
         $("#customFileUpload").change(function () {
             readURL(this);
         });
-        
+
         function readURL1(input) {
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
@@ -236,8 +252,8 @@
             $('#dataTable').DataTable();
         });
 
-        
-        
+
+
         $(document).on('change', '.status', function () {
             var id = $(this).attr("id");
             if ($(this).prop("checked") == true) {
@@ -265,5 +281,5 @@
         });
 
     </script>
-    
+
 @endpush

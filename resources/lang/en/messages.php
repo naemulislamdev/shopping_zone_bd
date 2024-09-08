@@ -1788,4 +1788,10 @@
   'Profile info' => 'Profile info',
   'Facebook Post' => 'Facebook Post',
   'Cash on delevery' => 'Cash on delevery',
+  'Landing page' => 'Landing page',
+  'Offer' => 'Offer',
+  'Left side' => 'Left side',
+  'Right side' => 'Right side',
+  'Left Side' => 'Left Side',
+  'Right Side' => 'Right Side',
 );

@@ -509,6 +509,15 @@
                                     </span>
                                 </a>
                             </li>
+                            <li class="navbar-vertical-aside-has-menu ">
+                                <a class="js-navbar-vertical-aside-menu-link nav-link"
+                                   href="{{route('admin.deal.feature')}}">
+                                    <i class="tio-flag-outlined nav-icon"></i>
+                                    <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
+                                        {{\App\CPU\translate('featured_deal')}}
+                                    </span>
+                                </a>
+                            </li>
                         @endif
                     <!--marketing section ends here-->
 

@@ -445,7 +445,7 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
             });
 
             Route::group(['prefix' => 'seller-settings', 'as' => 'seller-settings.','middleware'=>['module:business_settings']], function () {
-                Route::get('/', 'BusinessSettingsController@seller_settings')->name('index')->middleware('actch');;
+                Route::get('/', 'BusinessSettingsController@seller_settings')->name('index')->middleware('actch');
                 Route::post('update-seller-settings', 'BusinessSettingsController@sales_commission')->name('update-seller-settings');
                 Route::post('update-seller-registration', 'BusinessSettingsController@seller_registration')->name('update-seller-registration');
                 Route::post('seller-pos-settings', 'BusinessSettingsController@seller_pos_settings')->name('seller-pos-settings');
@@ -454,7 +454,7 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
             });
 
             Route::group(['prefix' => 'payment-method', 'as' => 'payment-method.','middleware'=>['module:business_settings']], function () {
-                Route::get('/', 'PaymentMethodController@index')->name('index')->middleware('actch');;
+                Route::get('/', 'PaymentMethodController@index')->name('index')->middleware('actch');
                 Route::post('{name}', 'PaymentMethodController@update')->name('update');
             });
 
