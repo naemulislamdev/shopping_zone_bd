@@ -21,6 +21,7 @@ use App\User;
 use App\Model\SellerWallet;
 use App\Model\ShippingAddress;
 use App\Model\ShippingMethod;
+use App\Model\Courier;
 use App\Model\Shop;
 use Barryvdh\DomPDF\Facade as PDF;
 use Brian2694\Toastr\Facades\Toastr;
@@ -253,12 +254,14 @@ class OrderController extends Controller
         })->when($order->seller_is == 'seller' && $shipping_method == 'inhouse_shipping', function ($query) use ($order) {
             $query->where(['seller_id' => 0]);
         })->get();
+        $curiers = Courier::where('status',1)->get();
+
 
         $shipping_address = ShippingAddress::find($order->shipping_address);
          $orderHistories = OrderHistory::where('order_id',$id)->get();
-        if($order->order_type == 'default_type')
+        if($order->order_type == 'default_type' || $order->order_type == 'apps')
         {
-            return view('admin-views.order.order-details', compact('shipping_address','order','delivery_men','orderHistories'));
+            return view('admin-views.order.order-details', compact('shipping_address','order','delivery_men','orderHistories','curiers'));
         }else{
             return view('admin-views.pos.order.order-details', compact('order'));
         }
