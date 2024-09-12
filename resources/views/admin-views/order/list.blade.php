@@ -524,6 +524,9 @@
                                 <a class="btn btn-info btn-sm mr-1" target="_blank" title="{{\App\CPU\translate('invoice')}}"
                                     href="{{route('admin.orders.generate-invoice',[$order['id']])}}"><i
                                         class="tio-download"></i> </a>
+                                        <a class="btn btn-warning btn-sm mr-1" title="Order Exchange"
+                                        href="{{route('admin.pos.exchange',['id'=>$order['id']])}}"><i
+                                            class="tio-repeat"></i></a>
 
                             </td>
 

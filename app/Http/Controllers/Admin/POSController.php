@@ -912,9 +912,46 @@ class POSController extends Controller
         $previousOrder = Order::find($previousOrderId);
         $previousOrder->order_status = 'EXCHANGE';
         $previousOrder->save();
-        // dd( $previousOrder);
+        $OrderDetail = OrderDetail::where('order_id',$previousOrderId)->get();
+
 
         $cart = session($cart_id);
+
+
+        foreach($OrderDetail as $ec)
+        {
+
+
+                $eProduct = Product::find($ec['product_id']);
+
+                if($eProduct)
+                {
+
+                    if ($ec['variant'] != null) {
+                        $type = $ec['variant'];
+                        $var_store = [];
+
+                        foreach (json_decode($eProduct['variation'],true) as $var) {
+                            if ($type == $var['type']) {
+                                $var['qty'] += $ec['qty'];
+                            }
+                            array_push($var_store, $var);
+                        }
+                      Product::where(['id' => $eProduct['id']])->update([
+                            'variation' => json_encode($var_store),
+                        ]);
+                    }
+
+                    // dd($var_store);
+
+                    Product::where(['id' => $eProduct['id']])->update([
+                        'current_stock' => $eProduct['current_stock'] - $ec['qty']
+                    ]);
+
+
+                }
+
+        }
 
         $total_tax_amount = 0;
         $product_price = 0;
@@ -930,6 +967,7 @@ class POSController extends Controller
         {
             if(is_array($c))
             {
+                // dd($c);
                 $discount_on_product = 0;
                 $product_subtotal = ($c['price']) * $c['quantity'];
                 $discount_on_product += ($c['discount'] * $c['quantity']);

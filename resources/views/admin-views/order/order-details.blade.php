@@ -769,7 +769,17 @@ th {
                                 <div class="card-body">
                                     <div class="form-group">
                                         <label for="">{{\App\CPU\translate('delivery_service_name')}}</label>
-                                        <input class="form-control" type="text" name="delivery_service_name" value="{{$order['delivery_service_name']}}" id="" required>
+
+                                        <select class="form-control text-capitalize js-select2-custom" name="delivery_service_name" required>
+                                            <option
+                                                value="0">{{\App\CPU\translate('select')}}</option>
+                                            @foreach($curiers as $value)
+                                                <option
+                                                    value="{{$value['name']}}" {{$order['delivery_service_name']==$value['name']?'name':''}}>
+                                                    {{$value['name'].' ('.$value['phone'].' )'}}
+                                                </option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                     <div class="form-group">
                                         <label for="">{{\App\CPU\translate('tracking_id')}} ({{\App\CPU\translate('optional')}})</label>
