@@ -98,6 +98,8 @@
             $.get({
                 url: '{{ url('/') }}/products',
                 data: {
+                    data_from: 'category',
+                    sort_by: 'latest',
                     min_price: min,
                     max_price: max,
                 },

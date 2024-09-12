@@ -83,7 +83,7 @@ class ProductController extends BaseController
             'purchase_price'    => 'required|numeric|min:1',
             'discount'          => 'required|gt:-1',
             'shipping_cost'     => 'required|gt:-1',
-            'code'              => 'required|numeric|min:1|digits_between:6,20|unique:products',
+            'code'              => 'required|min:6|max:20|unique:products',
             'minimum_order_qty' => 'required|numeric|min:1',
         ], [
             'images.required'       => 'Product images is required!',
@@ -92,7 +92,7 @@ class ProductController extends BaseController
             'brand_id.required'     => 'brand  is required!',
             'unit.required'         => 'Unit  is required!',
             'code.min'              => 'The code must be positive!',
-            'code.digits_between'   => 'The code must be minimum 6 digits!',
+            'code.required'   => 'The code must be minimum 6 digits!',
             'minimum_order_qty.required' => 'The minimum order quantity is required!',
             'minimum_order_qty.min' => 'The minimum order quantity must be positive!',
         ]);
@@ -143,14 +143,12 @@ class ProductController extends BaseController
                 'position' => 1,
             ]);
         }
-
         if ($request->sub_category_id != null) {
             array_push($category, [
                 'id' => $request->sub_category_id,
                 'position' => 2,
             ]);
         }
-
         if ($request->sub_sub_category_id != null) {
             array_push($category, [
                 'id' => $request->sub_sub_category_id,
@@ -162,7 +160,6 @@ class ProductController extends BaseController
         $p->brand_id = $request->brand_id;
         $p->unit = $request->unit;
         $p->details = $request->description[array_search('en', $request->lang)];
-        $p->short_description = $request->short_description[array_search('en', $request->lang)];
 
         if ($request->has('colors_active') && $request->has('colors') && count($request->colors) > 0) {
             $p->colors = json_encode($request->colors);
@@ -245,7 +242,7 @@ class ProductController extends BaseController
 
         $p->video_provider = 'youtube';
         $p->video_url = $request->video_link;
-        $videoShopping =$request->has('video_shopping');
+         $videoShopping =$request->has('video_shopping');
         if($videoShopping == 1){
             $p->video_shopping = true;
         }else{
@@ -254,8 +251,6 @@ class ProductController extends BaseController
         $p->request_status = 1;
         $p->shipping_cost = BackEndHelper::currency_to_usd($request->shipping_cost);
         $p->multiply_qty = $request->multiplyQTY=='on'?1:0;
-
-
 
         if ($request->ajax()) {
             return response()->json([], 200);
@@ -268,13 +263,11 @@ class ProductController extends BaseController
             }
             $p->thumbnail = ImageManager::upload('product/thumbnail/', 'png', $request->image);
             $p->size_chart = ImageManager::upload('product/thumbnail/', 'png', $request->size_chart);
-
             $p->meta_title = $request->meta_title;
             $p->meta_description = $request->meta_description;
             $p->meta_image = ImageManager::upload('product/meta/', 'png', $request->meta_image);
 
             $p->save();
-
 
             $data = [];
             foreach ($request->lang as $index => $key) {
@@ -298,23 +291,6 @@ class ProductController extends BaseController
                 }
             }
             Translation::insert($data);
-
-
-             $campaing_detalie = [];
-                for ($i = 0; $i < count($request->start_day); $i++) {
-                    $campaing_detalie[] = [
-                        'product_id' => $p->id,
-                        'start_day' => $request['start_day'][$i],
-                        'discountCam' => $request['discountCam'][$i],
-                        'auth_id' => auth('admin')->id(),
-                    ];
-               }
-
-
-
-                    campaing_detalie::insert($campaing_detalie);
-
-
 
             Toastr::success(translate('Product added successfully!'));
             return redirect()->route('admin.product.list', ['in_house']);
@@ -555,15 +531,15 @@ class ProductController extends BaseController
             'purchase_price'    => 'required|numeric|min:1',
             'discount'          =>'required|gt:-1',
             'shipping_cost'     => 'required|gt:-1',
-            'code'              => 'required|numeric|min:1|digits_between:6,20|unique:products,code,'.$product->id,
+            'code'              => 'required|min:6|max:20|unique:products,code,'.$product->id,
             'minimum_order_qty' => 'required|numeric|min:1',
         ], [
             'name.required'         => 'Product name is required!',
             'category_id.required'  => 'category  is required!',
             'brand_id.required'     => 'brand  is required!',
             'unit.required'         => 'Unit  is required!',
-            'code.min'              => 'The code must be positive!',
-            'code.digits_between'   => 'The code must be minimum 6 digits!',
+            'code.required'              => 'The code must be positive!',
+            'code.min'   => 'The code must be minimum 6 digits!',
             'minimum_order_qty.required' => 'The minimum order quantity is required!',
             'minimum_order_qty.min' => 'The minimum order quantity must be positive!',
         ]);

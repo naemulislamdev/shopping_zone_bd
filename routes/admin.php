@@ -83,6 +83,7 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
          Route::group(['prefix' => 'landingpages', 'as' => 'landingpages.','middleware'=>['module:marketing_section']], function () {
             Route::get('landing', 'LandingPagesController@landing_index')->name('landing');
             Route::post('landing', 'LandingPagesController@landing_submit');
+            Route::get('remove-banner', 'LandingPagesController@remove_image')->name('remove-image');
             Route::post('status-update', 'LandingPagesController@status_update')->name('status-update');
             Route::get('update/{id}', 'LandingPagesController@edit')->name('update');
             Route::post('landing_pages_update/{id}', 'LandingPagesController@update')->name('landing_pages_update');

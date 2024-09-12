@@ -141,7 +141,12 @@ class WebController extends Controller
     public function searchProducts(Request $request)
     {
         $query = $request->input('query');
-        $products = Product::active()->where('name', 'LIKE', "%{$query}%")->get();
+        $products = Product::active()
+            ->where(function ($queryBuilder) use ($query) {
+                $queryBuilder->where('name', 'LIKE', "%{$query}%")
+                    ->orWhere('code', 'LIKE', "%{$query}%");
+            })
+            ->get();
         $categories = Category::where('position', 0)->where('name', 'LIKE', "%{$query}%")->priority()->get();
 
         $output = '';
@@ -808,12 +813,13 @@ class WebController extends Controller
             return redirect('/');
         }
     }
-    public function landingPage($landing_slug){
-        $landing_page = DB::table('landing_pages')->where(['slug' => $landing_slug])->where('status',1)->first();
-      $landing_page_pro = DB::table('landing_pages_products')->where('landing_id',$landing_page->id)->pluck('product_id')->toArray();
-      $landing_products=Product::with(['rating'])->whereIn('id', $landing_page_pro)->orderBy('id', 'DESC')->active()->get();
-     // dd($landing_page_pro);
-        return view('web-views.landing-page.pages',compact('landing_products','landing_page'));
+    public function landingPage($landing_slug)
+    {
+        $landing_page = DB::table('landing_pages')->where(['slug' => $landing_slug])->where('status', 1)->first();
+        $landing_page_pro = DB::table('landing_pages_products')->where('landing_id', $landing_page->id)->pluck('product_id')->toArray();
+        $landing_products = Product::with(['rating'])->whereIn('id', $landing_page_pro)->orderBy('id', 'DESC')->active()->get();
+        // dd($landing_page_pro);
+        return view('web-views.landing-page.pages', compact('landing_products', 'landing_page'));
     }
     public function campaing_products_tomrrrow()
     {

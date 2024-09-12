@@ -1794,4 +1794,6 @@
   'Right side' => 'Right side',
   'Left Side' => 'Left Side',
   'Right Side' => 'Right Side',
+  'Profile' => 'Profile',
+  'Order Id' => 'Order Id',
 );

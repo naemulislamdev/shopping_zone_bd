@@ -353,8 +353,9 @@ class SystemController extends Controller
             session()->forget('payment_method');
             session()->forget('customer_info');
             session()->forget('shipping_method_id');
+            $order = Order::find($order_id);
 
-            return view('web-views.checkout-complete', compact('order_id'));
+            return view('web-views.checkout-complete', compact('order'));
         } else {
             return "something went wrong please try again";
         }
