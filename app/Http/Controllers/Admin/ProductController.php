@@ -83,7 +83,7 @@ class ProductController extends BaseController
             'purchase_price'    => 'required|numeric|min:1',
             'discount'          => 'required|gt:-1',
             'shipping_cost'     => 'required|gt:-1',
-            'code'              => 'required|min:6|max:20|unique:products',
+            'code'              => 'required|min:4|max:20|unique:products',
             'minimum_order_qty' => 'required|numeric|min:1',
         ], [
             'images.required'       => 'Product images is required!',
@@ -92,7 +92,7 @@ class ProductController extends BaseController
             'brand_id.required'     => 'brand  is required!',
             'unit.required'         => 'Unit  is required!',
             'code.min'              => 'The code must be positive!',
-            'code.required'   => 'The code must be minimum 6 digits!',
+            'code.required'   => 'The code must be minimum 4 digits!',
             'minimum_order_qty.required' => 'The minimum order quantity is required!',
             'minimum_order_qty.min' => 'The minimum order quantity must be positive!',
         ]);
@@ -531,7 +531,7 @@ class ProductController extends BaseController
             'purchase_price'    => 'required|numeric|min:1',
             'discount'          =>'required|gt:-1',
             'shipping_cost'     => 'required|gt:-1',
-            'code'              => 'required|min:6|max:20|unique:products,code,'.$product->id,
+            'code'              => 'required|min:4|max:20|unique:products,code,'.$product->id,
             'minimum_order_qty' => 'required|numeric|min:1',
         ], [
             'name.required'         => 'Product name is required!',
@@ -539,7 +539,7 @@ class ProductController extends BaseController
             'brand_id.required'     => 'brand  is required!',
             'unit.required'         => 'Unit  is required!',
             'code.required'              => 'The code must be positive!',
-            'code.min'   => 'The code must be minimum 6 digits!',
+            'code.min'   => 'The code must be minimum 4 digits!',
             'minimum_order_qty.required' => 'The minimum order quantity is required!',
             'minimum_order_qty.min' => 'The minimum order quantity must be positive!',
         ]);

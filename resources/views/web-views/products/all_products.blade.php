@@ -9,7 +9,7 @@
             <div class="row mb-3">
                 <div class="col text-center">
                     <div class="section-heading-title">
-                        <h3>Shopping</h3>
+                        <h3>{{$categoryName ?? 'Shop'}}</h3>
                         <div class="heading-border"></div>
                     </div>
                     <div class="grid-controls">

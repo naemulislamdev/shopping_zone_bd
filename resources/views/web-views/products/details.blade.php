@@ -31,8 +31,8 @@
     <meta property="og:url" content="{{ route('product', [$product->slug]) }}">
 
     @if ($product['meta_description'] != null)
-        <meta property="twitter:description" content="{!! $product['meta_description'] !!}">
-        <meta property="og:description" content="{!! $product['meta_description'] !!}">
+        <meta property="twitter:description" content="{{strip_tags($product['meta_description']) }}">
+        <meta property="og:description" content="{{strip_tags($product['meta_description']) }}">
     @else
         <meta property="og:description"
             content="@foreach (explode(' ', $product['name']) as $keyword) {{ $keyword . ' , ' }} @endforeach">
