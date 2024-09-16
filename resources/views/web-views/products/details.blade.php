@@ -81,6 +81,9 @@
         .owl-carousel .owl-nav button.owl-next {
             outline: none;
         }
+        .owl-carousel .owl-item img {
+    height: 80px;
+}
 
         .card-header {
             padding: 6px 0px;
