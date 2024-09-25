@@ -45,6 +45,7 @@ use Gregwar\Captcha\CaptchaBuilder;
 use App\CPU\CustomerManager;
 use App\CPU\Convert;
 use App\Model\Branch;
+use App\ProductLandingPage;
 use Carbon\Carbon;
 
 class WebController extends Controller
@@ -212,7 +213,7 @@ class WebController extends Controller
         }
         $videoProducts = $allProducts->paginate(30);
 
-            return view('web-views.video_shopping', compact('videoProducts'));
+        return view('web-views.video_shopping', compact('videoProducts'));
     }
 
     //shop function
@@ -863,7 +864,7 @@ class WebController extends Controller
         }
         $campainProducts = $allProducts->paginate(30);
 
-            return view('web-views.campain', compact('campainProducts'));
+        return view('web-views.campain', compact('campainProducts'));
     }
     public function landingPage($landing_slug)
     {
@@ -872,6 +873,17 @@ class WebController extends Controller
         $landing_products = Product::with(['rating'])->whereIn('id', $landing_page_pro)->orderBy('id', 'DESC')->active()->get();
         // dd($landing_page_pro);
         return view('web-views.landing-page.pages', compact('landing_products', 'landing_page'));
+    }
+    public function signleProductLandingPage($slug)
+    {
+        $productLandingPage = ProductLandingPage::where('slug', $slug)->where('status', true)->first();
+        if ($productLandingPage) {
+
+            return view('web-views.landing-page.signle_product', compact('productLandingPage'));
+        } else {
+            Toastr::warning('Landing pages is time out');
+            return redirect()->route('home');
+        }
     }
     public function campaing_products_tomrrrow()
     {

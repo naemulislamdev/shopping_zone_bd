@@ -83,7 +83,7 @@ class ProductController extends BaseController
             'purchase_price'    => 'required|numeric|min:1',
             'discount'          => 'required|gt:-1',
             'shipping_cost'     => 'required|gt:-1',
-            'code'              => 'required|min:4|max:20|unique:products',
+            'code'              => 'required|min:4|max:20',
             'minimum_order_qty' => 'required|numeric|min:1',
         ], [
             'images.required'       => 'Product images is required!',

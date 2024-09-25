@@ -91,6 +91,16 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
             Route::post('add-product/{landing_id}', 'LandingPagesController@add_product_submit');
             Route::post('delete-product', 'LandingPagesController@delete_product')->name('delete-product');
 
+            Route::get('/index', 'LandingPagesController@index')->name('index');
+            Route::get('/create', 'LandingPagesController@create')->name('create');
+            Route::post('/store', 'LandingPagesController@store')->name('store');
+            Route::get('/edit{id}', 'LandingPagesController@SingleProductEdit')->name('edit');
+            Route::post('/product-landing-page/update/{id}', 'LandingPagesController@SingleProductUpdate')->name('single.update');
+            Route::post('status', 'LandingPagesController@LandingPageStatus')->name('status');
+            Route::get('remove/slider', 'LandingPagesController@removeImage')->name('remove_image');
+            Route::get('remove/feature-list', 'LandingPagesController@removeFeatureList')->name('remove_feature_list');
+            Route::get('remove/landing-page/section', 'LandingPagesController@removePageSection')->name('remove_page_section');
+            Route::get('remove/landing-page/{id}', 'LandingPagesController@removeLandingPage')->name('remove_landing_page');
 
         });
 

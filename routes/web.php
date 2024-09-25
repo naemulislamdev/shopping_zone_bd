@@ -151,6 +151,7 @@ Route::group(['namespace' => 'Web','middleware'=>['maintenance_mode']], function
         Route::post('store', 'WebController@contact_store')->name('store');
         Route::get('/code/captcha/{tmp}', 'WebController@captcha')->name('default-captcha');
     });
+    Route::get('/page/{slug}', 'WebController@signleProductLandingPage')->name('signle.landing_page');
     Route::get('/{slug}', 'WebController@landingPage')->name('landing_page');
 });
 

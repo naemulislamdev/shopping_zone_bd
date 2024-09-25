@@ -35,6 +35,7 @@ class SystemController extends Controller
 
     public function set_shipping_method(Request $request)
     {
+        //dd($request->all());
         if ($request['id'] != 0) {
             session()->put('shipping_method_id', $request['id']);
 
@@ -43,10 +44,12 @@ class SystemController extends Controller
                 if ($key == $request['key']) {
                     $object['shipping_method_id'] = $request['id'];
                     $object['shipping_cost'] = ShippingMethod::find($request['id'])->cost;
+
                 }
                 return $object;
             });
-            $request->session()->put('cart', $cart);
+            $data = $request->session()->put('cart', $cart);
+            dd($data);
 
             return response()->json([
                 'status' => 1

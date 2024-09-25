@@ -616,6 +616,8 @@
                 url: route,
                 dataType: 'json',
                 success: function(data) {
+                    console.log(data);
+
                     if (type == 'select') {
                         $('#' + id).empty().append(data.select_tag);
                     }

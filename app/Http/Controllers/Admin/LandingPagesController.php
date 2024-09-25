@@ -10,11 +10,14 @@ use App\Model\LandingPage;
 use App\Model\LandingPages;
 use App\Model\Product;
 use App\Model\Translation;
+use App\ProductLandingPage;
+use App\ProductLandingPageSection;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Svg\Tag\Path;
 
 class LandingPagesController extends Controller
 {
@@ -187,5 +190,266 @@ class LandingPagesController extends Controller
         DB::table('landing_pages_products')->where('product_id', $request->id)->delete();
 
         return response()->json();
+    }
+    public function index()
+    {
+        $productLandingpage = ProductLandingPage::latest()->get();
+        return view('admin-views.landingpages.sign_product.index', compact('productLandingpage'));
+    }
+    public function create()
+    {
+        return view('admin-views.landingpages.sign_product.create');
+    }
+    public function store(Request $request)
+    {
+        //dd($request->all());
+        $request->validate([
+            'title' => 'required|string',
+            'images' => 'required',
+            'description' => 'required|string',
+            'product_id' => 'required',
+            'feature_title' => 'required',
+            'feature_image' => 'required',
+            'video_url' => 'required',
+        ]);
+
+        $images = null;
+        if ($request->file('images')) {
+            foreach ($request->file('images') as $img) {
+                $main_slider_images[] = ImageManager::upload('landingpage/slider/', 'png', $img);
+            }
+            $images = json_encode($main_slider_images);
+        }
+        $featureList = null;
+        if ($request->feature_title) {
+            foreach ($request->feature_title as $title) {
+                $feature_list[] = $title;
+            }
+            $featureList = json_encode($feature_list);
+        }
+        $productLandingpage = ProductLandingPage::create([
+            'title' => $request->title,
+            'slug' => Str::slug($request->title),
+            'slider_img' => $images,
+            'product_id' => $request->product_id,
+            'description' => $request->description,
+            'feature_list' => $featureList,
+            'feature_img' => $request->has('feature_image') ? ImageManager::upload('landingpage/', 'png', $request->file('feature_image')) : 'def.png',
+            'video_url' => $request->video_url,
+            'status' => 0,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $sectionTitles = $request->section_title;
+        if ($sectionTitles) {
+            foreach ($sectionTitles as $key => $val) {
+
+                $requestImg = $request->section_img[$key];
+                $sectionImg = $requestImg ? ImageManager::upload('landingpage/', 'png', $requestImg) : 'def.png';
+                $sectionDirection = $request->section_direction[$key];
+                $orderButton = $request->order_button[$key];
+                ProductLandingPageSection::create([
+                    'product_landing_page_id' => $productLandingpage->id,
+                    'section_title' => $val,
+                    'section_description' => $request->section_description[$key],
+                    'section_img' => $sectionImg,
+                    'section_direction' => $sectionDirection,
+                    'order_button' => $orderButton,
+                ]);
+            }
+        }
+        Toastr::success('Landing pages  created is successfully!');
+        return back();
+    }
+    public function LandingPageStatus(Request $request)
+    {
+
+        // DB::table('landing_pages')->where(['status' => 1])->update(['status' => 0]);
+        ProductLandingPage::where(['id' => $request['id']])->update([
+            'status' => $request['status'],
+        ]);
+        return response()->json([
+            'success' => 1,
+        ], 200);
+    }
+    public function SingleProductEdit($id)
+    {
+        $productLandingpage = ProductLandingPage::find($id);
+        //dd($productLandingpage->landingPageSection);
+        return view('admin-views.landingpages.sign_product.edit', compact('productLandingpage'));
+    }
+    public function removeImage(Request $request)
+    {
+        ImageManager::delete('/landingpage/slider/' . $request['image']);
+        $landingPage = ProductLandingPage::find($request['id']);
+        $array = [];
+        if (count(json_decode($landingPage->slider_img)) == 2) {
+            Toastr::warning('You cannot delete all images!');
+            return back();
+        }
+        foreach (json_decode($landingPage['slider_img']) as $image) {
+            if ($image != $request['name']) {
+                array_push($array, $image);
+            }
+        }
+        ProductLandingPage::where('id', $request['id'])->update([
+            'slider_img' => json_encode($array),
+        ]);
+        Toastr::success('Slider image removed successfully!');
+        return back();
+    }
+    public function removeFeatureList(Request $request)
+    {
+        $landingPage = ProductLandingPage::find($request['id']);
+        $array = [];
+        if (count(json_decode($landingPage->feature_list)) == 2) {
+            Toastr::warning('You cannot delete all feature list!');
+            return back();
+        }
+        foreach (json_decode($landingPage['feature_list']) as $list) {
+            if ($list != $request['name']) {
+                array_push($array, $list);
+            }
+        }
+        ProductLandingPage::where('id', $request['id'])->update([
+            'feature_list' => json_encode($array),
+        ]);
+        Toastr::success('Feature list removed successfully!');
+        return back();
+    }
+    public function removePageSection(Request $request)
+    {
+        $pageSection = ProductLandingPageSection::find($request['id']);
+        if ($pageSection->section_img) {
+            @unlink('storage/app/public/landingpage/' . $pageSection->section_img);
+        }
+
+        $pageSection->delete();
+        Toastr::success('Landing page section remove successfully!');
+        return back();
+    }
+    public function SingleProductUpdate(Request $request, $id)
+    {
+        //dd($request->all());
+        $request->validate([
+            'title' => 'required|string',
+            'description' => 'required|string',
+            'product_id' => 'required',
+            'feature_title' => 'required',
+            'video_url' => 'required',
+        ]);
+        $productLandingpage = ProductLandingPage::find($id);
+
+        $images = json_decode($productLandingpage->slider_img, true) ?? [];
+
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $img) {
+                $uploaded_image = ImageManager::upload('landingpage/slider/', 'png', $img);
+                $images[] = $uploaded_image;
+            }
+        }
+        $finalImage = json_encode($images);
+        //Feature Title
+        $featureList = json_decode($productLandingpage->feature_list, true) ?? [];
+
+        // Handle deletion of features
+        if ($request->deleted_features) {
+            foreach ($request->deleted_features as $deletedFeature) {
+                if (($key = array_search($deletedFeature, $featureList)) !== false) {
+                    unset($featureList[$key]);
+                }
+            }
+        }
+        // Add new or updated feature titles
+        if ($request->feature_title) {
+            foreach ($request->feature_title as $submittedFeature) {
+                if (!in_array($submittedFeature, $featureList)) {
+                    $featureList[] = $submittedFeature;
+                }
+            }
+        }
+        $FinalFeatureList = json_encode(array_values($featureList));
+
+
+        if ($request->feature_image) {
+            $featureImage = ImageManager::update('landingpage/', $productLandingpage->feature_img, 'png', $request->file('feature_image'));
+        }
+        $productLandingpage->update([
+            'title' => $request->title,
+            'slug' => Str::slug($request->title),
+            'slider_img' => $finalImage,
+            'product_id' => $request->product_id,
+            'description' => $request->description,
+            'feature_list' => $FinalFeatureList,
+            'feature_img' => $featureImage ?? $productLandingpage->feature_img,
+            'video_url' => $request->video_url,
+        ]);
+
+        // Handle existing sections
+        if ($request->existing_section_id) {
+            foreach ($request->existing_section_id as $sectionId) {
+                $section = ProductLandingPageSection::where('id', $sectionId)->first();
+                $requestImg = $request->file('section_img')[$sectionId] ?? null;
+                $sectionImg = $requestImg ? ImageManager::upload('landingpage/', 'png', $requestImg) : $section->section_img;
+                $section->update([
+                    'section_title' => $request->section_title[$sectionId],
+                    'section_description' => $request->section_description[$sectionId],
+                    'section_img' => $sectionImg,
+                    // 'section_img' => $this->handleImageUpload($request->file('section_img')[$sectionId]),
+                    'section_direction' => $request->section_direction[$sectionId],
+                    'order_button' => $request->order_button[$sectionId],
+                ]);
+            }
+        }
+
+
+        // Handle new sections
+        if ($request->has('new_section_title')) {
+            foreach ($request->new_section_title as $key => $title) {
+
+                $requestImg = $request->file('new_section_img')[$key] ?? null;
+                $sectionImg = $requestImg ? ImageManager::upload('landingpage/', 'png', $requestImg) : 'def.png';
+                ProductLandingPageSection::create([
+                    'section_title' => $title,
+                    'section_description' => $request->new_section_description[$key],
+                    'section_img' => $sectionImg,
+                    'section_direction' => $request->new_section_direction[$key],
+                    'order_button' => $request->new_order_button[$key],
+                    'product_landing_page_id' => $productLandingpage->id,
+                ]);
+            }
+        }
+
+
+        Toastr::success('Landing pages  created is successfully!');
+        return back();
+    }
+    public function removeLandingPage($id)
+    {
+        $productLandingpage = ProductLandingPage::find($id);
+        if ($productLandingpage->slider_img) {
+            foreach (json_decode($productLandingpage->slider_img) as $img) {
+                @unlink('storage/app/public/landingpage/slider/' . $img);
+            }
+        }
+        if ($productLandingpage->feature_img) {
+            @unlink('storage/app/public/landingpage/' . $productLandingpage->feature_img);
+        }
+
+        $sections = $productLandingpage->landingPageSection;
+        if($sections){
+            foreach ($sections as $item) {
+                //dd($item->section_img);
+                if ($item->section_img) {
+                    @unlink('storage/app/public/landingpage/' . $item->section_img);
+                }
+                $item->delete();
+            }
+        }
+
+        $productLandingpage->delete();
+        Toastr::success('Landing pages  deleted is successfully!');
+        return back();
     }
 }
