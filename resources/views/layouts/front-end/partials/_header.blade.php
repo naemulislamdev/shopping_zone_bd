@@ -63,19 +63,20 @@
                             <li><a href="{{ route('video_shopping') }}">{{\App\CPU\translate('video shopping')}}</a>
                             </li>
                             {{-- <li><a href="{{ route('campain') }}">{{\App\CPU\translate('Campaign')}}</i></a> --}}
-                            <li class="dd-btn1"><a href="#">{{\App\CPU\translate('Offer')}} <i class="fa fa-angle-down"></i></a>
-                                @php($landingPages = \App\Model\LandingPages::where('status',1)->get())
-                                <div class="dropdown-menu1 offer-dropdown">
-                                    <ul>
-                                        <li>
-                                            <a href="{{ route('campain') }}">{{\App\CPU\translate('Campaign')}}</i></a>
-                                        </li>
-                                        @foreach ($landingPages as $landingPage)
-                                        <li><a href="{{ route('landing_page',$landingPage->slug) }}">{{$landingPage->title}}</i></a></li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            </li>
+                                <li class="dd-btn1"><a href="#">{{\App\CPU\translate('Offer')}} <i class="fa fa-angle-down"></i></a>
+                                    @php($landingPages = \App\Model\LandingPages::where('status',1)->get())
+                                    <div class="dropdown-menu1 offer-dropdown">
+                                        <ul>
+                                            <li>
+                                                <a href="{{ route('campain') }}">{{\App\CPU\translate('Campaign')}}</i></a>
+                                            </li>
+                                            @foreach ($landingPages as $landingPage)
+                                            <li><a href="{{ route('landing_page',$landingPage->slug) }}">{{$landingPage->title}}</i></a></li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                </li>
+
                             <li><a href="{{ route('selling.product') }}">{{\App\CPU\translate('Selling product')}}</a>
                             </li>
                             <li><a href="{{ route('outlets') }}">{{\App\CPU\translate('Our outlets')}}</a></li>
@@ -130,7 +131,7 @@ $company_mobile_logo = \App\Model\BusinessSetting::where('type', 'company_mobile
             <div class="menu-box">
                 <div class="menu-link" id="headingOne">
                     <a class="mmenu-btn menu-link-active" type="button" data-toggle="collapse"
-                        data-target="#categories" aria-expanded="true">{{\App\CPU\translate('Categories')}}<i class="fa fa-plus"></i></a>
+                        data-target="#categories" aria-expanded="true"><i class="fa fa-ptab3 mr-2"></i>{{\App\CPU\translate('Categories')}}<i class="fa fa-plus"></i></a>
                 </div>
                 <div id="categories" class="menu-body collapse" aria-labelledby="headingOne"
                     data-parent="#accordionExample">
@@ -190,12 +191,26 @@ $company_mobile_logo = \App\Model\BusinessSetting::where('type', 'company_mobile
             </div>
             <div class="menu-box">
                 <div class="menu-link">
-     <a href="{{ route('video_shopping', 'video-shopping') }}"><i class="fa fa-ptab3 mr-2"></i> {{\App\CPU\translate('Video Shopping')}}</a>
+     <a href="{{ route('video_shopping') }}"><i class="fa fa-ptab3 mr-2"></i> {{\App\CPU\translate('Video Shopping')}}</a>
                 </div>
             </div>
             <div class="menu-box">
-                <div class="menu-link">
-                    <a href="{{ route('campain') }}"><i class="fa fa-ptab3 mr-2"></i>{{\App\CPU\translate('Campain')}}</a>
+                <div class="menu-link" id="headingTwo">
+                    <a class="mmenu-btn menu-link-active" type="button" data-toggle="collapse"
+                        data-target="#offers" aria-expanded="true"><i class="fa fa-ptab3 mr-2"></i>{{\App\CPU\translate('Offer')}}<i class="fa fa-plus"></i></a>
+                </div>
+                <div id="offers" class="menu-body collapse" aria-labelledby="headingTwo"
+                    data-parent="#accordionExample">
+                    <div class="card-body">
+                        <ul>
+                            <li>
+                                <a href="{{ route('campain') }}"><i class="fa fa-ptab3 mr-2"></i>{{\App\CPU\translate('Campaign')}}</i></a>
+                            </li>
+                            @foreach ($landingPages as $landingPage)
+                            <li><a href="{{ route('landing_page',$landingPage->slug) }}"><i class="fa fa-ptab3 mr-2"></i>{{$landingPage->title}}</i></a></li>
+                            @endforeach
+                        </ul>
+                    </div>
                 </div>
             </div>
             <div class="menu-box">

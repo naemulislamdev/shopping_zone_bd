@@ -542,7 +542,7 @@
                                 </td>
                                 <td>
                                     <div class="text-{{Session::get('direction') === "rtl" ? 'left' : 'right'}}"><span
-                                            class="font-weight-bold amount ">{{\App\CPU\Helpers::currency_converter($order->order_amount)}}</span>
+                                            class="font-weight-bold amount ">{{\App\CPU\Helpers::currency_converter($order->order_amount+$summary['total_shipping_cost'])}}</span>
                                     </div>
                                 </td>
                             </tr>

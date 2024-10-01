@@ -38,7 +38,9 @@
     }
     .navbar{background: #091731;}
 </style>
-
+<?php
+$route = request()->route()->getName();
+?>
 <div id="sidebarMain">
     <aside
         style="background: #e3eae!important; text-align: {{Session::get('direction') === "rtl" ? 'right' : 'left'}};"
@@ -1001,13 +1003,37 @@
                                 </a>
                             </li>
 
-                            <li class="navbar-vertical-aside-has-menu {{Request::is('admin/landingpages/Landing-pages-index')?'active':''}}">
-                                <a class="js-navbar-vertical-aside-menu-link nav-link"
-                                   href="{{route('admin.landingpages.landing')}}">
-                                    <i class="tio-flash nav-icon"></i>
-                                    <span
-                                        class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{\App\CPU\translate('Landing Pages Management System')}}</span>
+                            <li class="navbar-vertical-aside-has-menu {{ $route == 'admin.landingpages.landing' || $route == 'admin.landingpages.index'  ?'active':''
+
+                            }}">
+                                <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle"
+                                   href="javascript:">
+                                   <i class="tio-flash nav-icon"></i>
+                                    <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
+                                        {{\App\CPU\translate('Landing Pages Management System')}}
+                                    </span>
                                 </a>
+                                <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
+                                    style="display: {{Request::is('admin/landingpages/landing*')?'block':'none'}}">
+                                    <li class="nav-item {{Request::is('admin/landingpages/landing')?'active':''}}">
+                                        <a class="nav-link"
+                                           href="{{route('admin.landingpages.landing')}}">
+                                            <span class="tio-circle nav-indicator-icon"></span>
+                                            <span class="text-truncate">
+                                              {{\App\CPU\translate('Multiple Products')}}
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item {{Request::is('admin/landingpages/index')?'active':''}}">
+                                        <a class="nav-link"
+                                           href="{{route('admin.landingpages.index')}}">
+                                            <span class="tio-circle nav-indicator-icon"></span>
+                                            <span class="text-truncate">
+                                              {{\App\CPU\translate('Signle Products')}}
+                                            </span>
+                                        </a>
+                                    </li>
+                                </ul>
                             </li>
 
                             <li class="navbar-vertical-aside-has-menu {{Request::is('admin/business-settings/web-config')?'active':''}}">

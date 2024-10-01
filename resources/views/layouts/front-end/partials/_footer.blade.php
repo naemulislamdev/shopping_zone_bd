@@ -58,7 +58,7 @@
                 <div class="footer-title">
                     <h3>{{\App\CPU\translate('Download Our App')}}</h3>
                     <div class="download-icon mb-3">
-                        <a href="#"><img src="{{ asset('public/assets/front-end') }}/images/logo/google_app.png"
+                        <a target="_blank" href="https://play.google.com/store/apps/details?id=com.shoppingzonebd.android"><img src="{{ asset('public/assets/front-end') }}/images/logo/google_app.png"
                                 alt="Google play store logo"></a>
                         <a href="#"><img src="{{ asset('public/assets/front-end') }}/images/logo/apple_app.png"
                                 alt="Apple app store logo"></a>

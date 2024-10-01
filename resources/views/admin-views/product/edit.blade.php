@@ -67,7 +67,7 @@
                                 <div class="{{$lang != 'en'? 'd-none':''}} lang_form" id="{{$lang}}-form">
                                     <div class="form-group">
                                         <label class="input-label" for="{{$lang}}_name">{{\App\CPU\translate('name')}}
-                                            ({{strtoupper($lang)}})</label>
+                                            ({{strtoupper($lang)}}) <span class="text-danger">*</span></label>
                                         <input type="text" {{$lang == 'en'? 'required':''}} name="name[]"
                                                id="{{$lang}}_name"
                                                value="{{$translate[$lang]['name']??$product['name']}}"
@@ -100,7 +100,7 @@
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <label for="name">{{\App\CPU\translate('Category')}}</label>
+                                        <label for="name">{{\App\CPU\translate('Category')}} <span class="text-danger">*</span></label>
                                         <select
                                             class="js-example-basic-multiple js-states js-example-responsive form-control"
                                             name="category_id"
@@ -152,7 +152,7 @@
                                     </div>
 
                                     <div class="col-md-4">
-                                        <label for="name">{{\App\CPU\translate('Brand')}}</label>
+                                        <label for="name">{{\App\CPU\translate('Brand')}} <span class="text-danger">*</span></label>
                                         <select
                                             class="js-example-basic-multiple js-states js-example-responsive form-control"
                                             name="brand_id">
@@ -165,7 +165,7 @@
                                     </div>
 
                                     <div class="col-md-4">
-                                        <label for="name">{{\App\CPU\translate('Unit')}}</label>
+                                        <label for="name">{{\App\CPU\translate('Unit')}} <span class="text-danger">*</span></label>
                                         <select
                                             class="js-example-basic-multiple js-states js-example-responsive form-control"
                                             name="unit">
@@ -266,7 +266,7 @@
                                                value={{ \App\CPU\Convert::default($product->purchase_price) }} required>
                                     </div>
                                     <div class="col-md-4 mt-2">
-                                        <label class="control-label">{{\App\CPU\translate('Tax')}}</label>
+                                        <label class="control-label">{{\App\CPU\translate('Tax')}} <span class="text-danger">*</span></label>
                                         <label class="badge badge-info">{{\App\CPU\translate('Percent')}} ( % )</label>
                                         <input type="number" min="0" value={{ $product->tax }} step="0.01"
                                                placeholder="{{\App\CPU\translate('Tax') }}" name="tax"
@@ -350,24 +350,26 @@
                                   <th>Discount(%)</th>
                                   <th>Action</th>
                                 </tr>
+                                @if (count($campaingDetalies) > 0)
+
                                  @foreach($campaingDetalies as $campaing_detalies)
                                 <tr>
 
                                   <td>
 
-                                   <input class="form-control" type="date" placeholder="start day" name="start_day[]" value={{$campaing_detalies->start_day}}  required>
+                                   <input class="form-control" type="date" placeholder="start day" name="start_day[]" value="{{$campaing_detalies->start_day}}"  required>
 
                                   </td>
                                   <td>
 
-                                   <input class="form-control" type="date" placeholder="end day" name="end_day[]" value={{$campaing_detalies->end_day}}  required>
+                                   <input class="form-control" type="date" placeholder="end day" name="end_day[]" value="{{$campaing_detalies->end_day}}"  required>
 
                                   </td>
 
                                   <td>
                                     <input type="number"
                                            class="form-control" placeholder="Discount" name="discountCam[]"
-                                            value={{$campaing_detalies->discountCam}}  required>
+                                            value="{{$campaing_detalies->discountCam}}"  required>
                                   </td>
 
                                    <td>
@@ -378,6 +380,23 @@
 
                                 </tr>
                                 @endforeach
+                                @else
+                                <tr>
+                                    <td>
+                                     <input type="date"
+                                              placeholder="start day" name="start_day[]"
+                                              value="" class="form-control" required>
+                                    </td>
+                                    <td>
+                                      <input class="form-control" type="date" placeholder="end day" name="end_day[]" value="" required>
+                                    </td>
+                                    <td>
+                                      <input type="number"
+                                              placeholder="Discount" name="discountCam[]"
+                                              value="" class="form-control" required>
+                                    </td>
+                                  </tr>
+                                @endif
                               </table>
                               <div class="set-form">
                                 <input type="button" id="more_fields" onclick="add_fields();" value="Add More" class="btn btn-info" />
@@ -477,7 +496,7 @@
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="name">Size Chart</label><small
-                                            style="color: red">* ( {{\App\CPU\translate('ratio')}} 1:1 )</small>
+                                            style="color: red"> ( {{\App\CPU\translate('ratio')}} 1:1 )</small>
                                     </div>
 
                                     <div class="row" id="size_chart">

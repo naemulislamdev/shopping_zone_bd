@@ -35,6 +35,7 @@ class SystemController extends Controller
 
     public function set_shipping_method(Request $request)
     {
+        //dd($request->all());
         if ($request['id'] != 0) {
             session()->put('shipping_method_id', $request['id']);
 
@@ -43,10 +44,12 @@ class SystemController extends Controller
                 if ($key == $request['key']) {
                     $object['shipping_method_id'] = $request['id'];
                     $object['shipping_cost'] = ShippingMethod::find($request['id'])->cost;
+
                 }
                 return $object;
             });
-            $request->session()->put('cart', $cart);
+            $data = $request->session()->put('cart', $cart);
+            dd($data);
 
             return response()->json([
                 'status' => 1
@@ -353,8 +356,9 @@ class SystemController extends Controller
             session()->forget('payment_method');
             session()->forget('customer_info');
             session()->forget('shipping_method_id');
+            $order = Order::find($order_id);
 
-            return view('web-views.checkout-complete', compact('order_id'));
+            return view('web-views.checkout-complete', compact('order'));
         } else {
             return "something went wrong please try again";
         }

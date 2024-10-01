@@ -54,6 +54,13 @@
                     @include('web-views.products._ajax-products', ['products' => $shop_products])
                 </div>
                 <hr class="my-3">
+                <div class="row">
+                    <div class="col-12 d-flex align-items-center justify-content-center">
+                        <nav class="d-flex justify-content-between pt-2" aria-label="Page navigation">
+                            {!! $shop_products->links() !!}
+                        </nav>
+                    </div>
+                </div>
             @else
                 <div class="text-center pt-5">
                     <h2>Product Coming Soon!</h2>
@@ -73,30 +80,11 @@
 @endsection
 @push('scripts')
     <script>
-        function filter(value) {
-            $.get({
-                url: '{{ url('/') }}/products',
-                data: {
-                    sort_by: value
-                },
-                dataType: 'json',
-                beforeSend: function() {
-                    $('#loading').show();
-                },
-                success: function(response) {
-                    $('#ajax-products').html(response.view);
-                },
-                complete: function() {
-                    $('#loading').hide();
-                },
-            });
-        }
-
         function searchByPrice() {
             let min = $('#min_price').val();
             let max = $('#max_price').val();
             $.get({
-                url: '{{ url('/') }}/products',
+                url: '{{ url('/') }}/shop',
                 data: {
                     min_price: min,
                     max_price: max,
@@ -107,7 +95,6 @@
                 },
                 success: function(response) {
                     $('#ajax-products').html(response.view);
-                    $('#paginator-ajax').html(response.paginator);
                 },
                 complete: function() {
                     $('#loading').hide();
@@ -115,18 +102,6 @@
             });
         }
 
-        $("#search-brand").on("keyup", function() {
-            var value = this.value.toLowerCase().trim();
-            $("#lista1 div>li").show().filter(function() {
-                return $(this).text().toLowerCase().trim().indexOf(value) == -1;
-            }).hide();
-        });
-        $("#search-brand-m").on("keyup", function() {
-            var value = this.value.toLowerCase().trim();
-            $("#lista1 div>li").show().filter(function() {
-                return $(this).text().toLowerCase().trim().indexOf(value) == -1;
-            }).hide();
-        });
     </script>
     <script>
         cartQuantityInitialize();

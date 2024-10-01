@@ -567,19 +567,9 @@ class ProductController extends BaseController
             'unit.required'         => 'Unit  is required!',
             'code.min'              => 'The code must be positive!',
             'code.digits_between'   => 'The code must be minimum 6 digits!',
-            'minimum_order_qty.required' => 'The minimum order quantity is required!',
-            'minimum_order_qty.min' => 'The minimum order quantity must be positive!',
-        ]);
-
-        if ($request['discount_type'] == 'percent') {
-            $dis = ($request['unit_price'] / 100) * $request['discount'];
-        } else {
-            $dis = $request['discount'];
-        }
-
-        if ($request['unit_price'] <= $dis) {
-            $validator->after(function ($validator) {
-                $validator->errors()->add('unit_price', 'Discount can not be more or equal to the price!');
+t be positive!',
+            'code.min'   => 'The code must be minimum 4 digits!',
+equal to the price!');
             });
         }
 

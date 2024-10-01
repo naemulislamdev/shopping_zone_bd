@@ -59,17 +59,43 @@
                                         <label class="custom-file-label" for="customFileUpload">{{\App\CPU\translate('choose')}} {{\App\CPU\translate('file')}}</label>
                                     </div>
                                 </div>
-                                <div class="col-md-12" style="padding-top: 20px">
+                                <div class="row mt-2">
+                                    <div class="col-md-12">
+                                        <div class="p-2 border border-dashed" style="max-width:430px;">
+                                            <div class="row" id="multiBannerImage">
+                                                @foreach (json_decode($landing_pages->main_banner) as $key => $photo)
+                                                <div class="col-6">
+                                                    <div class="card">
+                                                        <div class="card-body">
+                                                            <img style="width: 100%" height="auto"
+                                                                 onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
+                                                                 src="{{asset("storage/app/public/deal/main-banner/$photo")}}"
+                                                                 alt="Product image">
+                            <a href="{{route('admin.landingpages.remove-image',['id'=>$landing_pages->id,'name'=>$photo])}}"
+                                                               class="btn btn-danger btn-block">{{\App\CPU\translate('Remove')}}</a>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                            </div>
+                                        </div>
+                                        @error('images')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+                                {{-- <div class="col-md-12" style="padding-top: 20px">
                                     <center>
                                         <img style="width:70%;border: 1px solid; border-radius: 10px; max-height:200px;" id="viewer"
                                         onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'" src="{{asset('storage/app/public/deal')}}/{{$landing_pages->main_banner}}" alt="banner image"/>
                                     </center>
-                                </div>
+                                </div> --}}
 
                                 <div class="col-md-12 pt-3">
-                                    <label for="name">{{\App\CPU\translate('Mid')}} {{\App\CPU\translate('Banner')}}</label><span class="badge badge-soft-danger">( {{\App\CPU\translate('ratio')}} 5:1 )</span>
+                                    <label for="name">{{\App\CPU\translate('Mid')}} {{\App\CPU\translate('Banner')}}</label><span class="badge badge-soft-danger">( {{\App\CPU\translate('ratio')}} 1900x300 )</span>
                                     <div class="custom-file" style="text-align: left">
-                                        <input type="file" name="image1" id="customFileUpload1" class="custom-file-input"
+                                        <input type="file" name="mid_banner" id="customFileUpload1" class="custom-file-input"
                                             accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
                                         <label class="custom-file-label" for="customFileUpload1">{{\App\CPU\translate('choose')}} {{\App\CPU\translate('file')}}</label>
                                     </div>
@@ -83,7 +109,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-6 pt-3">
-                                    <label for="name">{{\App\CPU\translate('Left Side')}} {{\App\CPU\translate('Banner')}}</label><span class="badge badge-soft-danger">( {{\App\CPU\translate('ratio')}} 5:1 )</span>
+                                    <label for="name">{{\App\CPU\translate('Left Side')}} {{\App\CPU\translate('Banner')}}</label><span class="badge badge-soft-danger">( {{\App\CPU\translate('ratio')}} 400x650 )</span>
                                     <div class="custom-file" style="text-align: left">
                                         <input type="file" name="left_side_banner" id="leftImage" class="custom-file-input"
                                             accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
@@ -96,7 +122,7 @@
                                     </center>
                                 </div>
                                 <div class="col-md-6 pt-3">
-                                    <label for="name">{{\App\CPU\translate('Right Side')}} {{\App\CPU\translate('Banner')}}</label><span class="badge badge-soft-danger">( {{\App\CPU\translate('ratio')}} 5:1 )</span>
+                                    <label for="name">{{\App\CPU\translate('Right Side')}} {{\App\CPU\translate('Banner')}}</label><span class="badge badge-soft-danger">( {{\App\CPU\translate('ratio')}} 400x650 )</span>
                                     <div class="custom-file" style="text-align: left">
                                         <input type="file" name="right_side_banner" id="rightImage" class="custom-file-input"
                                             accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
@@ -127,22 +153,9 @@
 
 @push('script')
     <script src="{{asset('public/assets/back-end')}}/js/select2.min.js"></script>
+    <script src="{{ asset('public/assets/back-end/js/spartan-multi-image-picker.js') }}"></script>
+
     <script>
-        function readURL(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-
-                reader.onload = function (e) {
-                    $('#viewer').attr('src', e.target.result);
-                }
-
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        $("#customFileUpload").change(function () {
-            readURL(this);
-        });
 
         function readURL1(input) {
             if (input.files && input.files[0]) {
@@ -199,12 +212,7 @@
         });
     </script>
 
-
-
     <!-- Page level custom scripts -->
-
-
-
     <script>
         $(".lang_link").click(function (e) {
             e.preventDefault();
@@ -226,6 +234,45 @@
         $(document).ready(function () {
             $('#dataTable').DataTable();
         });
+    </script>
+    <script>
+        var imageCount = {{10-count(json_decode($landing_pages->main_banner))}};
+        if (imageCount > 0) {
+        $("#multiBannerImage").spartanMultiImagePicker({
+            fieldName: 'images[]',
+            maxCount: imageCount,
+            rowHeight: 'auto',
+            groupClassName: 'col-6',
+            maxFileSize: '',
+            placeholderImage: {
+                image: '{{ asset('public/assets/back-end/img/400x400/img2.jpg') }}',
+                width: '100%',
+            },
+            dropFileLabel: "Drop Here",
+            onAddRow: function(index, file) {
+
+            },
+            onRenderedPreview: function(index) {
+
+            },
+            onRemoveRow: function(index) {
+
+            },
+            onExtensionErr: function(index, file) {
+                toastr.error(
+                    '{{ \App\CPU\translate('Please only input png or jpg type file') }}', {
+                        CloseButton: true,
+                        ProgressBar: true
+                    });
+            },
+            onSizeErr: function(index, file) {
+                toastr.error('{{ \App\CPU\translate('File size too big') }}', {
+                    CloseButton: true,
+                    ProgressBar: true
+                });
+            }
+        });
+    }
     </script>
 
     @include('shared-partials.image-process._script',[

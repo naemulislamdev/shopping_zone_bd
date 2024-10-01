@@ -45,6 +45,7 @@ use Gregwar\Captcha\CaptchaBuilder;
 use App\CPU\CustomerManager;
 use App\CPU\Convert;
 use App\Model\Branch;
+use App\ProductLandingPage;
 use Carbon\Carbon;
 
 class WebController extends Controller
@@ -141,7 +142,12 @@ class WebController extends Controller
     public function searchProducts(Request $request)
     {
         $query = $request->input('query');
-        $products = Product::active()->where('name', 'LIKE', "%{$query}%")->get();
+        $products = Product::active()
+            ->where(function ($queryBuilder) use ($query) {
+                $queryBuilder->where('name', 'LIKE', "%{$query}%")
+                    ->orWhere('code', 'LIKE', "%{$query}%");
+            })
+            ->get();
         $categories = Category::where('position', 0)->where('name', 'LIKE', "%{$query}%")->priority()->get();
 
         $output = '';
@@ -188,16 +194,69 @@ class WebController extends Controller
             'categories' => $cates
         ]);
     }
+    public function videoShopping(Request $request)
+    {
+        $allProducts = Product::active()->with(['reviews'])->where('video_shopping', true);
+
+        $query = null;
+        if ($request->get('min_price') !== null && $request->get('max_price') !== null) {
+            $min_price = BackEndHelper::currency_to_usd($request->get('min_price'));
+            $max_price = BackEndHelper::currency_to_usd($request->get('max_price'));
+            $query = $allProducts->whereBetween('unit_price', [$min_price, $max_price])->get();
+        }
+        $products = $query;
+
+        if ($request->ajax()) {
+            return response()->json([
+                'view' => view('web-views.products.video_ajax_products', compact('products'))->render()
+            ], 200);
+        }
+        $videoProducts = $allProducts->paginate(30);
+
+        return view('web-views.video_shopping', compact('videoProducts'));
+    }
 
     //shop function
-    public function shop()
+    public function shop(Request $request)
     {
-        $shop_products = Product::with(['reviews'])->active()->orderBy('id', 'desc')->get();
+        $allProducts = Product::with(['reviews'])->active();
+
+        $query = null;
+        if ($request->get('min_price') !== null && $request->get('max_price') !== null) {
+            $min_price = BackEndHelper::currency_to_usd($request->get('min_price'));
+            $max_price = BackEndHelper::currency_to_usd($request->get('max_price'));
+            $query = $allProducts->whereBetween('unit_price', [$min_price, $max_price])->get();
+        }
+        $products = $query;
+
+        if ($request->ajax()) {
+
+            return response()->json([
+                'view' => view('web-views.products._ajax-products', compact('products'))->render()
+            ], 200);
+        }
+        $shop_products = $allProducts->paginate(30);
         return view('web-views.products.all_products', compact('shop_products'));
     }
-    public function sellingProducts()
+    public function sellingProducts(Request $request)
     {
-        $selling_products = Product::with(['reviews'])->active()->orderBy('id', 'desc')->get();
+        $allProducts = Product::with(['reviews'])->active();
+
+        $query = null;
+        if ($request->get('min_price') !== null && $request->get('max_price') !== null) {
+            $min_price = BackEndHelper::currency_to_usd($request->get('min_price'));
+            $max_price = BackEndHelper::currency_to_usd($request->get('max_price'));
+            $query = $allProducts->whereBetween('unit_price', [$min_price, $max_price])->get();
+        }
+        $products = $query;
+
+        if ($request->ajax()) {
+
+            return response()->json([
+                'view' => view('web-views.products.selling_ajax_products', compact('products'))->render()
+            ], 200);
+        }
+        $selling_products = $allProducts->paginate(30);
         return view('web-views.products.selling_products', compact('selling_products'));
     }
     //outlets function
@@ -633,7 +692,6 @@ class WebController extends Controller
         //dd($request->all());
         $sort_by = $request->get('sort_by') ?? 'latest';
         $porduct_data = Product::active()->with(['reviews']);
-
         if ($request['data_from'] == 'category') {
             $products = $porduct_data->get();
             $product_ids = [];
@@ -761,6 +819,7 @@ class WebController extends Controller
 
         $products = $query->paginate(20)->appends($data);
 
+
         if ($request->ajax()) {
 
             return response()->json([
@@ -779,41 +838,52 @@ class WebController extends Controller
                 return redirect('/');
             }
         }
-
-
         return view('web-views.category_wise_product', compact('products', 'data'), $data);
     }
-    public function videoShopping()
-    {
-        $videoProducts = Product::active()->with(['reviews'])->where('video_shopping', true)->get();;
-        if ($videoProducts) {
-            $categoryName = 'Video Shopping';
-            return view('web-views.video_shopping', compact('videoProducts', 'categoryName'));
-        } else {
-            Toastr::warning(translate('not_found'));
-            return redirect('/');
-        }
-    }
     //Campain products
-    public function campaing_products()
+    public function campaing_products(Request $request)
     {
         $todayDate = Carbon::today()->toDateString();
 
-        $data['products'] = Product::join('campaing_detalies', 'campaing_detalies.product_id', '=', 'products.id')->where('campaing_detalies.start_day', $todayDate)
-            ->select(['products.*', 'campaing_detalies.id', 'campaing_detalies.product_id', 'campaing_detalies.start_day', 'campaing_detalies.end_day', 'campaing_detalies.discountCam'])->get();
-        if (count($data['products']) > 0) {
-            return view('web-views.campain', $data);
-        } else {
-            Toastr::warning(translate('Campain are not available'));
-            return redirect('/');
+        $allProducts = Product::join('campaing_detalies', 'campaing_detalies.product_id', '=', 'products.id')->where('campaing_detalies.start_day', $todayDate)
+            ->select(['products.*', 'campaing_detalies.id', 'campaing_detalies.product_id', 'campaing_detalies.start_day', 'campaing_detalies.end_day', 'campaing_detalies.discountCam']);
+
+        $query = null;
+        if ($request->get('min_price') !== null && $request->get('max_price') !== null) {
+            $min_price = BackEndHelper::currency_to_usd($request->get('min_price'));
+            $max_price = BackEndHelper::currency_to_usd($request->get('max_price'));
+            $query = $allProducts->whereBetween('unit_price', [$min_price, $max_price])->get();
         }
+        $products = $query;
+
+        if ($request->ajax()) {
+
+            return response()->json([
+                'view' => view('web-views.products.campain_ajax_products', compact('products'))->render()
+            ], 200);
+        }
+        $campainProducts = $allProducts->paginate(30);
+
+        return view('web-views.campain', compact('campainProducts'));
     }
-    public function landingPage($landing_slug){
-        $landing_page = DB::table('landing_pages')->where(['slug' => $landing_slug])->where('status',1)->first();
-      $landing_page_pro = DB::table('landing_pages_products')->where('landing_id',$landing_page->id)->pluck('product_id')->toArray();
-      $landing_products=Product::with(['rating'])->whereIn('id', $landing_page_pro)->orderBy('id', 'DESC')->active()->get();
-     // dd($landing_page_pro);
-        return view('web-views.landing-page.pages',compact('landing_products','landing_page'));
+    public function landingPage($landing_slug)
+    {
+        $landing_page = DB::table('landing_pages')->where(['slug' => $landing_slug])->where('status', 1)->first();
+        $landing_page_pro = DB::table('landing_pages_products')->where('landing_id', $landing_page->id)->pluck('product_id')->toArray();
+        $landing_products = Product::with(['rating'])->whereIn('id', $landing_page_pro)->orderBy('id', 'DESC')->active()->get();
+        // dd($landing_page_pro);
+        return view('web-views.landing-page.pages', compact('landing_products', 'landing_page'));
+    }
+    public function signleProductLandingPage($slug)
+    {
+        $productLandingPage = ProductLandingPage::where('slug', $slug)->where('status', true)->first();
+        if ($productLandingPage) {
+
+            return view('web-views.landing-page.signle_product', compact('productLandingPage'));
+        } else {
+            Toastr::warning('Landing pages is time out');
+            return redirect()->route('home');
+        }
     }
     public function campaing_products_tomrrrow()
     {

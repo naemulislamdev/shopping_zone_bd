@@ -1794,4 +1794,11 @@
   'Right side' => 'Right side',
   'Left Side' => 'Left Side',
   'Right Side' => 'Right Side',
+  'Profile' => 'Profile',
+  'Order Id' => 'Order Id',
+  'Multiple Products' => 'Multiple Products',
+  'Signle Products' => 'Signle Products',
+  'Slider' => 'Slider',
+  'Feature image' => 'Feature image',
+  'Feature' => 'Feature',
 );

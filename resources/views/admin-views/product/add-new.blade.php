@@ -54,7 +54,7 @@
                                     <div class="form-group">
                                         <label class="input-label"
                                             for="{{ $lang }}_name">{{ \App\CPU\translate('name') }}
-                                            ({{ strtoupper($lang) }})
+                                            ({{ strtoupper($lang) }}) <span class="text-danger">*</span>
                                         </label>
                                         <input type="text" {{ $lang == $default_lang ? 'required' : '' }} name="name[]"
                                             id="{{ $lang }}_name" class="form-control" placeholder="New Product">
@@ -85,7 +85,7 @@
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <label for="name">{{ \App\CPU\translate('Category') }}</label>
+                                        <label for="name">{{ \App\CPU\translate('Category') }} <span class="text-danger">*</span></label>
                                         <select class="js-example-basic-multiple form-control" name="category_id"
                                             onchange="getRequest('{{ url('/') }}/admin/product/get-categories?parent_id='+this.value,'sub-category-select','select')"
                                             required>
@@ -133,7 +133,7 @@
                                     </div>
 
                                     <div class="col-md-4">
-                                        <label for="name">{{ \App\CPU\translate('Brand') }}</label> <a href="{{route('admin.brand.add-new')}}" target="_blank">add new</a>
+                                        <label for="name">{{ \App\CPU\translate('Brand') }} <span class="text-danger">*</span></label> <a href="{{route('admin.brand.add-new')}}" target="_blank">add new</a>
                                         <select
                                             class="js-example-basic-multiple js-states js-example-responsive form-control"
                                             name="brand_id" required>
@@ -146,7 +146,7 @@
                                     </div>
 
                                     <div class="col-md-4">
-                                        <label for="name">{{ \App\CPU\translate('Unit') }}</label>
+                                        <label for="name">{{ \App\CPU\translate('Unit') }} <span class="text-danger">*</span></label>
                                         <select class="js-example-basic-multiple form-control" name="unit">
                                             @foreach (\App\CPU\Helpers::units() as $x)
                                                 <option value="{{ $x }}" {{ old('unit') == $x ? 'selected' : '' }}>
@@ -235,7 +235,7 @@
                                 </div>
                                 <div class="row pt-4">
                                     <div class="col-md-4">
-                                        <label class="control-label">{{ \App\CPU\translate('Tax') }}</label>
+                                        <label class="control-label">{{ \App\CPU\translate('Tax') }} <span class="text-danger">*</span></label>
                                         <label class="badge badge-info">{{ \App\CPU\translate('Percent') }} ( % )</label>
                                         <input type="number" min="0" value="0" step="0.01"
                                             placeholder="{{ \App\CPU\translate('Tax') }}" name="tax"
@@ -248,7 +248,7 @@
                                         <span class="text-danger">*</span>
                                         <input type="number" min="0" value="{{ old('discount') }}"
                                             step="0.01" placeholder="{{ \App\CPU\translate('Discount') }}"
-                                            name="discount" class="form-control" required>
+                                            name="discount" class="form-control" required value="0">
                                     </div>
                                     <div class="col-md-4" style="padding-top: 30px;">
                                         <select style="width: 100%"
@@ -271,7 +271,7 @@
                                     </div>
                                     <div class="col-md-3" id="minimum_order_qty">
                                         <label class="control-label">
-                                            {{ \App\CPU\translate('minimum_order_quantity') }}</label>
+                                            {{ \App\CPU\translate('minimum_order_quantity') }} <span class="text-danger">*</span></label>
                                         <input type="number" min="1" value="1" step="1"
                                             placeholder="{{ \App\CPU\translate('minimum_order_quantity') }}" name="minimum_order_qty"
                                             class="form-control" required>
@@ -310,13 +310,18 @@
                               <table id="myTable" class="table table-bordered">
                                 <tr>
                                   <th>Start Day</th>
+                                  <th>End Day</th>
                                   <th>Discount(%)</th>
+                                  <th>Action</th>
                                 </tr>
                                 <tr>
                                   <td>
                                    <input type="date"
                                             placeholder="start day" name="start_day[]"
                                             value="" class="form-control" required>
+                                  </td>
+                                  <td>
+                                    <input class="form-control" type="date" placeholder="end day" name="end_day[]" value="" required>
                                   </td>
                                   <td>
                                     <input type="number"
@@ -398,7 +403,7 @@
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="name">Size Chart</label><small
-                                            style="color: red">* ( {{ \App\CPU\translate('ratio') }} 1:1 )</small>
+                                            style="color: red"> ( {{ \App\CPU\translate('ratio') }} 1:1 )</small>
                                     </div>
                                     <div style="max-width:200px;">
                                         <div class="row" id="size_chart"></div>
@@ -611,6 +616,8 @@
                 url: route,
                 dataType: 'json',
                 success: function(data) {
+                    console.log(data);
+
                     if (type == 'select') {
                         $('#' + id).empty().append(data.select_tag);
                     }
@@ -765,7 +772,7 @@
         })
 
         function add_fields() {
-          document.getElementById("myTable").insertRow(-1).innerHTML = '<tr><td><input type="date"  placeholder="start day" name="start_day[]" value="" class="form-control" required></td><td><input type="nubmer" placeholder="Discount" name="discountCam[]" value="" class="form-control" required> </td> </tr>';
+          document.getElementById("myTable").insertRow(-1).innerHTML = '<tr><td><input type="date"  placeholder="start day" name="start_day[]" value="" class="form-control" required></td><td><input type="date"  placeholder="end day" name="end_day[]" value="" class="form-control" required></td><td><input type="nubmer" placeholder="Discount" name="discountCam[]" value="" class="form-control" required> </td> </tr>';
         }
 
     </script>

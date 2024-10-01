@@ -13,11 +13,15 @@
     <meta property="twitter:description" content="{!! substr($web_config['about']->value, 0, 100) !!}">
     <style>
         .main-banner {
-            background-image: url('{{ asset('storage/app/public/deal') }}/{{ $landing_page->main_banner }}');
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-position: center;
             height: 400px;
+        }
+
+        .middle-banner {
+            height: 300px;
+        }
+
+        .middle-banner>img {
+            height: 100%;
         }
 
         .left-banner {
@@ -46,17 +50,59 @@
         .product-item h5 {
             margin-top: 10px;
         }
+
         .product-box-col-3 {
-    height: 640px;
-}
-.product-image2-col-3 {
-    height: 526px;
-}
+            height: 640px;
+        }
+
+        .product-image2-col-3 {
+            height: 526px;
+        }
+
+        @media (max-width:768px) {
+            .main-banner {
+                height: 180px;
+            }
+
+            .middle-banner {
+                height: 70px;
+            }
+        }
     </style>
 @endpush
 @section('content')
     <!-- Top Main Banner -->
-    <div class="container-fluid main-banner">
+    <div class="container-fluid">
+        <section class="landing-slider-section">
+            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    @foreach (json_decode($landing_page->main_banner) as $key => $banner)
+                        <li data-target="#carouselExampleIndicators" data-slide-to="{{ $key }}"
+                            class="{{ $key == 0 ? 'active' : '' }}"></li>
+                    @endforeach
+                </ol>
+                <div class="carousel-inner">
+                    @foreach (json_decode($landing_page->main_banner) as $key => $banner)
+                        <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
+                            <div class="main-banner">
+                                <img class="d-block w-100"
+                                    onerror="this.src='{{ asset('public/assets/front-end/img/image-place-holder.png') }}'"
+                                    src="{{ asset('storage/app/public/deal/main-banner') }}/{{ $banner }}"
+                                    alt="">
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+                <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        </section>
     </div>
 
     <!-- Main Section with Left Banner and Product Showcase -->

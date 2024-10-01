@@ -31,8 +31,8 @@
     <meta property="og:url" content="{{ route('product', [$product->slug]) }}">
 
     @if ($product['meta_description'] != null)
-        <meta property="twitter:description" content="{!! $product['meta_description'] !!}">
-        <meta property="og:description" content="{!! $product['meta_description'] !!}">
+        <meta property="twitter:description" content="{{strip_tags($product['meta_description']) }}">
+        <meta property="og:description" content="{{strip_tags($product['meta_description']) }}">
     @else
         <meta property="og:description"
             content="@foreach (explode(' ', $product['name']) as $keyword) {{ $keyword . ' , ' }} @endforeach">
@@ -81,6 +81,9 @@
         .owl-carousel .owl-nav button.owl-next {
             outline: none;
         }
+        .owl-carousel .owl-item img {
+    height: 80px;
+}
 
         .card-header {
             padding: 6px 0px;
@@ -116,30 +119,6 @@
         .btn-link:hover {
             text-decoration: none;
             color: #7d7d7d;
-        }
-
-        header {
-            position: fixed;
-            width: 100%;
-            top: 0;
-            left: 0;
-            z-index: 9999;
-            border-bottom: 1px solid hsla(0, 0%, 100%, .14);
-            background: #fff;
-            transition: 0.5s;
-        }
-
-        .menu-area>ul>li>a {
-            text-decoration: none;
-            color: #343a40;
-        }
-
-        .menu-icon {
-            color: #504f4f;
-        }
-
-        .header-icon>a>.fa {
-            color: #464545;
         }
 
         .main-image>img {
@@ -245,7 +224,7 @@
                     <div class="row">
                         <div class="col-md-7 mb-3">
                             <div class="p-details">
-                                <h1 class="product-name">{{ $product->name }}</h1>
+                                <h1 class="product-name mb-2">{{ $product->name }}</h1>
 
                                 <span class="product-price">{{ \App\CPU\Helpers::get_price_range($product) }}</span>
 
@@ -254,6 +233,9 @@
                                         <del>{{ \App\CPU\Helpers::currency_converter($product->unit_price) }} </del> -
                                         {{ $product->discount }}%</span>
                                 @endif
+                                <div class="my-2">
+                                    <span class="product-code"><strong>Code:</strong> {{ $product->code }}</span>
+                                </div>
                                 <p class="product-description">{!! $product['short_description'] !!}</p>
 
                                 <form id="form-{{ $product->id }}" class="mb-2">

@@ -8,6 +8,7 @@
         @php($total_discount_on_product = 0)
         @if (session()->has('cart') && count(session()->get('cart')) > 0)
             @foreach (session('cart') as $key => $cartItem)
+            {{-- @dd(session('cart')) --}}
             @php($sub_total += ($cartItem['price'] * $cartItem['quantity'])-($cartItem['quantity']*$cartItem['discount']))
                 @php($total_tax += $cartItem['tax'] * $cartItem['quantity'])
                 @php($total_shipping_cost += $cartItem['shipping_cost'])

@@ -83,6 +83,7 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
          Route::group(['prefix' => 'landingpages', 'as' => 'landingpages.','middleware'=>['module:marketing_section']], function () {
             Route::get('landing', 'LandingPagesController@landing_index')->name('landing');
             Route::post('landing', 'LandingPagesController@landing_submit');
+            Route::get('remove-banner', 'LandingPagesController@remove_image')->name('remove-image');
             Route::post('status-update', 'LandingPagesController@status_update')->name('status-update');
             Route::get('update/{id}', 'LandingPagesController@edit')->name('update');
             Route::post('landing_pages_update/{id}', 'LandingPagesController@update')->name('landing_pages_update');
@@ -90,6 +91,16 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
             Route::post('add-product/{landing_id}', 'LandingPagesController@add_product_submit');
             Route::post('delete-product', 'LandingPagesController@delete_product')->name('delete-product');
 
+            Route::get('/index', 'LandingPagesController@index')->name('index');
+            Route::get('/create', 'LandingPagesController@create')->name('create');
+            Route::post('/store', 'LandingPagesController@store')->name('store');
+            Route::get('/edit{id}', 'LandingPagesController@SingleProductEdit')->name('edit');
+            Route::post('/product-landing-page/update/{id}', 'LandingPagesController@SingleProductUpdate')->name('single.update');
+            Route::post('status', 'LandingPagesController@LandingPageStatus')->name('status');
+            Route::get('remove/slider', 'LandingPagesController@removeImage')->name('remove_image');
+            Route::get('remove/feature-list', 'LandingPagesController@removeFeatureList')->name('remove_feature_list');
+            Route::get('remove/landing-page/section', 'LandingPagesController@removePageSection')->name('remove_page_section');
+            Route::get('remove/landing-page/{id}', 'LandingPagesController@removeLandingPage')->name('remove_landing_page');
 
         });
 
