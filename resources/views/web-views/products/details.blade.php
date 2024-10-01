@@ -351,6 +351,7 @@
                                         </button>
                                     </div>
                                     <div class="col-md-12 mb-3">
+                                        @if ($product['size_chart']!=NULL && $product['size_chart']!=='def.png')
                                         <div class="accordion mb-3" id="accordionExample">
                                             <div class="card">
                                                 <div class="card-header d-flex justify-content-between align-items-center"
@@ -371,17 +372,17 @@
                                                     aria-labelledby="productSizeChart" data-parent="#accordionExample">
                                                     <div class="card-body">
                                                         <div class="size-img-box">
-                                                            @if ($product['size_chart'])
+
                                                                 <img src="{{ \App\CPU\ProductManager::product_image_path('thumbnail') }}/{{ $product['size_chart'] }}"
                                                                     class="img-fluid" alt="Product size chart image">
-                                                            @else
-                                                                <span>Size chart are not available.</span>
-                                                            @endif
+
+
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
+                                        @endif
                                         <div class="accordion mb-3" id="accordionExample">
                                             <div class="card">
                                                 <div class="card-header d-flex justify-content-between align-items-center"
