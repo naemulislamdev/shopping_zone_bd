@@ -70,7 +70,7 @@
                                         <label class="input-label"
                                             for="{{ $lang }}_description">{{ \App\CPU\translate(' short description') }}
                                             ({{ strtoupper($lang) }})</label>
-                                        <textarea name="short_description" class="editor" id="summernote1" cols="30" rows="30">{{ old('short_description') }}</textarea>
+                                        <textarea name="short_description[]" class="editor" id="summernote1" cols="30" rows="30">{{ old('short_description') }}</textarea>
                                     </div>
                                 </div>
                             @endforeach

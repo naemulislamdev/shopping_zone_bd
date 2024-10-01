@@ -83,7 +83,7 @@ class ProductController extends BaseController
             'purchase_price'    => 'required|numeric|min:1',
             'discount'          => 'required|gt:-1',
             'shipping_cost'     => 'required|gt:-1',
-            'code'              => 'required|numeric|min:1|digits_between:6,20|unique:products',
+            'code'              => 'required|min:1|digits_between:3,30|unique:products,code',
             'minimum_order_qty' => 'required|numeric|min:1',
         ], [
             'images.required'       => 'Product images is required!',
@@ -242,9 +242,12 @@ class ProductController extends BaseController
         $p->attributes = json_encode($request->choice_attributes);
         $p->current_stock = abs($stock_count);
         $p->minimum_order_qty = $request->minimum_order_qty;
-
-        $p->video_provider = 'youtube';
         $p->video_url = $request->video_link;
+        if (strpos($request->video_link, 'facebook') !== false) {
+            $p->video_provider = 'facebook';
+        } elseif (strpos($request->video_link, 'youtube') !== false) {
+            $p->video_provider = 'youtube';
+        }
         $videoShopping =$request->has('video_shopping');
         if($videoShopping == 1){
             $p->video_shopping = true;
@@ -707,9 +710,12 @@ class ProductController extends BaseController
         $product->attributes = json_encode($request->choice_attributes);
         $product->discount_type = $request->discount_type;
         $product->current_stock = abs($stock_count);
-
-        $product->video_provider = 'youtube';
         $product->video_url = $request->video_link;
+        if (strpos($request->video_link, 'facebook') !== false) {
+            $product->video_provider = 'facebook';
+        } elseif (strpos($request->video_link, 'youtube') !== false) {
+            $product->video_provider = 'youtube';
+        }
         $videoShopping =$request->has('video_shopping');
         if($videoShopping == 1){
             $product->video_shopping = true;
@@ -885,6 +891,11 @@ class ProductController extends BaseController
                     return back();
                 }
             }
+            if (strpos($collection['youtube_video_url'], 'facebook') !== false) {
+                $videoProvider = 'facebook';
+            } elseif (strpos($collection['youtube_video_url'], 'youtube') !== false) {
+                $videoProvider = 'youtube';
+            }
 
             $thumbnail = explode('/', $collection['thumbnail']);
 
@@ -903,7 +914,7 @@ class ProductController extends BaseController
                 'discount_type' => $collection['discount_type'],
                 'current_stock' => $collection['current_stock'],
                 'details' => $collection['details'],
-                'video_provider' => 'youtube',
+                'video_provider' => $videoProvider,
                 'video_url' => $collection['youtube_video_url'],
                 'images' => json_encode(['def.png']),
                 'thumbnail' => $thumbnail[1]??$thumbnail[0],
