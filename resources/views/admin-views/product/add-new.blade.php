@@ -402,8 +402,8 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="name">Size Chart</label><small
-                                            style="color: red"> ( {{ \App\CPU\translate('ratio') }} 1:1 )</small>
+                                        <label>Size Chart</label><small
+                                            style="color: red"> ( Optional )</small>
                                     </div>
                                     <div style="max-width:200px;">
                                         <div class="row" id="size_chart"></div>
@@ -481,7 +481,7 @@
                 fieldName: 'size_chart',
                 maxCount: 1,
                 rowHeight: 'auto',
-                groupClassName: 'col-6',
+                groupClassName: 'col-12',
                 maxFileSize: '',
                 placeholderImage: {
                     image: '{{ asset('public/assets/back-end/img/400x400/img2.jpg') }}',

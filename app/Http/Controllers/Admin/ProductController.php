@@ -565,13 +565,12 @@ class ProductController extends BaseController
             'category_id.required'  => 'category  is required!',
             'brand_id.required'     => 'brand  is required!',
             'unit.required'         => 'Unit  is required!',
-            'code.min'              => 'The code must be positive!',
-            'code.digits_between'   => 'The code must be minimum 6 digits!',
-t be positive!',
+            'code.required'              => 'The code must be positive!',
             'code.min'   => 'The code must be minimum 4 digits!',
-equal to the price!');
-            });
-        }
+            'minimum_order_qty.required' => 'The minimum order quantity is required!',
+            'minimum_order_qty.min' => 'The minimum order quantity must be positive!',
+        ]);
+
 
         if (is_null($request->name[array_search('en', $request->lang)])) {
             $validator->after(function ($validator) {
