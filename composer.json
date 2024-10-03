@@ -20,7 +20,7 @@
         "hardevine/shoppingcart": "^3.3",
         "intervention/image": "^2.7",
         "kingflamez/laravelrave": "^4.2",
-        "laravel/framework": "^8.65",
+        "laravel/framework": "^9.0",
         "laravel/passport": "^10.2",
         "laravel/sanctum": "^2.11",
         "laravel/socialite": "^5.2",
@@ -46,12 +46,12 @@
     "require-dev": {
         "amirami/localizator": "^0.7.1@alpha",
         "barryvdh/laravel-debugbar": "^3.6",
-        "facade/ignition": "^2.5",
         "fakerphp/faker": "^1.9.1",
         "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.4.4",
-        "nunomaduro/collision": "^5.10",
-        "phpunit/phpunit": "^9.5.10"
+        "nunomaduro/collision": "^6.1",
+        "phpunit/phpunit": "^9.5.10",
+        "pusher/pusher-php-server": "^5.0"
     },
     "autoload": {
         "files": [

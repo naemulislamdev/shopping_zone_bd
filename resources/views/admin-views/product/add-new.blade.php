@@ -70,7 +70,7 @@
                                         <label class="input-label"
                                             for="{{ $lang }}_description">{{ \App\CPU\translate(' short description') }}
                                             ({{ strtoupper($lang) }})</label>
-                                        <textarea name="short_description" class="editor" id="summernote1" cols="30" rows="30">{{ old('short_description') }}</textarea>
+                                        <textarea name="short_description[]" class="editor" id="summernote1" cols="30" rows="30">{{ old('short_description') }}</textarea>
                                     </div>
                                 </div>
                             @endforeach
@@ -402,8 +402,8 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="name">Size Chart</label><small
-                                            style="color: red"> ( {{ \App\CPU\translate('ratio') }} 1:1 )</small>
+                                        <label>Size Chart</label><small
+                                            style="color: red"> ( Optional )</small>
                                     </div>
                                     <div style="max-width:200px;">
                                         <div class="row" id="size_chart"></div>
@@ -481,7 +481,7 @@
                 fieldName: 'size_chart',
                 maxCount: 1,
                 rowHeight: 'auto',
-                groupClassName: 'col-6',
+                groupClassName: 'col-12',
                 maxFileSize: '',
                 placeholderImage: {
                     image: '{{ asset('public/assets/back-end/img/400x400/img2.jpg') }}',
