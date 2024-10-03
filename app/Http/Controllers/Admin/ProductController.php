@@ -83,7 +83,7 @@ class ProductController extends BaseController
             'purchase_price'    => 'required|numeric|min:1',
             'discount'          => 'required|gt:-1',
             'shipping_cost'     => 'required|gt:-1',
-            'code'              => 'required|min:1|digits_between:3,30|unique:products,code',
+            'code'              => 'required|string|between:3,30|unique:products,code',
             'minimum_order_qty' => 'required|numeric|min:1',
         ], [
             'images.required'       => 'Product images is required!',
@@ -320,7 +320,7 @@ class ProductController extends BaseController
 
 
             Toastr::success(translate('Product added successfully!'));
-            return redirect()->route('admin.product.list', ['in_house']);
+            return redirect()->route('admin.product.list',['in_house']);
         }
     }
 
