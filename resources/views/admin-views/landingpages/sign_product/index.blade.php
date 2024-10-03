@@ -55,7 +55,7 @@
                                         <tr>
 
                                             <td>{{ $lPage->title }}</td>
-                                            <td>{{ $lPage->slug }}</td>
+                                            <td>page/{{ $lPage->slug }}</td>
 
                                             <td>
                                                 <label class="switch">

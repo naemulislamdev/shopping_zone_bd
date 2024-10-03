@@ -7,6 +7,7 @@
         @yield('title')
     </title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <link rel="apple-touch-icon" sizes="180x180"
         href="{{ asset('storage/app/public/company') }}/{{ $web_config['fav_icon']->value }}">
     <link rel="icon" type="image/png" sizes="32x32"
@@ -261,7 +262,8 @@
 
     {{-- <script src="{{asset('public/assets/front-end')}}/vendor/jquery/dist/jquery.slim.min.js"></script> --}}
     {{-- <script src="{{asset('public/assets/front-end')}}/vendor/jquery/dist/jquery-2.2.4.min.js"></script> --}}
-    <script src="{{ asset('public/assets/front-end') }}/js/jquery.min.js"></script>
+    {{-- <script src="{{ asset('public/assets/front-end') }}/js/jquery.min.js"></script> --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
     <script src="{{ asset('public/assets/front-end') }}/js/bootstrap_v4.min.js"></script>
     <script src="{{ asset('public/assets/front-end') }}/js/bs_v5.js"></script>

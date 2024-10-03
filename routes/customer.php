@@ -60,6 +60,7 @@ Route::group(['namespace' => 'Customer', 'prefix' => 'customer', 'as' => 'custom
         Route::get('set-shipping-method', 'SystemController@set_shipping_method')->name('set-shipping-method');
         Route::get('set-pos-shipping-method', 'SystemController@set_pos_shipping_method')->name('set-pos-shipping-method');
         Route::post('checkout-complete', 'SystemController@productCheckoutOrder')->name('product.checkout.order');
+        Route::post('checkout/complete', 'SystemController@singlepCheckout')->name('sproduct.checkout');
         Route::post('choose-billing-address', 'SystemController@choose_billing_address')->name('choose-billing-address');
 
         Route::group(['prefix' => 'reward-points', 'as' => 'reward-points.', 'middleware' => ['auth:customer']], function () {

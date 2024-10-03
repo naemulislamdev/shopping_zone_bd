@@ -250,7 +250,7 @@ class OrderManager
         if ($req != null) {
             if (session()->has('coupon_code') == false) {
                 $coupon_code = $req->has('coupon_code') ? $req['coupon_code'] : null;
-                $discount = $req->has('coupon_code') ? Helpers::coupon_discount($req) : $discount;
+                $discount = $req->has('coupon_discount') ? $req->coupon_discount : 0;
             }
             if (session()->has('address_id') == false) {
                 $address_id = $req->has('address_id') ? $req['address_id'] : null;

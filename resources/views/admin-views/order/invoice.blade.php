@@ -426,13 +426,14 @@
                     <p style="margin-left: 10px; margin-top: 6px; margin-bottom:0px;"><i
                             class="fa fa-phone text-white"></i>{{\App\CPU\translate('phone')}}
                         : {{\App\Model\BusinessSetting::where('type','company_phone')->first()->value}}</p>
-                    <p style="margin-left: 10px; margin-top: 6px; margin-bottom:0px;"><i
-                                class="fa fa-globe text-white" aria-hidden="true"></i> {{\App\CPU\translate('website')}}
-                            : https://sajerbela.com/</p>
+
                     <p style="margin-left: 10px; margin-top: 6px; margin-bottom:0px;"><i
                                 class="fa fa-envelope text-white" aria-hidden="true"></i> {{\App\CPU\translate('email')}}
                             : {{$company_email}}</p>
-                </td>
+                               <p style="margin-left: 10px; margin-top: 6px; margin-bottom:0px;"><i
+                                class="fa fa-map-marker" aria-hidden="true"></i> {{\App\CPU\translate('address')}}
+                            : 45, Probal Tower, Ring Road, Mohammadpur. </p>
+                </td>
                 @else
                     <td valign="top">
                         <span class="h2" style="margin: 0px;">{{\App\CPU\translate('customer_info')}}: </span>
