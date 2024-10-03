@@ -83,7 +83,7 @@ class ProductController extends BaseController
             'purchase_price'    => 'required|numeric|min:1',
             'discount'          => 'required|gt:-1',
             'shipping_cost'     => 'required|gt:-1',
-            'code'              => 'required|min:4|max:20',
+            'code'              => 'required|min:4|max:20|unique:products,code',
             'minimum_order_qty' => 'required|numeric|min:1',
         ], [
             'images.required'       => 'Product images is required!',
@@ -93,6 +93,7 @@ class ProductController extends BaseController
             'unit.required'         => 'Unit  is required!',
             'code.min'              => 'The code must be positive!',
             'code.required'   => 'The code must be minimum 4 digits!',
+            'code.unique'   => 'The product code must be unique!',
             'minimum_order_qty.required' => 'The minimum order quantity is required!',
             'minimum_order_qty.min' => 'The minimum order quantity must be positive!',
         ]);

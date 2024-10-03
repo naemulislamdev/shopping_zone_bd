@@ -376,8 +376,7 @@ class OrderController extends Controller
 
     public function payment_status(Request $request)
     {
-        if ($request->ajax()) {
-            $order = Order::find($request->id);
+        $order = Order::find($request->id);
 
             if(!isset($order->customer))
             {
@@ -386,10 +385,9 @@ class OrderController extends Controller
 
             $order = Order::find($request->id);
             $order->payment_status = $request->payment_status;
-            $order->save();
-            $data = $request->payment_status;
+           $data = $order->save();
             return response()->json($data);
-        }
+
     }
 
     public function advance_payment(Request $request){

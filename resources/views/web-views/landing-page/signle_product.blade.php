@@ -76,7 +76,7 @@
         }
 
         .name-price {
-            background: #ddd;
+            background: #f4f4f4;
             padding: 11px 13px;
             border-radius: 7px;
         }
@@ -91,6 +91,46 @@
 
         .p-data-box>img {
             width: 200px;
+        }
+
+        .order-box {
+            box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+        }
+
+        .sp-right-img {
+            width: 100px;
+        }
+
+        .p-dtls-box>table>tbody>tr {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .p-type-box {
+            background: #f4f4f4;
+            padding: 10px 10px;
+            margin-bottom: 7px;
+            border-radius: 7px;
+        }
+
+        .p-type-box>h4 {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .p-type-box>p {
+            margin: 0;
+            background: #ddd;
+            padding: 8px 8px;
+        }
+
+        #preloader img {
+            vertical-align: middle;
+        }
+
+        #preloader {
+            display: inline-block;
+            margin-left: 10px;
         }
     </style>
 @endpush
@@ -139,11 +179,17 @@
 
 
     <!-- Offer Section -->
-    <section class="offer-section">
+    <section class="p-details">
         <div class="container">
-            <h1 class="mb-2">{{ $productLandingPage->product->name }}</h1>
-            <div class="p-short-details">
-                <p>{!! $productLandingPage->description !!}</p>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <div class="p-name">
+                        <h3 class="mb-2">{{ $productLandingPage->product->name }}</h3>
+                    </div>
+                    <div class="p-short-details">
+                        <p>{!! $productLandingPage->description !!}</p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -175,7 +221,7 @@
             <div class="row">
                 <div class="col-md-8 mx-auto">
                     <div class="row align-items-center justify-content-center">
-                        <div class="col-md-6">
+                        <div class="col-md-6 mb-3">
                             <ul class="benefit-list">
                                 @foreach (json_decode($productLandingPage->feature_list) as $title)
                                     <li><i class="fa fa-check-square-o"></i>{{ $title }}</li>
@@ -183,7 +229,7 @@
                             </ul>
                             <a href="#orderPlace" class="w-100 order-btn">অর্ডার করতে চাই</a>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6 mb-3">
                             <div class="benefit-img">
                                 <img src="{{ asset('storage/app/public/landingpage/' . $productLandingPage->feature_img) }}"
                                     style="width: 100%; height:400px;" alt="">
@@ -211,7 +257,7 @@
                         <div class="col-md-8 mx-auto">
                             <div class="row align-items-center justify-content-center">
                                 @if ($section->section_direction == 'left')
-                                    <div class="col-md-6">
+                                    <div class="col-md-6 mb-3">
                                         <div class="section-dtls">
                                             <p>{{ $section->section_description }}</p>
                                         </div>
@@ -220,7 +266,7 @@
                                         @endif
                                     </div>
 
-                                    <div class="col-md-6">
+                                    <div class="col-md-6 mb-3">
                                         <div class="benefit-img">
                                             <img onerror="this.src='{{ asset('public/assets/front-end/img/image-place-holder.png') }}'"
                                                 src="{{ asset('storage/app/public/landingpage/' . $section->section_img) }}"
@@ -228,14 +274,14 @@
                                         </div>
                                     </div>
                                 @elseif ($section->section_direction == 'right')
-                                    <div class="col-md-6">
+                                    <div class="col-md-6 mb-3">
                                         <div class="benefit-img">
                                             <img onerror="this.src='{{ asset('public/assets/front-end/img/image-place-holder.png') }}'"
                                                 src="{{ asset('storage/app/public/landingpage/' . $section->section_img) }}"
                                                 style="width: 100%; height:400px;" alt="">
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-6 mb-3">
                                         <div class="section-dtls">
                                             <p>{{ $section->section_description }}</p>
                                         </div>
@@ -253,7 +299,7 @@
     @endif
 
     <!-- Form Section -->
-    <section id="orderPlace my-4">
+    <section id="orderPlace" class="my-4">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-md-10">
@@ -262,205 +308,233 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="section-title">
-                                        <h4 class="text-center">অর্ডার করতে নিচের ফর্মটি সঠিক ভাবে পুরন করুন</h4>
+                                        <h4 class="text-center">অর্ডার করতে নিচের ফর্মটি সঠিক ভাবে পুরন করুন।</h4>
                                     </div>
                                 </div>
                             </div>
-                            <form action="{{ route('customer.product.checkout.order') }}" method="POST">
+                            <form action="{{ route('customer.sproduct.checkout') }}" method="POST">
                                 @csrf
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <label class="text-danger">Choose Shipping Method</label>
-                                        <select class="form-control" id="shipping_method_id"
-                                            onchange="set_shipping_id(this.value)" name="shipping_method_id">
-                                            <option selected disabled>Select Shipping Method</option>
-                                            @foreach (\App\Model\ShippingMethod::where(['status' => 1])->get() as $shipping)
-                                                <option value="{{ $shipping['id'] }}"
-                                                    {{ session()->has('shipping_method_id') ? (session('shipping_method_id') == $shipping['id'] ? 'selected' : '') : '' }}>
-                                                    {{ $shipping['title'] . ' ( ' . $shipping['duration'] . ' ) ' . \App\CPU\Helpers::currency_converter($shipping['cost']) }}
-                                                </option>
-                                            @endforeach
-                                        </select>
+                                        <div class="order-box">
+                                            <div class="card-body">
+                                                <div class="row mb-3">
+                                                    <div class="col">
+                                                        <h4 class="">Billing details</h4>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-6 mb-3">
+                                                        <div class="form-group">
+                                                            <label>Name <span class="text-danger">*</span></label>
+                                                            <input type="text" class="form-control"
+                                                                placeholder="Enter your name" name="name"
+                                                                value="{{ old('name') }}">
+                                                            @error('name')
+                                                                <span class="text-danger">{{ $message }}</span>
+                                                            @enderror
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <div class="form-group">
+                                                            <label>Phone <span class="text-danger">*</span></label>
+                                                            <input type="text" class="form-control"
+                                                                placeholder="Enter your phone" name="phone"
+                                                                value="{{ old('phone') }}">
+                                                            @error('phone')
+                                                                <span class="text-danger">{{ $message }}</span>
+                                                            @enderror
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12 mb-3">
+                                                        <div class="form-group">
+                                                            <label>Email </label>
+                                                            <input type="email" class="form-control"
+                                                                placeholder="Enter your email" name="email"
+                                                                value="{{ old('email') }}">
+                                                            @error('email')
+                                                                <span class="text-danger">{{ $message }}</span>
+                                                            @enderror
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-12 mb-3">
+                                                        <div class="form-group">
+                                                            <label>Shipping Address <span
+                                                                    class="text-danger">*</span></label>
+                                                            <textarea class="form-control" placeholder="Enter your shipping address" name="address">{{ old('address') }}</textarea>
+                                                            @error('address')
+                                                                <span class="text-danger">{{ $message }}</span>
+                                                            @enderror
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Note </label>
+                                                            <textarea class="form-control" placeholder="Enter your Note" name="order_note">{{ old('order_note') }}</textarea>
+                                                            @error('order_note')
+                                                                <span class="text-danger">{{ $message }}</span>
+                                                            @enderror
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>Choose Payment Method</label>
-                                            <select class="form-control" name="payment_method">
-                                                <option value="cash_on_delivery">Cash on delevery</option>
-                                                <option value="online_payment">online payment</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <div class="form-group">
-                                            <label>Name <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Enter your name"
-                                                name="name" value="{{ old('name') }}">
-                                            @error('name')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <div class="form-group">
-                                            <label>Phone <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control" placeholder="Enter your phone"
-                                                name="phone" value="{{ old('phone') }}">
-                                            @error('phone')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12 mb-3">
-                                        <div class="form-group">
-                                            <label>Email </label>
-                                            <input type="email" class="form-control" placeholder="Enter your email"
-                                                name="email" value="{{ old('email') }}">
-                                            @error('email')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                    </div>
+                                        <div class="order-box">
+                                            <div class="card-body">
+                                                <div class="row mb-3">
+                                                    <div class="col">
+                                                        <h4 class="">Your Product</h4>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-md-12">
+                                                        <div class="name-price">
+                                                            <div class="title-box d-flex justify-content-between">
+                                                                <h4>Product</h4>
+                                                                <h4>Price</h4>
+                                                            </div>
+                                                            <div class="p-data-box d-flex justify-content-between">
 
-                                    <div class="col-md-12 mb-3">
-                                        <div class="form-group">
-                                            <label>Shipping Address <span class="text-danger">*</span></label>
-                                            <textarea class="form-control" placeholder="Enter your shipping address" name="address">{{ old('address') }}</textarea>
-                                            @error('address')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Note </label>
-                                            <textarea class="form-control" placeholder="Enter your Note" name="order_note">{{ old('order_note') }}</textarea>
-                                            @error('order_note')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                </div>
-                                <button type="submit" class="btn btn-primary float-right">Submit</button>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="row mb-3">
-                                <div class="col">
-                                    <h4 class="">Your Product</h4>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-md-12">
-                                    <div class="name-price">
-                                        <div class="title-box d-flex justify-content-between">
-                                            <h4>Product</h4>
-                                            <h4>Price</h4>
-                                        </div>
-                                        <div class="p-data-box d-flex justify-content-between">
-                                            <p>{{ $productLandingPage->product->name }} <i class="fa fa-close"></i> 1</p>
-                                            <p>{{ \App\CPU\Helpers::currency_converter($productLandingPage->product->unit_price) }}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col">
-                                    <h4 class="">Your order</h4>
-                                </div>
-                            </div>
-
-                            @php($sub_total = 0)
-                            @php($total_tax = 0)
-                            @php($total_shipping_cost = 0)
-                            @php($total_discount_on_product = 0)
-                            @if (session()->has('cart') && count(session()->get('cart')) > 0)
-                            {{-- @dd(session('cart')) --}}
-                                @foreach (session('cart') as $key => $cartItem)
-                                    @php($sub_total += $cartItem['price'] * $cartItem['quantity'] - $cartItem['quantity'] * $cartItem['discount'])
-                                    @php($total_tax += $cartItem['tax'] * $cartItem['quantity'])
-                                    @php($total_shipping_cost += $cartItem['shipping_cost'])
-                                    @php($total_discount_on_product += $cartItem['discount'] * $cartItem['quantity'])
-                                @endforeach
-                            @endif
-                            <div class="row mb-3">
-                                <div class="col-md-12">
-                                    <div class="name-price">
-                                        <div class="title-box d-flex justify-content-between">
-                                            <h4>Product</h4>
-                                        </div>
-                                        <div class="p-data-box d-flex justify-content-between">
-                                            <img src="{{ \App\CPU\ProductManager::product_image_path('thumbnail') }}/{{ $productLandingPage->product->thumbnail }}"
-                                                alt="">
-                                            <div>
-                                                <table class="mt-4">
-                                                    <tr>
-                                                        <td>Subtotal :</td>
-                                                        <td>{{ \App\CPU\Helpers::currency_converter($sub_total) }}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Shipping :</td>
-                                                        <td>{{ \App\CPU\Helpers::currency_converter($total_shipping_cost) }}
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Total:</td>
-                                                        <td>{{ \App\CPU\Helpers::currency_converter($sub_total + $total_tax + $total_shipping_cost) }}
-                                                        </td>
-                                                    </tr>
-                                                </table>
+                                                                <div>
+                                                                    <p>{{ $productLandingPage->product->name }} <i
+                                                                            class="fa fa-close"></i> 1</p>
+                                                                    <img class="sp-right-img"
+                                                                        src="{{ \App\CPU\ProductManager::product_image_path('thumbnail') }}/{{ $productLandingPage->product->thumbnail }}">
+                                                                </div>
+                                                                <p>{{ \App\CPU\Helpers::currency_converter($productLandingPage->product->unit_price) }}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <input type="hidden" name="price" value="{{$productLandingPage->product->unit_price }}">
+                                                    <input type="hidden" name="quantity" value="1">
+                                                    <input type="hidden" name="tax" value="{{$productLandingPage->product->tax}}">
+                                                    <input type="hidden" name="discount" value="{{$productLandingPage->product->discount}}">
+                                                    <input type="hidden" name="product_id" value="{{$productLandingPage->product->id}}">
+                                                    <div class="col-md-12">
+                                                        <div class="name-price mb-3">
+                                                            <div class="title-box">
+                                                                <h4>Your order</h4>
+                                                            </div>
+                                                            <div class="p-dtls-box">
+                                                                <table class="mt-4 table">
+                                                                    <tr>
+                                                                        <th>Subtotal :</th>
+                                                                        <td id="subtotal">
+                                                                            {{ \App\CPU\Helpers::currency_converter($productLandingPage->product->unit_price) }}
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th>Shipping :</th>
+                                                                        <td>
+                                                                            <ul class="p-0 m-0">
+                                                                                @foreach (\App\Model\ShippingMethod::where(['status' => 1])->get() as $shipping)
+                                                                                    <li style="list-style: none;">
+                                                                                        <div class="form-check">
+                                                                                            <input
+                                                                                                class="form-check-input shipping-method"
+                                                                                                type="radio"
+                                                                                                name="shipping_method"
+                                                                                                id="shipping_{{ $shipping['id'] }}"
+                                                                                                data-cost="{{ $shipping['cost'] }}"
+                                                                                                value="{{ $shipping['id'] }}" />
+                                                                                            <label class="form-check-label"
+                                                                                                for="shipping_{{ $shipping['id'] }}">
+                                                                                                {{ $shipping['title'] . ' ( ' . $shipping['duration'] . ' ) ' . \App\CPU\Helpers::currency_converter($shipping['cost']) }}
+                                                                                            </label>
+                                                                                        </div>
+                                                                                    </li>
+                                                                                @endforeach
+                                                                            </ul>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th>Total:</th>
+                                                                        <td>
+                                                                            <span
+                                                                                id="total">{{ \App\CPU\Helpers::currency_converter($productLandingPage->product->unit_price) }}</span>
+                                                                            <div id="preloader" style="display: none;">
+                                                                                <img src="{{ asset('public/assets/front-end/img/loader_.gif') }}"
+                                                                                    alt="Loading..." width="20">
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col">
+                                                                <div class="p-type-box">
+                                                                    <h4>ক্যাশঅন ডেলিভারি</h4>
+                                                                    <p>Pay with cash upon delivery.</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <button type="submit" class="w-100 btn btn-primary">Place
+                                                            Order</button>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            <form>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
     </section>
 @endsection
 @push('scripts')
-    <script>
-        function set_shipping_id(id) {
-            @foreach (session()->get('cart') as $key => $item)
-                let key = '{{ $key }}';
-                @break
-            @endforeach
-            $.get({
-                url: '{{ url('/') }}/customer/set-shipping-method',
-                dataType: 'json',
-                data: {
-                    id: id,
-                    key: key
-                },
-                beforeSend: function() {
-                    $('#loading').show();
-                },
-                success: function(data) {
-                    console.log(data);
+    @php
+        $unitPrice = $productLandingPage->product->unit_price;
+        $shippingMethods = \App\Model\ShippingMethod::where(['status' => 1])->get();
+    @endphp
 
-                    if (data.status == 1) {
-                        toastr.success('Shipping method selected', {
-                            CloseButton: true,
-                            ProgressBar: true
-                        });
-                        setInterval(function() {
-                            location.reload();
-                        }, 2000);
-                    } else {
-                        toastr.error('Choose proper shipping method.', {
-                            CloseButton: true,
-                            ProgressBar: true
-                        });
-                    }
-                },
-                complete: function() {
-                    $('#loading').hide();
-                },
+    <script>
+        const unitPrice = parseFloat("{{ \App\CPU\Helpers::currency_converter($unitPrice) }}");
+
+        // Pre-converted shipping costs from the backend
+        const shippingPrices = {
+            @foreach ($shippingMethods as $shipping)
+                "{{ $shipping['id'] }}": parseFloat("{{ \App\CPU\Helpers::currency_converter($shipping['cost']) }}"),
+            @endforeach
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const shippingRadios = document.querySelectorAll('.shipping-method');
+            const totalElement = document.getElementById('total');
+            const preloader = document.getElementById('preloader');
+
+            // Update total price
+            function updateTotal(shippingCost) {
+                preloader.style.display = 'inline-block'; // Show preloader
+                setTimeout(function() {
+                    // Calculate the new total using pre-converted values
+                    const total = unitPrice + shippingCost;
+                    console.log(total);
+
+
+                    // Update the total element with the new total
+                    totalElement.innerHTML = total.toFixed(2); // Assuming 2 decimal points
+                    preloader.style.display = 'none'; // Hide preloader after update
+                }, 1500); // Simulate a delay for 1.5 seconds
+            }
+
+            // Listen for changes in the shipping method
+            shippingRadios.forEach(function(radio) {
+                radio.addEventListener('change', function() {
+                    const shippingCost = parseFloat(shippingPrices[this
+                    .value]); // Get pre-converted shipping cost
+                    updateTotal(shippingCost);
+                });
             });
-        }
+        });
     </script>
 @endpush
