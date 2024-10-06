@@ -19,14 +19,22 @@ class CategoryManager
         return $x;
     }
 
-    public static function products($category_id)
+    public static function products($category_id,$limit = 10, $offset = 1)
     {
         $id = '"'.$category_id.'"';
-        return Product::active()
-            ->where('category_ids', 'like', "%{$id}%")->get();
+        // return Product::active()
+        //     ->where('category_ids', 'like', "%{$id}%")->get();
             /*->whereJsonContains('category_ids', ["id" => (string)$data['id']])*/
+
+            $paginator = Product::with(['rating'])->active()->where('category_ids', 'like', "%{$id}%")->latest()->paginate($limit, ['*'], 'page', $offset);
+        return [
+            'total_size' => $paginator->total(),
+            'limit' => (int)$limit,
+            'offset' => (int)$offset,
+            'products' => $paginator->items()
+        ];
     }
-    
+
      public static function products_slug($category_slug)
     {
         $categoryInfo = Category::where('slug',$category_slug)->first();
