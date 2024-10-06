@@ -55,7 +55,7 @@
         }
 
         .slider-img {
-            height: 500px;
+            height: 550px;
         }
 
         .slider-img>img {
@@ -172,7 +172,7 @@
     <section>
         <div class="container">
             <div class="row">
-                <div class="col-md-5 mx-auto">
+                <div class="col-md-4 mx-auto">
                     <div class="lt-slider">
                         <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
                             <ol class="carousel-indicators">
@@ -449,6 +449,16 @@
                                                             @enderror
                                                         </div>
                                                     </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="size-chart">
+                                                    @if ($productLandingPage->product->size_chart)
+                                                    <img class="w-100" src="{{ \App\CPU\ProductManager::product_image_path('thumbnail') }}/{{ $productLandingPage->product['size_chart'] }}"
+                                                                    class="img-fluid" alt="Product size chart image">
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
