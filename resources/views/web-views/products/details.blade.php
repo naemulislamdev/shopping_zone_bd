@@ -681,7 +681,7 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="video-product">
-                                                <iframe width="100%" height="360" src="{{ $embedUrl }}"
+                                                <iframe width="100%" height="700" src="{{ $embedUrl }}"
                                                     title="{{ $product['name'] }}" frameborder="0"
                                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                                     referrerpolicy="strict-origin-when-cross-origin"
