@@ -368,6 +368,13 @@ class Helpers
         $rate = $my_currency / $usd;
         return format_price(round($amount * $rate));
     }
+    public static function currency_converter2($amount)
+    {
+        $usd = Currency::where(['code' => 'USD'])->first()->exchange_rate;
+        $my_currency = \session('currency_exchange_rate');
+        $rate = $my_currency / $usd;
+        return round($amount * $rate);
+    }
 
     public static function language_load()
     {

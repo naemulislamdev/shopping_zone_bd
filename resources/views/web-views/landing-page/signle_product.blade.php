@@ -55,7 +55,7 @@
         }
 
         .slider-img {
-            height: 400px;
+            height: 500px;
         }
 
         .slider-img>img {
@@ -132,6 +132,39 @@
             display: inline-block;
             margin-left: 10px;
         }
+
+        .v-color-box,
+        .v-size-box {
+            display: flex;
+            align-items: center;
+            width: 70px;
+            height: 30px !important;
+            margin-top: 0px;
+            margin-right: 10px;
+        }
+        .v-color-box>.color-label, .v-size-box>.size-label {
+    cursor: pointer;
+    border: 2px solid #ccc;
+    padding: 2px 6px !important;
+    border-radius: 5px;
+    width: 100%;
+    text-align: center;
+    height: 30px !important;
+    position: relative;
+}
+.v-color-box>input:checked+.color-label {
+    border: 2px solid #02ab16 !important;
+}
+
+.v-color-box>input:checked+.color-label::after {
+    content: '✔';
+    color: white;
+    font-size: 12px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
     </style>
 @endpush
 @section('content')
@@ -193,14 +226,49 @@
             </div>
         </div>
     </section>
+    @php
+        $videoUrl = $productLandingPage->video_url;
+        $embedUrl = '';
 
+        if (strpos($videoUrl, 'facebook.com') !== false) {
+            if (strpos($videoUrl, '/reel/') !== false) {
+                // Facebook Reel URL
+                $videoId = explode('/reel/', $videoUrl)[1];
+                $videoId = explode('?', $videoId)[0];
+                $embedUrl = "https://www.facebook.com/plugins/video.php?href=https://www.facebook.com/watch/?v={$videoId}";
+            } elseif (strpos($videoUrl, 'watch?v=') !== false || strpos($videoUrl, '/watch/') !== false) {
+                // Facebook Watch Video URL
+                if (strpos($videoUrl, 'v=') !== false) {
+                    $videoId = explode('v=', $videoUrl)[1];
+                } else {
+                    $videoId = explode('/watch/', $videoUrl)[1];
+                }
+                $videoId = explode('&', $videoId)[0]; // Ensure we remove any trailing query parameters
+                $embedUrl = "https://www.facebook.com/plugins/video.php?href=https://www.facebook.com/watch/?v={$videoId}";
+            }
+        } elseif (strpos($videoUrl, 'youtube.com') !== false || strpos($videoUrl, 'youtu.be') !== false) {
+            if (strpos($videoUrl, 'youtube.com/watch') !== false) {
+                // Standard YouTube Video URL
+                $videoId = explode('v=', $videoUrl)[1];
+                $videoId = explode('&', $videoId)[0];
+                $embedUrl = "https://www.youtube.com/embed/{$videoId}";
+            } elseif (strpos($videoUrl, 'youtu.be') !== false) {
+                // Shortened YouTube URL
+                $videoId = explode('/', $videoUrl)[3];
+                $videoId = explode('?', $videoId)[0];
+                $embedUrl = "https://www.youtube.com/embed/{$videoId}";
+            } elseif (strpos($videoUrl, '/embed/') !== false) {
+                // YouTube Embed URL
+                $embedUrl = $videoUrl;
+            }
+        }
+    @endphp
     <!-- Video Section -->
     <div class="container video-section">
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="embed-responsive embed-responsive-16by9">
-                    <iframe width="928" height="522" src="{{ $productLandingPage->video_url }}" title="Western tops"
-                        frameborder="0"
+                    <iframe width="928" height="522" src="{{ $embedUrl }}" title="Western tops" frameborder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                 </div>
@@ -222,17 +290,22 @@
                 <div class="col-md-8 mx-auto">
                     <div class="row align-items-center justify-content-center">
                         <div class="col-md-6 mb-3">
-                            <ul class="benefit-list">
-                                @foreach (json_decode($productLandingPage->feature_list) as $title)
-                                    <li><i class="fa fa-check-square-o"></i>{{ $title }}</li>
-                                @endforeach
-                            </ul>
+                            @if (json_decode($productLandingPage->feature_list) != null)
+                                <ul class="benefit-list">
+                                    @foreach (json_decode($productLandingPage->feature_list) as $title)
+                                        <li><i class="fa fa-check-square-o"></i>{{ $title }}</li>
+                                    @endforeach
+                                </ul>
+                            @endif
+
                             <a href="#orderPlace" class="w-100 order-btn">অর্ডার করতে চাই</a>
                         </div>
                         <div class="col-md-6 mb-3">
                             <div class="benefit-img">
+                                {{-- <img src="{{ asset('public/landingpage/') }}"
+                                    style="width: 100%; height:500px;" alt=""> --}}
                                 <img src="{{ asset('storage/app/public/landingpage/' . $productLandingPage->feature_img) }}"
-                                    style="width: 100%; height:400px;" alt="">
+                                    style="width: 100%; height:560px;" alt="">
                             </div>
                         </div>
                     </div>
@@ -270,7 +343,7 @@
                                         <div class="benefit-img">
                                             <img onerror="this.src='{{ asset('public/assets/front-end/img/image-place-holder.png') }}'"
                                                 src="{{ asset('storage/app/public/landingpage/' . $section->section_img) }}"
-                                                style="width: 100%; height:400px;" alt="">
+                                                style="width: 100%; height:560px;" alt="">
                                         </div>
                                     </div>
                                 @elseif ($section->section_direction == 'right')
@@ -278,7 +351,7 @@
                                         <div class="benefit-img">
                                             <img onerror="this.src='{{ asset('public/assets/front-end/img/image-place-holder.png') }}'"
                                                 src="{{ asset('storage/app/public/landingpage/' . $section->section_img) }}"
-                                                style="width: 100%; height:400px;" alt="">
+                                                style="width: 100%; height:560px;" alt="">
                                         </div>
                                     </div>
                                     <div class="col-md-6 mb-3">
@@ -391,30 +464,98 @@
                                                 <div class="row mb-3">
                                                     <div class="col-md-12">
                                                         <div class="name-price">
-                                                            <div class="title-box d-flex justify-content-between">
+                                                            <div class="title-box">
                                                                 <h4>Product</h4>
-                                                                <h4>Price</h4>
                                                             </div>
-                                                            <div class="p-data-box d-flex justify-content-between">
-
-                                                                <div>
-                                                                    <p>{{ $productLandingPage->product->name }} <i
-                                                                            class="fa fa-close"></i> 1</p>
+                                                            <div class="p-data-box d-flex mb-2">
+                                                                <div class="mr-2">
                                                                     <img class="sp-right-img"
                                                                         src="{{ \App\CPU\ProductManager::product_image_path('thumbnail') }}/{{ $productLandingPage->product->thumbnail }}">
                                                                 </div>
-                                                                <p>{{ \App\CPU\Helpers::currency_converter($productLandingPage->product->unit_price) }}
-                                                                </p>
+                                                                <div>
+                                                                    <p class="m-0">{{ $productLandingPage->product->name }} <i
+                                                                            class="fa fa-close"></i> 1</p>
+                                                                    <p>{{ \App\CPU\Helpers::currency_converter($productLandingPage->product->unit_price) }}
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="p-variant">
+                                                                @if (count(json_decode($productLandingPage->product->colors)) > 0)
+                                                                    <div class="row">
+                                                                        <div class="col-12">
+                                                                            <h4 style="font-size: 18px;">Color
+                                                                            </h4>
+                                                                        </div>
+                                                                        <div class="col-12">
+                                                                            <div class="d-flex">
+                                                                                @foreach (json_decode($productLandingPage->product->colors) as $key => $color)
+                                                                                    <div class="v-color-box">
+                                                                                        <input type="radio"
+                                                                                            id="{{ $productLandingPage->product->id }}-color-{{ $key }}"
+                                                                                            checked name="color"
+                                                                                            value="{{ $color }}"
+                                                                                            @if ($key == 0) checked @endif>
+                                                                                        <label
+                                                                                            style="background: {{ $color }}"
+                                                                                            for="{{ $productLandingPage->product->id }}-color-{{ $key }}"
+                                                                                            class="color-label"></label>
+                                                                                    </div>
+                                                                                @endforeach
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                @endif
+                                                                @php
+                                                                    $qty = 0;
+                                                                    if (!empty($productLandingPage->product)) {
+                                                                        foreach (
+                                                                            json_decode(
+                                                                                $productLandingPage->product->variation,
+                                                                            )
+                                                                            as $key => $variation
+                                                                        ) {
+                                                                            $qty += $variation->qty;
+                                                                        }
+                                                                    }
+                                                                @endphp
+                                                                @foreach (json_decode($productLandingPage->product->choice_options) as $key => $choice)
+                                                                    <div class="row">
+                                                                        <div class="col-12">
+                                                                            <h4 style="font-size: 18px; margin:5px;">
+                                                                                {{ $choice->title }}</h4>
+                                                                        </div>
+                                                                        <div class="col-12">
+                                                                            <div class="d-flex">
+                                                                                @foreach ($choice->options as $key => $option)
+                                                                                    <div class="v-size-box">
+                                                                                        <input type="radio"
+                                                                                            id="{{ $choice->name }}-{{ $option }}"
+                                                                                            name="{{ $choice->name }}"
+                                                                                            value="{{ $option }}"
+                                                                                            @if ($key == 0) checked @endif>
+                                                                                        <label
+                                                                                            for="{{ $choice->name }}-{{ $option }}"
+                                                                                            class="size-label">{{ $option }}</label>
+                                                                                    </div>
+                                                                                @endforeach
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                @endforeach
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="row mb-3">
-                                                    <input type="hidden" name="price" value="{{$productLandingPage->product->unit_price }}">
+                                                    <input type="hidden" name="price"
+                                                        value="{{ $productLandingPage->product->unit_price }}">
                                                     <input type="hidden" name="quantity" value="1">
-                                                    <input type="hidden" name="tax" value="{{$productLandingPage->product->tax}}">
-                                                    <input type="hidden" name="discount" value="{{$productLandingPage->product->discount}}">
-                                                    <input type="hidden" name="product_id" value="{{$productLandingPage->product->id}}">
+                                                    <input type="hidden" name="tax"
+                                                        value="{{ $productLandingPage->product->tax }}">
+                                                    <input type="hidden" name="discount"
+                                                        value="{{ $productLandingPage->product->discount }}">
+                                                    <input type="hidden" name="product_id"
+                                                        value="{{ $productLandingPage->product->id }}">
                                                     <div class="col-md-12">
                                                         <div class="name-price mb-3">
                                                             <div class="title-box">
@@ -482,7 +623,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            <form>
+                                <form>
                         </div>
                     </div>
 
@@ -498,12 +639,12 @@
     @endphp
 
     <script>
-        const unitPrice = parseFloat("{{ \App\CPU\Helpers::currency_converter($unitPrice) }}");
-
+        const unitPrice = {{ \App\CPU\Helpers::currency_converter2($unitPrice) }};
+        //console.log(unitPrice);
         // Pre-converted shipping costs from the backend
         const shippingPrices = {
             @foreach ($shippingMethods as $shipping)
-                "{{ $shipping['id'] }}": parseFloat("{{ \App\CPU\Helpers::currency_converter($shipping['cost']) }}"),
+                "{{ $shipping['id'] }}": parseFloat("{{ \App\CPU\Helpers::currency_converter2($shipping['cost']) }}"),
             @endforeach
         };
 
@@ -518,7 +659,7 @@
                 setTimeout(function() {
                     // Calculate the new total using pre-converted values
                     const total = unitPrice + shippingCost;
-                    console.log(total);
+                    console.log(unitPrice);
 
 
                     // Update the total element with the new total
@@ -531,7 +672,7 @@
             shippingRadios.forEach(function(radio) {
                 radio.addEventListener('change', function() {
                     const shippingCost = parseFloat(shippingPrices[this
-                    .value]); // Get pre-converted shipping cost
+                        .value]); // Get pre-converted shipping cost
                     updateTotal(shippingCost);
                 });
             });

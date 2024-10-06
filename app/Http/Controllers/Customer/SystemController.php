@@ -6,6 +6,7 @@ use App\CPU\CartManager;
 use App\CPU\Helpers;
 use App\Http\Controllers\Controller;
 use App\Model\CartShipping;
+use App\Model\Color;
 use App\Model\Order;
 use App\Model\Product;
 use App\Model\ShippingAddress;
@@ -44,7 +45,6 @@ class SystemController extends Controller
                 if ($key == $request['key']) {
                     $object['shipping_method_id'] = $request['id'];
                     $object['shipping_cost'] = ShippingMethod::find($request['id'])->cost;
-
                 }
                 return $object;
             });
@@ -265,24 +265,24 @@ class SystemController extends Controller
             $discount = session()->has('coupon_discount') ? session('coupon_discount') : 0;
             $coupon_code = session()->has('coupon_code') ? session('coupon_code') : 0;
             $or = [
-            'id' => 100000 + Order::all()->count() + 1,
-            'verification_code' => rand(100000, 999999),
-            'customer_id' => auth('customer')->id(),
-            'customer_type' => 'customer',
-            'payment_status' => 'unpaid',
-            'order_status' => 'pending',
-            'payment_method' => $request->payment_method,
-            'order_note' => $request->order_note,
-            'transaction_ref' => null,
-            'coupon_code' => $coupon_code,
-            'discount_amount' => $discount,
-            'discount_type' => $discount == 0 ? null : 'coupon_discount',
-            'order_amount' => CartManager::cart_grand_total(session('cart')) - $discount,
-            'shipping_address' => $shippingAddress->id,
-            'shipping_address_data' => ShippingAddress::find($shippingAddress->id),
-            'shipping_method_id' => $request->shipping_method_id,
-            'shipping_cost' => CartManager::get_shipping_cost($request->shipping_method_id),
-            'created_at' => now()
+                'id' => 100000 + Order::all()->count() + 1,
+                'verification_code' => rand(100000, 999999),
+                'customer_id' => auth('customer')->id(),
+                'customer_type' => 'customer',
+                'payment_status' => 'unpaid',
+                'order_status' => 'pending',
+                'payment_method' => $request->payment_method,
+                'order_note' => $request->order_note,
+                'transaction_ref' => null,
+                'coupon_code' => $coupon_code,
+                'discount_amount' => $discount,
+                'discount_type' => $discount == 0 ? null : 'coupon_discount',
+                'order_amount' => CartManager::cart_grand_total(session('cart')) - $discount,
+                'shipping_address' => $shippingAddress->id,
+                'shipping_address_data' => ShippingAddress::find($shippingAddress->id),
+                'shipping_method_id' => $request->shipping_method_id,
+                'shipping_cost' => CartManager::get_shipping_cost($request->shipping_method_id),
+                'created_at' => now()
             ];
 
             $order_id = DB::table('orders')->insertGetId($or);
@@ -365,7 +365,7 @@ class SystemController extends Controller
     }
     public function singlepCheckout(Request $request)
     {
-        // $request->dd();
+         //$request->dd();
         $this->validate($request, [
             'name' => 'required|string|max:150',
             'email' => 'nullable|email',
@@ -386,9 +386,32 @@ class SystemController extends Controller
             $shippingAddress->created_at = now();
             $shippingAddress->save();
 
+            $product = Product::find($request->product_id);
+            $str = '';
+            $variations = [];
+            //check the color enabled or disabled for the product
+            if ($request->has('color')) {
+                $data['color'] = $request['color'];
+                $str = Color::where('code', $request['color'])->first()->name;
+                $variations[] = $str;
+            }
+            //Gets all the choice values of customer choice option and generate a string like Black-S-Cotton
+            foreach (json_decode(Product::find($request->product_id)->choice_options) as $key => $choice) {
+                $data[$choice->name] = $request[$choice->name];
+
+                $variations[$choice->title] = $request[$choice->name];
+                if ($str != null) {
+                    $str .= '-' . str_replace(' ', '', $request[$choice->name]);
+                } else {
+                    $str .= str_replace(' ', '', $request[$choice->name]);
+                }
+            }
+            $variations[] = $variations;
+            $variant = $str;
+
+
             ///order table code
             $coupon_code = 0;
-
             $price = $request->price;
             $quantity = $request->quantity;
             $tax = $request->tax ?? 0;
@@ -397,66 +420,66 @@ class SystemController extends Controller
             $granTotal = ($price * $quantity) + ($tax * $quantity) - ($discount * $quantity);
 
             $or = [
-            'id' => 100000 + Order::all()->count() + 1,
-            'verification_code' => rand(100000, 999999),
-            'customer_id' => auth('customer')->id(),
-            'customer_type' => 'customer',
-            'payment_status' => 'unpaid',
-            'order_status' => 'pending',
-            'payment_method' => $request->payment_method,
-            'order_note' => $request->order_note,
-            'transaction_ref' => null,
-            'coupon_code' => $coupon_code,
-            'discount_amount' => $discount,
-            'discount_type' => $discount == 0 ? null : 'coupon_discount',
-            'order_amount' => $granTotal - $discount,
-            'shipping_address' => $shippingAddress->id,
-            'shipping_address_data' => ShippingAddress::find($shippingAddress->id),
-            'shipping_method_id' => $request->shipping_method,
-            'shipping_cost' => CartManager::get_shipping_cost($request->shipping_method),
-            'created_at' => now()
+                'id' => 100000 + Order::all()->count() + 1,
+                'verification_code' => rand(100000, 999999),
+                'customer_id' => auth('customer')->id(),
+                'customer_type' => 'customer',
+                'payment_status' => 'unpaid',
+                'order_status' => 'pending',
+                'payment_method' => $request->payment_method,
+                'order_note' => $request->order_note,
+                'transaction_ref' => null,
+                'coupon_code' => $coupon_code,
+                'discount_amount' => $discount,
+                'discount_type' => $discount == 0 ? null : 'coupon_discount',
+                'order_amount' => $granTotal - $discount,
+                'shipping_address' => $shippingAddress->id,
+                'shipping_address_data' => ShippingAddress::find($shippingAddress->id),
+                'shipping_method_id' => $request->shipping_method,
+                'shipping_cost' => CartManager::get_shipping_cost($request->shipping_method),
+                'created_at' => now()
             ];
 
             $order_id = DB::table('orders')->insertGetId($or);
 
-                $product = Product::where(['id' => $request['product_id']])->first();
-                $or_d = [
-                    'order_id' => $order_id,
-                    'product_id' => $request['product_id'],
-                    'seller_id' => $product->added_by == 'seller' ? $product->user_id : '0',
-                    'product_details' => $product,
-                    'qty' => $request['quantity'],
-                    'price' => $request['price'],
-                    'tax' => $request['tax'] * $request['quantity'],
-                    'discount' => $request['discount'] * $request['quantity'],
-                    'discount_type' => 'discount_on_product',
-                    //'variant' => $request['variant'],
-                    //'variation' => json_encode($request['variations']),
-                    'delivery_status' => 'pending',
-                    'shipping_method_id' => $request['shipping_method'],
-                    'payment_status' => 'unpaid',
-                    'created_at' => now()
-                ];
+            $product = Product::where(['id' => $request['product_id']])->first();
+            $or_d = [
+                'order_id' => $order_id,
+                'product_id' => $request['product_id'],
+                'seller_id' => $product->added_by == 'seller' ? $product->user_id : '0',
+                'product_details' => $product,
+                'qty' => $request['quantity'],
+                'price' => $request['price'],
+                'tax' => $request['tax'] * $request['quantity'],
+                'discount' => $request['discount'] * $request['quantity'],
+                'discount_type' => 'discount_on_product',
+                'variant' => $variant,
+                'variation' => json_encode($variations),
+                'delivery_status' => 'pending',
+                'shipping_method_id' => $request['shipping_method'],
+                'payment_status' => 'unpaid',
+                'created_at' => now()
+            ];
 
-                // if ($c['variant'] != null) {
-                //     $type = $c['variant'];
-                //     $var_store = [];
-                //     foreach (json_decode($product['variation'], true) as $var) {
-                //         if ($type == $var['type']) {
-                //             $var['qty'] -= $c['quantity'];
-                //         }
-                //         array_push($var_store, $var);
-                //     }
-                //     Product::where(['id' => $product['id']])->update([
-                //         'variation' => json_encode($var_store),
-                //     ]);
-                // }
+            if ($variant != null) {
+                $type = $variant;
+                $var_store = [];
+                foreach (json_decode($product['variation'], true) as $var) {
+                    if ($type == $var['type']) {
+                        $var['qty'] -= $request['quantity'];
+                    }
+                    array_push($var_store, $var);
+                }
+                Product::where(['id' => $product['product_id']])->update([
+                    'variation' => json_encode($var_store),
+                ]);
+            }
 
-                // Product::where(['id' => $product['id']])->update([
-                //     'current_stock' => $product['current_stock'] - $c['quantity']
-                // ]);
+            Product::where(['id' => $product['product_id']])->update([
+                'current_stock' => $product['current_stock'] - $request['quantity']
+            ]);
 
-                DB::table('order_details')->insert($or_d);
+            DB::table('order_details')->insert($or_d);
 
             try {
                 $fcm_token = User::where(['id' => auth('customer')->id()])->first()->cm_firebase_token;

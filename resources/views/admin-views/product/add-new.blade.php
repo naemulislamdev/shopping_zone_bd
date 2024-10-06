@@ -745,7 +745,7 @@
                                 CloseButton: true,
                                 ProgressBar: true
                             });
-                            $('#product_form').submit();
+                            window.location.reload();
                         }
                     }
                 });
