@@ -33,7 +33,10 @@ class CategoryController extends Controller
     public function get_products(Request $request, $id)
     {
 
-        return response()->json(Helpers::product_data_formatting(CategoryManager::products($id,$request['limit'], $request['offset']), true), 200);
+        $products = CategoryManager::products($id,$request['limit'], $request['offset']);
+        $products['products'] = Helpers::product_data_formatting($products['products'], true);
+        return response()->json($products, 200);
+
     }
 
     public function get_products_slug($slug)
