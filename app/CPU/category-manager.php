@@ -35,6 +35,16 @@ class CategoryManager
         ];
     }
 
+    public static function homeProducts($category_id)
+    {
+        $id = '"'.$category_id.'"';
+         return Product::active()
+           ->where('category_ids', 'like', "%{$id}%")->inRandomOrder()->limit(10)->get();
+            /*->whereJsonContains('category_ids', ["id" => (string)$data['id']])*/
+
+
+    }
+
      public static function products_slug($category_slug)
     {
         $categoryInfo = Category::where('slug',$category_slug)->first();
