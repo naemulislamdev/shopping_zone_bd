@@ -87,8 +87,7 @@
                                     <div class="col-md-4">
                                         <label for="name">{{ \App\CPU\translate('Category') }} <span class="text-danger">*</span></label>
                                         <select class="js-example-basic-multiple form-control" name="category_id"
-                                            onchange="getRequest('{{ url('/') }}/admin/product/get-categories?parent_id='+this.value,'sub-category-select','select')"
-                                            required>
+                                            onchange="getRequest('{{ url('/') }}/admin/product/get-categories?parent_id='+this.value,'sub-category-select','select')">
                                             <option value="{{ old('category_id') }}" selected disabled>---Select---
                                             </option>
                                             @foreach ($cat as $c)
@@ -98,6 +97,9 @@
                                                 </option>
                                             @endforeach
                                         </select>
+                                        @error('category_id')
+                                        <span class="text-danger">{{$message}}</span>
+                                        @enderror
                                     </div>
                                     <div class="col-md-4">
                                         <label for="name">{{ \App\CPU\translate('Sub Category') }}</label>
@@ -128,7 +130,10 @@
                                                     {{ \App\CPU\translate('code') }}</a></label>
                                             <input type="text" minlength="6" id="generate_number" name="code"
                                                 class="form-control" value="{{ old('code') }}"
-                                                placeholder="{{ \App\CPU\translate('code') }}" required>
+                                                placeholder="{{ \App\CPU\translate('code') }}">
+                                                @error('code')
+                                        <span class="text-danger">{{$message}}</span>
+                                        @enderror
                                         </div>
                                     </div>
 
@@ -136,13 +141,16 @@
                                         <label for="name">{{ \App\CPU\translate('Brand') }} <span class="text-danger">*</span></label> <a href="{{route('admin.brand.add-new')}}" target="_blank">add new</a>
                                         <select
                                             class="js-example-basic-multiple js-states js-example-responsive form-control"
-                                            name="brand_id" required>
+                                            name="brand_id">
                                             <option value="{{ null }}" selected disabled>
                                                 ---{{ \App\CPU\translate('Select') }}---</option>
                                             @foreach ($br as $b)
                                                 <option value="{{ $b['id'] }}">{{ $b['name'] }}</option>
                                             @endforeach
                                         </select>
+                                        @error('brand_id')
+                                        <span class="text-danger">{{$message}}</span>
+                                        @enderror
                                     </div>
 
                                     <div class="col-md-4">
@@ -153,6 +161,9 @@
                                                     {{ $x }}</option>
                                             @endforeach
                                         </select>
+                                        @error('unit')
+                                        <span class="text-danger">{{$message}}</span>
+                                        @enderror
                                     </div>
                                 </div>
                             </div>
@@ -222,7 +233,10 @@
                                         <span class="text-danger">*</span>
                                         <input type="number" min="0" step="0.01"
                                             placeholder="{{ \App\CPU\translate('Unit price') }}" name="unit_price"
-                                            value="{{ old('unit_price') }}" class="form-control" required>
+                                            value="{{ old('unit_price') }}" class="form-control">
+                                            @error('unit_price')
+                                        <span class="text-danger">{{$message}}</span>
+                                        @enderror
                                     </div>
                                     <div class="col-md-6">
                                         <label class="control-label">{{ \App\CPU\translate('Purchase price') }}</label>
@@ -230,7 +244,10 @@
                                         <input type="number" min="0" step="0.01"
                                             placeholder="{{ \App\CPU\translate('Purchase price') }}"
                                             value="{{ old('purchase_price') }}" name="purchase_price"
-                                            class="form-control" required>
+                                            class="form-control">
+                                            @error('purchase_price')
+                                        <span class="text-danger">{{$message}}</span>
+                                        @enderror
                                     </div>
                                 </div>
                                 <div class="row pt-4">
@@ -241,14 +258,20 @@
                                             placeholder="{{ \App\CPU\translate('Tax') }}" name="tax"
                                             value="{{ old('tax') }}" class="form-control">
                                         <input name="tax_type" value="percent" style="display: none">
+                                        @error('tax')
+                                        <span class="text-danger">{{$message}}</span>
+                                        @enderror
                                     </div>
 
                                     <div class="col-md-4">
                                         <label class="control-label">{{ \App\CPU\translate('Discount') }}</label>
                                         <span class="text-danger">*</span>
-                                        <input type="number" min="0" value="{{ old('discount') }}"
+                                        <input type="number" min="0"
                                             step="0.01" placeholder="{{ \App\CPU\translate('Discount') }}"
-                                            name="discount" class="form-control" required value="0">
+                                            name="discount" class="form-control" value="0">
+                                            @error('discount')
+                                        <span class="text-danger">{{$message}}</span>
+                                        @enderror
                                     </div>
                                     <div class="col-md-4" style="padding-top: 30px;">
                                         <select style="width: 100%"
@@ -267,20 +290,26 @@
                                             <span class="text-danger">*</span>
                                         <input type="number" min="0" value="0" step="1"
                                                placeholder="{{ \App\CPU\translate('Quantity') }}" name="current_stock"
-                                               class="form-control" required>
+                                               class="form-control">
+                                               @error('current_stock')
+                                        <span class="text-danger">{{$message}}</span>
+                                        @enderror
                                     </div>
                                     <div class="col-md-3" id="minimum_order_qty">
                                         <label class="control-label">
                                             {{ \App\CPU\translate('minimum_order_quantity') }} <span class="text-danger">*</span></label>
                                         <input type="number" min="1" value="1" step="1"
                                             placeholder="{{ \App\CPU\translate('minimum_order_quantity') }}" name="minimum_order_qty"
-                                            class="form-control" required>
+                                            class="form-control">
+                                            @error('minimum_order_qty')
+                                            <span class="text-danger">{{$message}}</span>
+                                            @enderror
                                     </div>
                                     <div class="col-md-3" id="shipping_cost">
                                         <label class="control-label">{{ \App\CPU\translate('shipping_cost') }} </label>
                                         <input type="number" min="0" value="0" step="1"
                                             placeholder="{{ \App\CPU\translate('shipping_cost') }}" name="shipping_cost"
-                                            class="form-control" required>
+                                            class="form-control">
                                     </div>
                                     <div class="col-md-3" id="shipping_cost_multy">
                                         <div>
@@ -318,15 +347,15 @@
                                   <td>
                                    <input type="date"
                                             placeholder="start day" name="start_day[]"
-                                            value="" class="form-control" required>
+                                            value="" class="form-control">
                                   </td>
                                   <td>
-                                    <input class="form-control" type="date" placeholder="end day" name="end_day[]" value="" required>
+                                    <input class="form-control" type="date" placeholder="end day" name="end_day[]" value="">
                                   </td>
                                   <td>
                                     <input type="number"
                                             placeholder="Discount" name="discountCam[]"
-                                            value="" class="form-control" required>
+                                            value="" class="form-control">
                                   </td>
                                 </tr>
                               </table>
@@ -346,11 +375,18 @@
                                 <div class="col-md-12 mb-4">
                                     <label class="control-label">{{ \App\CPU\translate('Meta Title') }}</label>
                                     <input type="text" name="meta_title" placeholder="" class="form-control">
+                                    @error('meta_title')
+                                            <span class="text-danger">{{$message}}</span>
+                                            @enderror
                                 </div>
+
 
                                 <div class="col-md-8 mb-4">
                                     <label class="control-label">{{ \App\CPU\translate('Meta Description') }}</label>
                                     <textarea rows="10" type="text" id="summernote2" name="meta_description" class="form-control"></textarea>
+                                    @error('meta_description')
+                                            <span class="text-danger">{{$message}}</span>
+                                            @enderror
                                 </div>
 
                                 <div class="col-md-4">
@@ -375,7 +411,10 @@
                                         )</small>
                                     <input type="text" name="video_link"
                                         placeholder="{{ \App\CPU\translate('EX') }} : https://www.youtube.com/embed/5R06LRdUCSE"
-                                        class="form-control" required>
+                                        class="form-control">
+                                        @error('video_link')
+                                            <span class="text-danger">{{$message}}</span>
+                                            @enderror
                                 </div>
                                 <div class="col-md-4">
                                     <div>
@@ -426,7 +465,7 @@
                     <div class="card card-footer">
                         <div class="row">
                             <div class="col-md-12" style="padding-top: 20px">
-                                <button type="button" onclick="check()"
+                                <button type="submit"
                                     class="btn btn-primary float-right">{{ \App\CPU\translate('Submit') }}</button>
                             </div>
                         </div>
@@ -440,6 +479,54 @@
 @push('script')
     <script src="{{ asset('public/assets/back-end') }}/js/tags-input.min.js"></script>
     <script src="{{ asset('public/assets/back-end/js/spartan-multi-image-picker.js') }}"></script>
+    <script>
+        // function check() {
+        //     Swal.fire({
+        //         title: '{{ \App\CPU\translate('Are you sure') }}?',
+        //         text: '',
+        //         type: 'warning',
+        //         showCancelButton: true,
+        //         cancelButtonColor: 'default',
+        //         confirmButtonColor: '#377dff',
+        //         cancelButtonText: 'No',
+        //         confirmButtonText: 'Yes',
+        //         reverseButtons: true
+        //     }).then((result) => {
+
+        //         var formData = new FormData(document.getElementById('product_form'));
+        //         $.ajaxSetup({
+        //             headers: {
+        //                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        //             }
+        //         });
+        //         $.post({
+        //             url: '{{ route('admin.product.store') }}',
+        //             data: formData,
+        //             contentType: false,
+        //             processData: false,
+        //             success: function(data) {
+        //                 console.log(data);
+        //                 // return false;
+        //                 if (data.errors) {
+        //                     for (var i = 0; i < data.errors.length; i++) {
+        //                         toastr.error(data.errors[i].message, {
+        //                             CloseButton: true,
+        //                             ProgressBar: true
+        //                         });
+        //                     }
+        //                 } else {
+        //                     toastr.success(
+        //                     '{{ \App\CPU\translate('product added successfully') }}!', {
+        //                         CloseButton: true,
+        //                         ProgressBar: true
+        //                     });
+        //                     $('#product_form').submit();
+        //                 }
+        //             }
+        //         });
+        //     })
+        // };
+    </script>
     <script>
         $(function() {
             $("#coba").spartanMultiImagePicker({
@@ -705,55 +792,6 @@
     </script>
 
     <script>
-        function check() {
-            Swal.fire({
-                title: '{{ \App\CPU\translate('Are you sure') }}?',
-                text: '',
-                type: 'warning',
-                showCancelButton: true,
-                cancelButtonColor: 'default',
-                confirmButtonColor: '#377dff',
-                cancelButtonText: 'No',
-                confirmButtonText: 'Yes',
-                reverseButtons: true
-            }).then((result) => {
-
-                var formData = new FormData(document.getElementById('product_form'));
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
-                $.post({
-                    url: '{{ route('admin.product.store') }}',
-                    data: formData,
-                    contentType: false,
-                    processData: false,
-                    success: function(data) {
-                        console.log(data);
-                        // return false;
-                        if (data.errors) {
-                            for (var i = 0; i < data.errors.length; i++) {
-                                toastr.error(data.errors[i].message, {
-                                    CloseButton: true,
-                                    ProgressBar: true
-                                });
-                            }
-                        } else {
-                            toastr.success(
-                            '{{ \App\CPU\translate('product added successfully') }}!', {
-                                CloseButton: true,
-                                ProgressBar: true
-                            });
-                            window.location.reload();
-                        }
-                    }
-                });
-            })
-        };
-    </script>
-
-    <script>
         $(".lang_link").click(function(e) {
             e.preventDefault();
             $(".lang_link").removeClass('active');
@@ -772,7 +810,7 @@
         })
 
         function add_fields() {
-          document.getElementById("myTable").insertRow(-1).innerHTML = '<tr><td><input type="date"  placeholder="start day" name="start_day[]" value="" class="form-control" required></td><td><input type="date"  placeholder="end day" name="end_day[]" value="" class="form-control" required></td><td><input type="nubmer" placeholder="Discount" name="discountCam[]" value="" class="form-control" required> </td> </tr>';
+          document.getElementById("myTable").insertRow(-1).innerHTML = '<tr><td><input type="date"  placeholder="start day" name="start_day[]" value="" class="form-control"></td><td><input type="date"  placeholder="end day" name="end_day[]" value="" class="form-control"></td><td><input type="nubmer" placeholder="Discount" name="discountCam[]" value="" class="form-control"> </td> </tr>';
         }
 
     </script>
@@ -788,8 +826,6 @@
   $('#summernote2').summernote();
 });
     </script>
-
-    {{-- ck editor --}}
 
 @endpush
 
