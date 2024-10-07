@@ -6,6 +6,7 @@ use App\CPU\CategoryManager;
 use App\CPU\Helpers;
 use App\Http\Controllers\Controller;
 use App\Model\Category;
+use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
@@ -18,7 +19,7 @@ class CategoryController extends Controller
             return response()->json([], 200);
         }
     }
-    
+
      public function get_subcategories($id)
     {
         try {
@@ -29,15 +30,16 @@ class CategoryController extends Controller
         }
     }
 
-    public function get_products($id)
+    public function get_products(Request $request, $id)
     {
-        return response()->json(Helpers::product_data_formatting(CategoryManager::products($id), true), 200);
+
+        return response()->json(Helpers::product_data_formatting(CategoryManager::products($id,$request['limit'], $request['offset']), true), 200);
     }
-    
+
     public function get_products_slug($slug)
-    
+
     {
-        
+
             return response()->json(Helpers::product_data_formatting(CategoryManager::products_slug($slug), true), 200);
     }
 }
