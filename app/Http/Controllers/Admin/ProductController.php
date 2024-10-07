@@ -71,7 +71,8 @@ class ProductController extends BaseController
 
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        //dd($request->all());
+        $request->validate([
             'name'              => 'required',
             'category_id'       => 'required',
             'brand_id'          => 'required',
@@ -83,8 +84,10 @@ class ProductController extends BaseController
             'purchase_price'    => 'required|numeric|min:1',
             'discount'          => 'required|gt:-1',
             'shipping_cost'     => 'required|gt:-1',
-            'code'              => 'required|string|between:3,30|unique:products,code',
+            'code'              => 'required|min:3|max:30|unique:products,code',
             'minimum_order_qty' => 'required|numeric|min:1',
+            'meta_title' => 'nullable',
+            'meta_description' => 'nullable',
         ], [
             'images.required'       => 'Product images is required!',
             'image.required'        => 'Product thumbnail is required!',
@@ -103,13 +106,13 @@ class ProductController extends BaseController
             $dis = $request['discount'];
         }
 
-        if ($request['unit_price'] <= $dis) {
-            $validator->after(function ($validator) {
-                $validator->errors()->add(
-                    'unit_price', 'Discount can not be more or equal to the price!'
-                );
-            });
-        }
+        // if ($request['unit_price'] <= $dis) {
+        //     $validator->after(function ($validator) {
+        //         $validator->errors()->add(
+        //             'unit_price', 'Discount can not be more or equal to the price!'
+        //         );
+        //     });
+        // }
 
         // if (is_null($request->description[array_search('en', $request->lang)])) {
         //     $validator->after(function ($validator) {
@@ -119,13 +122,13 @@ class ProductController extends BaseController
         //     });
         // }
 
-        if (is_null($request->name[array_search('en', $request->lang)])) {
-            $validator->after(function ($validator) {
-                $validator->errors()->add(
-                    'name', 'Name field is required!'
-                );
-            });
-        }
+        // if (is_null($request->name[array_search('en', $request->lang)])) {
+        //     $validator->after(function ($validator) {
+        //         $validator->errors()->add(
+        //             'name', 'Name field is required!'
+        //         );
+        //     });
+        // }
 
 
         $p = new Product();
@@ -224,11 +227,7 @@ class ProductController extends BaseController
                 $stock_count += $item['qty'];
             }
         } else {
-            $stock_count = (integer)$request['current_stock'];
-        }
-
-        if ($validator->errors()->count() > 0) {
-            return response()->json(['errors' => Helpers::error_processor($validator)]);
+            $stock_count = (int)$request['current_stock'];
         }
 
         //combinations end
@@ -248,15 +247,15 @@ class ProductController extends BaseController
         } elseif (strpos($request->video_link, 'youtube') !== false) {
             $p->video_provider = 'youtube';
         }
-        $videoShopping =$request->has('video_shopping');
-        if($videoShopping == 1){
+        $videoShopping = $request->has('video_shopping');
+        if ($videoShopping == 1) {
             $p->video_shopping = true;
-        }else{
+        } else {
             $p->video_shopping = false;
         }
         $p->request_status = 1;
         $p->shipping_cost = BackEndHelper::currency_to_usd($request->shipping_cost);
-        $p->multiply_qty = $request->multiplyQTY=='on'?1:0;
+        $p->multiply_qty = $request->multiplyQTY == 'on' ? 1 : 0;
 
 
 
@@ -303,24 +302,19 @@ class ProductController extends BaseController
             Translation::insert($data);
 
 
-             $campaing_detalie = [];
-                for ($i = 0; $i < count($request->start_day); $i++) {
-                    $campaing_detalie[] = [
-                        'product_id' => $p->id,
-                        'start_day' => $request['start_day'][$i],
-                        'discountCam' => $request['discountCam'][$i],
-                        'auth_id' => auth('admin')->id(),
-                    ];
-               }
-
-
-
-                    campaing_detalie::insert($campaing_detalie);
-
-
+            $campaing_detalie = [];
+            for ($i = 0; $i < count($request->start_day); $i++) {
+                $campaing_detalie[] = [
+                    'product_id' => $p->id,
+                    'start_day' => $request['start_day'][$i],
+                    'discountCam' => $request['discountCam'][$i],
+                    'auth_id' => auth('admin')->id(),
+                ];
+            }
+            campaing_detalie::insert($campaing_detalie);
 
             Toastr::success(translate('Product added successfully!'));
-            return redirect()->route('admin.product.list',['in_house']);
+            return redirect()->route('admin.product.list', ['in_house']);
         }
     }
 
@@ -356,7 +350,7 @@ class ProductController extends BaseController
         if ($request->has('search')) {
             $key = explode(' ', $request['search']);
             $pro = Product::where(['added_by' => 'seller'])
-                ->where('is_shipping_cost_updated',0)
+                ->where('is_shipping_cost_updated', 0)
                 ->where(function ($q) use ($key) {
                     foreach ($key as $value) {
                         $q->Where('name', 'like', "%{$value}%");
@@ -364,7 +358,7 @@ class ProductController extends BaseController
                 });
             $query_param = ['search' => $request['search']];
         } else {
-            $pro = Product::where(['added_by' => 'seller'])->where('is_shipping_cost_updated',0);
+            $pro = Product::where(['added_by' => 'seller'])->where('is_shipping_cost_updated', 0);
         }
         $pro = $pro->orderBy('id', 'DESC')->paginate(Helpers::pagination_limit())->appends($query_param);
 
@@ -467,18 +461,15 @@ class ProductController extends BaseController
     {
 
         $product = Product::where(['id' => $request['product_id']])->first();
-        if($request->status == 1)
-        {
+        if ($request->status == 1) {
             $product->shipping_cost = $product->temp_shipping_cost;
             $product->is_shipping_cost_updated = $request->status;
-        }else{
+        } else {
             $product->is_shipping_cost_updated = $request->status;
         }
 
         $product->save();
-        return response()->json([
-
-        ], 200);
+        return response()->json([], 200);
     }
 
     public function get_categories(Request $request)
@@ -535,13 +526,13 @@ class ProductController extends BaseController
     public function edit($id)
     {
         $product = Product::withoutGlobalScopes()->with('translations')->find($id);
-        $campaingDetalies =campaing_detalie::where(['product_id'=>$product->id])->get();
+        $campaingDetalies = campaing_detalie::where(['product_id' => $product->id])->get();
         $product_category = json_decode($product->category_ids);
         $product->colors = json_decode($product->colors);
         $categories = Category::where(['parent_id' => 0])->get();
         $br = Brand::orderBY('name', 'ASC')->get();
 
-        return view('admin-views.product.edit', compact('categories', 'br', 'product', 'product_category','campaingDetalies'));
+        return view('admin-views.product.edit', compact('categories', 'br', 'product', 'product_category', 'campaingDetalies'));
     }
 
     public function update(Request $request, $id)
@@ -556,9 +547,9 @@ class ProductController extends BaseController
             'tax'               => 'required|min:0',
             'unit_price'        => 'required|numeric|min:1',
             'purchase_price'    => 'required|numeric|min:1',
-            'discount'          =>'required|gt:-1',
+            'discount'          => 'required|gt:-1',
             'shipping_cost'     => 'required|gt:-1',
-            'code'              => 'required|string|between:3,30|unique:products,code,'.$product->id,
+            'code'              => 'required|string|between:3,30|unique:products,code,' . $product->id,
             'minimum_order_qty' => 'required|numeric|min:1',
         ], [
             'name.required'         => 'Product name is required!',
@@ -575,7 +566,8 @@ class ProductController extends BaseController
         if (is_null($request->name[array_search('en', $request->lang)])) {
             $validator->after(function ($validator) {
                 $validator->errors()->add(
-                    'name', 'Name field is required!'
+                    'name',
+                    'Name field is required!'
                 );
             });
         }
@@ -677,7 +669,7 @@ class ProductController extends BaseController
                 $stock_count += $item['qty'];
             }
         } else {
-            $stock_count = (integer)$request['current_stock'];
+            $stock_count = (int)$request['current_stock'];
         }
 
         if ($validator->errors()->count() > 0) {
@@ -705,17 +697,17 @@ class ProductController extends BaseController
         } elseif (strpos($request->video_link, 'youtube') !== false) {
             $product->video_provider = 'youtube';
         }
-        $videoShopping =$request->has('video_shopping');
-        if($videoShopping == 1){
+        $videoShopping = $request->has('video_shopping');
+        if ($videoShopping == 1) {
             $product->video_shopping = true;
-        }else{
+        } else {
             $product->video_shopping = false;
         }
         if ($product->added_by == 'seller' && $product->request_status == 2) {
             $product->request_status = 1;
         }
         $product->shipping_cost = BackEndHelper::currency_to_usd($request->shipping_cost);
-        $product->multiply_qty = $request->multiplyQTY=='on'?1:0;
+        $product->multiply_qty = $request->multiplyQTY == 'on' ? 1 : 0;
         if ($request->ajax()) {
             return response()->json([], 200);
         } else {
@@ -745,19 +737,23 @@ class ProductController extends BaseController
             foreach ($request->lang as $index => $key) {
                 if ($request->name[$index] && $key != 'en') {
                     Translation::updateOrInsert(
-                        ['translationable_type' => 'App\Model\Product',
+                        [
+                            'translationable_type' => 'App\Model\Product',
                             'translationable_id' => $product->id,
                             'locale' => $key,
-                            'key' => 'name'],
+                            'key' => 'name'
+                        ],
                         ['value' => $request->name[$index]]
                     );
                 }
                 if ($request->description[$index] && $key != 'en') {
                     Translation::updateOrInsert(
-                        ['translationable_type' => 'App\Model\Product',
+                        [
+                            'translationable_type' => 'App\Model\Product',
                             'translationable_id' => $product->id,
                             'locale' => $key,
-                            'key' => 'description'],
+                            'key' => 'description'
+                        ],
                         ['value' => $request->description[$index]]
                     );
                 }
@@ -769,41 +765,40 @@ class ProductController extends BaseController
 
             // }
 
-                //   $campaingdetalie=DB::table('campaing_detalies')->where(['product_id'=>$product->id])->get();
-                // //   dd($campaingdetalie);
-                //   $campaingdetalie->product_id=$id;
-                //   $campaingdetalie->start_day=$request->start_day;
-                //   $campaingdetalie->end_day=$request->end_day;
-                //   $campaingdetalie->discountCam=$request->discountCam;
-                //   $campaingdetalie->auth_id=auth('admin')->id();
-                //   $campaingdetalie->save();
+            //   $campaingdetalie=DB::table('campaing_detalies')->where(['product_id'=>$product->id])->get();
+            // //   dd($campaingdetalie);
+            //   $campaingdetalie->product_id=$id;
+            //   $campaingdetalie->start_day=$request->start_day;
+            //   $campaingdetalie->end_day=$request->end_day;
+            //   $campaingdetalie->discountCam=$request->discountCam;
+            //   $campaingdetalie->auth_id=auth('admin')->id();
+            //   $campaingdetalie->save();
 
 
-           $campaing_detalie = [];
-                for ($i = 0; $i < count($request->start_day); $i++) {
-                    $campaing_detalie[] = [
-                        'product_id' => $product->id,
-                        'start_day' => $request['start_day'][$i],
-                        'end_day' => $request['end_day'][$i],
-                        'discountCam' => $request['discountCam'][$i],
-                        'auth_id' => auth('admin')->id(),
-                    ];
-               }
+            $campaing_detalie = [];
+            for ($i = 0; $i < count($request->start_day); $i++) {
+                $campaing_detalie[] = [
+                    'product_id' => $product->id,
+                    'start_day' => $request['start_day'][$i],
+                    'end_day' => $request['end_day'][$i],
+                    'discountCam' => $request['discountCam'][$i],
+                    'auth_id' => auth('admin')->id(),
+                ];
+            }
 
 
 
-                  if (count($campaing_detalie)) {
-                        DB::table('campaing_detalies')->where(['product_id'=>$product->id])->delete();
-                        campaing_detalie::insert($campaing_detalie);
-
-                    }
+            if (count($campaing_detalie)) {
+                DB::table('campaing_detalies')->where(['product_id' => $product->id])->delete();
+                campaing_detalie::insert($campaing_detalie);
+            }
 
             //   $phoneBook->contact_phones()->delete();
 
 
 
 
-                    // campaing_detalie::insert($campaing_detalie);
+            // campaing_detalie::insert($campaing_detalie);
 
             Toastr::success('Product updated successfully.');
             return back();
@@ -875,7 +870,7 @@ class ProductController extends BaseController
         $skip = ['youtube_video_url', 'details', 'thumbnail'];
         foreach ($collections as $collection) {
             foreach ($collection as $key => $value) {
-                if ($key!="" && $value === "" && !in_array($key, $skip)) {
+                if ($key != "" && $value === "" && !in_array($key, $skip)) {
                     Toastr::error('Please fill ' . $key . ' fields');
                     return back();
                 }
@@ -906,7 +901,7 @@ class ProductController extends BaseController
                 'video_provider' => $videoProvider,
                 'video_url' => $collection['youtube_video_url'],
                 'images' => json_encode(['def.png']),
-                'thumbnail' => $thumbnail[1]??$thumbnail[0],
+                'thumbnail' => $thumbnail[1] ?? $thumbnail[0],
                 'status' => 1,
                 'request_status' => 1,
                 'colors' => json_encode([]),
@@ -969,14 +964,14 @@ class ProductController extends BaseController
 
         if ($request->limit > 270) {
             Toastr::warning(translate('You can not generate more than 270 barcode'));
-             return back();
+            return back();
         }
         $product = Product::findOrFail($id);
         $limit =  $request->limit ?? 4;
         return view('admin-views.product.barcode', compact('product', 'limit'));
     }
 
-     public function CampaingDelete($id)
+    public function CampaingDelete($id)
     {
         $task = campaing_detalie::find($id);
         $task->delete();
@@ -985,12 +980,12 @@ class ProductController extends BaseController
         return back();
     }
 
-    public function productsearch(Request $request ){
-            $pro = Product::where('name', $request->name)
-    ->orWhere('name', 'like', '%' . $request->name . '%')->get();
+    public function productsearch(Request $request)
+    {
+        $pro = Product::where('name', $request->name)
+            ->orWhere('name', 'like', '%' . $request->name . '%')->get();
 
-            // dd($pro);
-         return view('admin-views.product.searchlist', compact('pro'));
+        // dd($pro);
+        return view('admin-views.product.searchlist', compact('pro'));
     }
-
 }
