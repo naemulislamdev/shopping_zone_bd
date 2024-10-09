@@ -1031,7 +1031,7 @@ th {
 
         function initializegLocationMap() {
             var map = null;
-            var myLatlng = new google.maps.LatLng({{$shipping_address->latitude}}, {{$shipping_address->longitude}});
+            var myLatlng = new google.maps.LatLng({{@$shipping_address->latitude}}, {{@$shipping_address->longitude}});
             var dmbounds = new google.maps.LatLngBounds(null);
             var locationbounds = new google.maps.LatLngBounds(null);
             var dmMarkers = [];
