@@ -306,7 +306,8 @@ class OrderController extends Controller
 
     public function status(Request $request)
     {
-        $order = Order::find($request->id);
+         $order = Order::with('customer')->where(['id' => $request->id])->first();
+
 
         if(!isset($order->customer))
         {
@@ -322,6 +323,33 @@ class OrderController extends Controller
         }
         $fcm_token = $order->customer->cm_firebase_token;
         $value = Helpers::order_status_update_message($request->order_status);
+        $customerPhone =$order->customer->phone;
+        $url = "http://188.138.41.146:7788/sendtext";
+        if($request->order_status=='confirmed'){
+            $orderAmount = BackEndHelper::usd_to_currency($order['order_amount']+$order['shipping_cost']);
+            $text="Shoppingzonebd.com.bd order ".$order['id']." Confirmed Ready ".$orderAmount."Tk For Parcel Received";
+        }
+        if($request->order_status=='canceled'){
+            $hotLineNumber = Helpers::get_business_settings('company_hotline');
+            $text="Your Order ".$order['id']." has been Cancelled, if you don't want to cancel then call ".$hotLineNumber." Shoppingzonebd.com.bd ";
+        }
+            $data= array(
+                'apikey'=>"1438fd77da6a0689",
+                'secretkey'=>"d5ed7176",
+                'callerID'=>"shoppingzonebd",
+                'toUser'=>"$customerPhone",
+                'messageContent'=>"$text"
+                );
+                //  dd($data);
+
+                $ch = curl_init(); // Initialize cURL
+                curl_setopt($ch, CURLOPT_URL,$url);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                $smsresult = curl_exec($ch);
+                $p = explode("|",$smsresult);
+                $sendstatus = $p[0];
+
         try {
             if ($value) {
                 $data = [
