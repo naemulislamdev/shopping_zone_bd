@@ -418,6 +418,8 @@
                             <th>{{\App\CPU\translate('customer_name')}}</th>
                             <th>{{\App\CPU\translate('phone')}}</th>
                             <th>{{\App\CPU\translate('Status')}}</th>
+                            <th>{{\App\CPU\translate('Amount')}}</th>
+                            <th>{{\App\CPU\translate('Delivery_charge')}}</th>
                             <th>{{\App\CPU\translate('Total')}}</th>
                             <th>{{\App\CPU\translate('Order')}} {{\App\CPU\translate('Status')}} </th>
                             <th>{{\App\CPU\translate('Order')}} {{\App\CPU\translate('Type')}} </th>
@@ -467,6 +469,8 @@
                                 @endif
                             </td>
                             <td> {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($order->order_amount))}}</td>
+                            <td> {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($order->shipping_cost))}}</td>
+                            <td> {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($order->order_amount+$order->shipping_cost))}}</td>
                             <td class="text-capitalize">
                                 @if($order['order_status']=='pending')
                                     <span class="badge badge-soft-info">

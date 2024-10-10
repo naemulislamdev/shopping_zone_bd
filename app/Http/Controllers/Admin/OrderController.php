@@ -11,6 +11,7 @@ use App\Model\AdminWallet;
 use App\Model\BusinessSetting;
 use App\Model\DeliveryMan;
 use App\Model\Order;
+use App\Model\OrderDetail;
 use App\Model\OrderExchange;
 use App\Model\OrderExchangeDetail;
 use App\Model\OrderTransaction;
@@ -97,6 +98,7 @@ class OrderController extends Controller
                     });
 
         $orders = $orders->whereIn('order_type',['apps','default_type',])->orderBy('id','desc')->paginate(500)->appends(['search'=>$request['search'],'from'=>$request['from'],'to'=>$request['to']]);
+        // dd($orders);
         return view('admin-views.order.list', compact('orders', 'search','from','to','status'));
     }
 
