@@ -308,7 +308,7 @@ class OrderController extends Controller
     {
          $order = Order::with('customer')->where(['id' => $request->id])->first();
 
-
+        //  return response()->json(['customer'=>$order],200);
         if(!isset($order->customer))
         {
             return response()->json(['customer_status'=>0],200);
@@ -328,11 +328,6 @@ class OrderController extends Controller
         if($request->order_status=='confirmed'){
             $orderAmount = BackEndHelper::usd_to_currency($order['order_amount']+$order['shipping_cost']);
             $text="Shoppingzonebd.com.bd order ".$order['id']." Confirmed Ready ".$orderAmount."Tk For Parcel Received";
-        }
-        if($request->order_status=='canceled'){
-            $hotLineNumber = Helpers::get_business_settings('company_hotline');
-            $text="Your Order ".$order['id']." has been Cancelled, if you don't want to cancel then call ".$hotLineNumber." Shoppingzonebd.com.bd ";
-        }
             $data= array(
                 'apikey'=>"1438fd77da6a0689",
                 'secretkey'=>"d5ed7176",
@@ -349,6 +344,28 @@ class OrderController extends Controller
                 $smsresult = curl_exec($ch);
                 $p = explode("|",$smsresult);
                 $sendstatus = $p[0];
+        }
+        if($request->order_status=='canceled'){
+            $hotLineNumber = Helpers::get_business_settings('company_hotline');
+            $text="Your Order ".$order['id']." has been Cancelled, if you don't want to cancel then call ".$hotLineNumber." Shoppingzonebd.com.bd ";
+            $data= array(
+                'apikey'=>"1438fd77da6a0689",
+                'secretkey'=>"d5ed7176",
+                'callerID'=>"shoppingzonebd",
+                'toUser'=>"$customerPhone",
+                'messageContent'=>"$text"
+                );
+                //  dd($data);
+
+                $ch = curl_init(); // Initialize cURL
+                curl_setopt($ch, CURLOPT_URL,$url);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                $smsresult = curl_exec($ch);
+                $p = explode("|",$smsresult);
+                $sendstatus = $p[0];
+        }
+
 
         try {
             if ($value) {
@@ -379,6 +396,8 @@ class OrderController extends Controller
         }
 
         $order->order_status = $request->order_status;
+        $order->order_note = $request->note;
+
         OrderManager::stock_update_on_order_status_change($order, $request->order_status);
         $order->save();
 

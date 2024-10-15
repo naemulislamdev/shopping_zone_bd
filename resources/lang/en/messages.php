@@ -1808,4 +1808,5 @@
   'QUANTITY' => 'QUANTITY',
   'product AMOUNTS' => 'Product AMOUNTS',
   'Delivery_charge' => 'Delivery charge',
+  'Note' => 'Note',
 );
