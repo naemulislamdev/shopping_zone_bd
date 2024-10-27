@@ -62,6 +62,7 @@
                             <tr>
                                 <th>{{\App\CPU\translate('SL#')}}</th>
                                 <th>{{\App\CPU\translate('Product Name')}}</th>
+                                <th>{{\App\CPU\translate('Code')}}</th>
                                 <th>{{\App\CPU\translate('purchase_price')}}</th>
                                 <th>{{\App\CPU\translate('selling_price')}}</th>
                                 <th>{{\App\CPU\translate('featured')}}</th>
@@ -77,6 +78,9 @@
                                         <a href="{{route('admin.product.view',[$p['id']])}}">
                                             {{\Illuminate\Support\Str::limit($p['name'],20)}}
                                         </a>
+                                    </td>
+                                    <td>
+                                        {{$p->code}}
                                     </td>
                                     <td>
                                         {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($p['purchase_price']))}}

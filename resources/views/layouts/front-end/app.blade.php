@@ -33,7 +33,7 @@
     @stack('css_or_js')
     <meta name="_token" content="{{ csrf_token() }}">
     <style>
-        .v-color-box,
+        /* .v-color-box,
         .v-size-box {
             display: flex;
             align-items: center;
@@ -41,14 +41,14 @@
             height: 70px;
             margin-top: 7px;
             margin-right: 10px;
-        }
+        } */
 
         .v-color-box input,
         .v-size-box input {
             display: none;
         }
 
-        .v-color-box>.color-label,
+        /* .v-color-box>.color-label,
         .v-size-box>.size-label {
             cursor: pointer;
             border: 2px solid #ccc;
@@ -64,7 +64,40 @@
 
         .v-size-box>input:checked+.size-label {
             border: 2px solid #121212;
+        } */
+
+        .v-color-box,
+        .v-size-box {
+            display: flex;
+            align-items: center;
+            width: 70px;
+            height: 30px !important;
+            margin-top: 0px;
+            margin-right: 10px;
         }
+        .v-color-box>.color-label, .v-size-box>.size-label {
+    cursor: pointer;
+    border: 2px solid #ccc;
+    padding: 2px 6px !important;
+    border-radius: 5px;
+    width: 100%;
+    text-align: center;
+    height: 30px !important;
+    position: relative;
+}
+.v-color-box>input:checked+.color-label {
+    border: 2px solid #02ab16 !important;
+}
+
+.v-color-box>input:checked+.color-label::after {
+    content: '✔';
+    color: white;
+    font-size: 12px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
     </style>
     @php
         $request = request()->route()->getName();

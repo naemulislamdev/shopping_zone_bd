@@ -49,7 +49,7 @@ class SystemController extends Controller
                 return $object;
             });
             $data = $request->session()->put('cart', $cart);
-            dd($data);
+            //dd($data);
 
             return response()->json([
                 'status' => 1

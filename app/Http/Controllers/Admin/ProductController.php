@@ -72,6 +72,11 @@ class ProductController extends BaseController
     public function store(Request $request)
     {
         //dd($request->all());
+        $productCode = Product::where('code', $request->code)->first();
+        if($productCode){
+            Toastr::error(translate('Product code already exist!'));
+            return redirect()->back();
+        }else{
         $request->validate([
             'name'              => 'required',
             'category_id'       => 'required',
@@ -99,222 +104,222 @@ class ProductController extends BaseController
             'minimum_order_qty.required' => 'The minimum order quantity is required!',
             'minimum_order_qty.min' => 'The minimum order quantity must be positive!',
         ]);
-
-        if ($request['discount_type'] == 'percent') {
-            $dis = ($request['unit_price'] / 100) * $request['discount'];
-        } else {
-            $dis = $request['discount'];
-        }
-
-        // if ($request['unit_price'] <= $dis) {
-        //     $validator->after(function ($validator) {
-        //         $validator->errors()->add(
-        //             'unit_price', 'Discount can not be more or equal to the price!'
-        //         );
-        //     });
-        // }
-
-        // if (is_null($request->description[array_search('en', $request->lang)])) {
-        //     $validator->after(function ($validator) {
-        //         $validator->errors()->add(
-        //             'description', 'description field is required!'
-        //         );
-        //     });
-        // }
-
-        // if (is_null($request->name[array_search('en', $request->lang)])) {
-        //     $validator->after(function ($validator) {
-        //         $validator->errors()->add(
-        //             'name', 'Name field is required!'
-        //         );
-        //     });
-        // }
-
-
-        $p = new Product();
-        $p->user_id = auth('admin')->id();
-        $p->added_by = "admin";
-        $p->name = $request->name[array_search('en', $request->lang)];
-        $p->code = $request->code;
-        $p->slug = Str::slug($request->name[array_search('en', $request->lang)], '-') . '-' . Str::random(6);
-
-        $category = [];
-
-        if ($request->category_id != null) {
-            array_push($category, [
-                'id' => $request->category_id,
-                'position' => 1,
-            ]);
-        }
-
-        if ($request->sub_category_id != null) {
-            array_push($category, [
-                'id' => $request->sub_category_id,
-                'position' => 2,
-            ]);
-        }
-
-        if ($request->sub_sub_category_id != null) {
-            array_push($category, [
-                'id' => $request->sub_sub_category_id,
-                'position' => 3,
-            ]);
-        }
-
-        $p->category_ids = json_encode($category);
-        $p->brand_id = $request->brand_id;
-        $p->unit = $request->unit;
-        $p->details = $request->description[array_search('en', $request->lang)];
-        $p->short_description = $request->short_description[array_search('en', $request->lang)];
-
-        if ($request->has('colors_active') && $request->has('colors') && count($request->colors) > 0) {
-            $p->colors = json_encode($request->colors);
-        } else {
-            $colors = [];
-            $p->colors = json_encode($colors);
-        }
-        $choice_options = [];
-        if ($request->has('choice')) {
-            foreach ($request->choice_no as $key => $no) {
-                $str = 'choice_options_' . $no;
-                $item['name'] = 'choice_' . $no;
-                $item['title'] = $request->choice[$key];
-                $item['options'] = explode(',', implode('|', $request[$str]));
-                array_push($choice_options, $item);
+            if ($request['discount_type'] == 'percent') {
+                $dis = ($request['unit_price'] / 100) * $request['discount'];
+            } else {
+                $dis = $request['discount'];
             }
-        }
-        $p->choice_options = json_encode($choice_options);
-        //combinations start
-        $options = [];
-        if ($request->has('colors_active') && $request->has('colors') && count($request->colors) > 0) {
-            $colors_active = 1;
-            array_push($options, $request->colors);
-        }
-        if ($request->has('choice_no')) {
-            foreach ($request->choice_no as $key => $no) {
-                $name = 'choice_options_' . $no;
-                $my_str = implode('|', $request[$name]);
-                array_push($options, explode(',', $my_str));
+
+            // if ($request['unit_price'] <= $dis) {
+            //     $validator->after(function ($validator) {
+            //         $validator->errors()->add(
+            //             'unit_price', 'Discount can not be more or equal to the price!'
+            //         );
+            //     });
+            // }
+
+            // if (is_null($request->description[array_search('en', $request->lang)])) {
+            //     $validator->after(function ($validator) {
+            //         $validator->errors()->add(
+            //             'description', 'description field is required!'
+            //         );
+            //     });
+            // }
+
+            // if (is_null($request->name[array_search('en', $request->lang)])) {
+            //     $validator->after(function ($validator) {
+            //         $validator->errors()->add(
+            //             'name', 'Name field is required!'
+            //         );
+            //     });
+            // }
+
+
+            $p = new Product();
+            $p->user_id = auth('admin')->id();
+            $p->added_by = "admin";
+            $p->name = $request->name[array_search('en', $request->lang)];
+            $p->code = $request->code;
+            $p->slug = Str::slug($request->name[array_search('en', $request->lang)], '-') . '-' . Str::random(6);
+
+            $category = [];
+
+            if ($request->category_id != null) {
+                array_push($category, [
+                    'id' => $request->category_id,
+                    'position' => 1,
+                ]);
             }
-        }
-        //Generates the combinations of customer choice options
 
-        $combinations = Helpers::combinations($options);
+            if ($request->sub_category_id != null) {
+                array_push($category, [
+                    'id' => $request->sub_category_id,
+                    'position' => 2,
+                ]);
+            }
 
-        $variations = [];
-        $stock_count = 0;
-        if (count($combinations[0]) > 0) {
-            foreach ($combinations as $key => $combination) {
-                $str = '';
-                foreach ($combination as $k => $item) {
-                    if ($k > 0) {
-                        $str .= '-' . str_replace(' ', '', $item);
-                    } else {
-                        if ($request->has('colors_active') && $request->has('colors') && count($request->colors) > 0) {
-                            $color_name = Color::where('code', $item)->first()->name;
-                            $str .= $color_name;
+            if ($request->sub_sub_category_id != null) {
+                array_push($category, [
+                    'id' => $request->sub_sub_category_id,
+                    'position' => 3,
+                ]);
+            }
+
+            $p->category_ids = json_encode($category);
+            $p->brand_id = $request->brand_id;
+            $p->unit = $request->unit;
+            $p->details = $request->description[array_search('en', $request->lang)];
+            $p->short_description = $request->short_description[array_search('en', $request->lang)];
+
+            if ($request->has('colors_active') && $request->has('colors') && count($request->colors) > 0) {
+                $p->colors = json_encode($request->colors);
+            } else {
+                $colors = [];
+                $p->colors = json_encode($colors);
+            }
+            $choice_options = [];
+            if ($request->has('choice')) {
+                foreach ($request->choice_no as $key => $no) {
+                    $str = 'choice_options_' . $no;
+                    $item['name'] = 'choice_' . $no;
+                    $item['title'] = $request->choice[$key];
+                    $item['options'] = explode(',', implode('|', $request[$str]));
+                    array_push($choice_options, $item);
+                }
+            }
+            $p->choice_options = json_encode($choice_options);
+            //combinations start
+            $options = [];
+            if ($request->has('colors_active') && $request->has('colors') && count($request->colors) > 0) {
+                $colors_active = 1;
+                array_push($options, $request->colors);
+            }
+            if ($request->has('choice_no')) {
+                foreach ($request->choice_no as $key => $no) {
+                    $name = 'choice_options_' . $no;
+                    $my_str = implode('|', $request[$name]);
+                    array_push($options, explode(',', $my_str));
+                }
+            }
+            //Generates the combinations of customer choice options
+
+            $combinations = Helpers::combinations($options);
+
+            $variations = [];
+            $stock_count = 0;
+            if (count($combinations[0]) > 0) {
+                foreach ($combinations as $key => $combination) {
+                    $str = '';
+                    foreach ($combination as $k => $item) {
+                        if ($k > 0) {
+                            $str .= '-' . str_replace(' ', '', $item);
                         } else {
-                            $str .= str_replace(' ', '', $item);
+                            if ($request->has('colors_active') && $request->has('colors') && count($request->colors) > 0) {
+                                $color_name = Color::where('code', $item)->first()->name;
+                                $str .= $color_name;
+                            } else {
+                                $str .= str_replace(' ', '', $item);
+                            }
                         }
                     }
+                    $item = [];
+                    $item['type'] = $str;
+                    $item['price'] = BackEndHelper::currency_to_usd(abs($request['price_' . str_replace('.', '_', $str)]));
+                    $item['sku'] = $request['sku_' . str_replace('.', '_', $str)];
+                    $item['qty'] = abs($request['qty_' . str_replace('.', '_', $str)]);
+                    array_push($variations, $item);
+                    $stock_count += $item['qty'];
                 }
-                $item = [];
-                $item['type'] = $str;
-                $item['price'] = BackEndHelper::currency_to_usd(abs($request['price_' . str_replace('.', '_', $str)]));
-                $item['sku'] = $request['sku_' . str_replace('.', '_', $str)];
-                $item['qty'] = abs($request['qty_' . str_replace('.', '_', $str)]);
-                array_push($variations, $item);
-                $stock_count += $item['qty'];
+            } else {
+                $stock_count = (int)$request['current_stock'];
             }
-        } else {
-            $stock_count = (int)$request['current_stock'];
-        }
 
-        //combinations end
-        $p->variation = json_encode($variations);
-        $p->unit_price = BackEndHelper::currency_to_usd($request->unit_price);
-        $p->purchase_price = BackEndHelper::currency_to_usd($request->purchase_price);
-        $p->tax = $request->tax_type == 'flat' ? BackEndHelper::currency_to_usd($request->tax) : $request->tax;
-        $p->tax_type = $request->tax_type;
-        $p->discount = $request->discount_type == 'flat' ? BackEndHelper::currency_to_usd($request->discount) : $request->discount;
-        $p->discount_type = $request->discount_type;
-        $p->attributes = json_encode($request->choice_attributes);
-        $p->current_stock = abs($stock_count);
-        $p->minimum_order_qty = $request->minimum_order_qty;
-        $p->video_url = $request->video_link;
-        if (strpos($request->video_link, 'facebook') !== false) {
-            $p->video_provider = 'facebook';
-        } elseif (strpos($request->video_link, 'youtube') !== false) {
-            $p->video_provider = 'youtube';
-        }
-        $videoShopping = $request->has('video_shopping');
-        if ($videoShopping == 1) {
-            $p->video_shopping = true;
-        } else {
-            $p->video_shopping = false;
-        }
-        $p->request_status = 1;
-        $p->shipping_cost = BackEndHelper::currency_to_usd($request->shipping_cost);
-        $p->multiply_qty = $request->multiplyQTY == 'on' ? 1 : 0;
+            //combinations end
+            $p->variation = json_encode($variations);
+            $p->unit_price = BackEndHelper::currency_to_usd($request->unit_price);
+            $p->purchase_price = BackEndHelper::currency_to_usd($request->purchase_price);
+            $p->tax = $request->tax_type == 'flat' ? BackEndHelper::currency_to_usd($request->tax) : $request->tax;
+            $p->tax_type = $request->tax_type;
+            $p->discount = $request->discount_type == 'flat' ? BackEndHelper::currency_to_usd($request->discount) : $request->discount;
+            $p->discount_type = $request->discount_type;
+            $p->attributes = json_encode($request->choice_attributes);
+            $p->current_stock = abs($stock_count);
+            $p->minimum_order_qty = $request->minimum_order_qty;
+            $p->video_url = $request->video_link;
+            if (strpos($request->video_link, 'facebook') !== false) {
+                $p->video_provider = 'facebook';
+            } elseif (strpos($request->video_link, 'youtube') !== false) {
+                $p->video_provider = 'youtube';
+            }
+            $videoShopping = $request->has('video_shopping');
+            if ($videoShopping == 1) {
+                $p->video_shopping = true;
+            } else {
+                $p->video_shopping = false;
+            }
+            $p->request_status = 1;
+            $p->shipping_cost = BackEndHelper::currency_to_usd($request->shipping_cost);
+            $p->multiply_qty = $request->multiplyQTY == 'on' ? 1 : 0;
 
 
 
-        if ($request->ajax()) {
-            return response()->json([], 200);
-        } else {
-            if ($request->file('images')) {
-                foreach ($request->file('images') as $img) {
-                    $product_images[] = ImageManager::upload('product/', 'png', $img);
+            if ($request->ajax()) {
+                return response()->json([], 200);
+            } else {
+                if ($request->file('images')) {
+                    foreach ($request->file('images') as $img) {
+                        $product_images[] = ImageManager::upload('product/', 'png', $img);
+                    }
+                    $p->images = json_encode($product_images);
                 }
-                $p->images = json_encode($product_images);
-            }
-            $p->thumbnail = ImageManager::upload('product/thumbnail/', 'png', $request->image);
-            $p->size_chart = ImageManager::upload('product/thumbnail/', 'png', $request->size_chart);
+                $p->thumbnail = ImageManager::upload('product/thumbnail/', 'png', $request->image);
+                $p->size_chart = ImageManager::upload('product/thumbnail/', 'png', $request->size_chart);
 
-            $p->meta_title = $request->meta_title;
-            $p->meta_description = $request->meta_description;
-            $p->meta_image = ImageManager::upload('product/meta/', 'png', $request->meta_image);
+                $p->meta_title = $request->meta_title;
+                $p->meta_description = $request->meta_description;
+                $p->meta_image = ImageManager::upload('product/meta/', 'png', $request->meta_image);
 
-            $p->save();
+                $p->save();
 
 
-            $data = [];
-            foreach ($request->lang as $index => $key) {
-                if ($request->name[$index] && $key != 'en') {
-                    array_push($data, array(
-                        'translationable_type' => 'App\Model\Product',
-                        'translationable_id' => $p->id,
-                        'locale' => $key,
-                        'key' => 'name',
-                        'value' => $request->name[$index],
-                    ));
+                $data = [];
+                foreach ($request->lang as $index => $key) {
+                    if ($request->name[$index] && $key != 'en') {
+                        array_push($data, array(
+                            'translationable_type' => 'App\Model\Product',
+                            'translationable_id' => $p->id,
+                            'locale' => $key,
+                            'key' => 'name',
+                            'value' => $request->name[$index],
+                        ));
+                    }
+                    if ($request->description[$index] && $key != 'en') {
+                        array_push($data, array(
+                            'translationable_type' => 'App\Model\Product',
+                            'translationable_id' => $p->id,
+                            'locale' => $key,
+                            'key' => 'description',
+                            'value' => $request->description[$index],
+                        ));
+                    }
                 }
-                if ($request->description[$index] && $key != 'en') {
-                    array_push($data, array(
-                        'translationable_type' => 'App\Model\Product',
-                        'translationable_id' => $p->id,
-                        'locale' => $key,
-                        'key' => 'description',
-                        'value' => $request->description[$index],
-                    ));
+                Translation::insert($data);
+
+
+                $campaing_detalie = [];
+                for ($i = 0; $i < count($request->start_day); $i++) {
+                    $campaing_detalie[] = [
+                        'product_id' => $p->id,
+                        'start_day' => $request['start_day'][$i],
+                        'discountCam' => $request['discountCam'][$i],
+                        'auth_id' => auth('admin')->id(),
+                    ];
                 }
+                campaing_detalie::insert($campaing_detalie);
+
+                Toastr::success(translate('Product added successfully!'));
+                return redirect()->route('admin.product.list', ['in_house']);
             }
-            Translation::insert($data);
-
-
-            $campaing_detalie = [];
-            for ($i = 0; $i < count($request->start_day); $i++) {
-                $campaing_detalie[] = [
-                    'product_id' => $p->id,
-                    'start_day' => $request['start_day'][$i],
-                    'discountCam' => $request['discountCam'][$i],
-                    'auth_id' => auth('admin')->id(),
-                ];
-            }
-            campaing_detalie::insert($campaing_detalie);
-
-            Toastr::success(translate('Product added successfully!'));
-            return redirect()->route('admin.product.list', ['in_house']);
         }
     }
 
@@ -332,7 +337,7 @@ class ProductController extends BaseController
             $key = explode(' ', $request['search']);
             $pro = $pro->where(function ($q) use ($key) {
                 foreach ($key as $value) {
-                    $q->Where('name', 'like', "%{$value}%");
+                    $q->Where('name', 'like', "%{$value}%")->orWhere('code', 'like', "%{$value}%");
                 }
             });
             $query_param = ['search' => $request['search']];

@@ -97,7 +97,7 @@ class CartManager
     public static function get_shipping_cost($id = null)
     {
 
-            $cost = ShippingMethod::where('id', $id)->first()->cost;
+        $cost = ShippingMethod::where('id', $id)->first()->cost;
 
         return $cost;
     }
