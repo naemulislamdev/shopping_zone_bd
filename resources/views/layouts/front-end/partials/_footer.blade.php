@@ -74,6 +74,7 @@
             </div>
         </div>
     </div>
+
 </footer>
 <!-- Start  Copyright Section -->
 <section class="copyright-section">

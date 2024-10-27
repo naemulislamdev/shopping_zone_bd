@@ -418,8 +418,13 @@
                             <th>{{\App\CPU\translate('customer_name')}}</th>
                             <th>{{\App\CPU\translate('phone')}}</th>
                             <th>{{\App\CPU\translate('Status')}}</th>
+                            <th>{{\App\CPU\translate('Amount')}}</th>
+                            <th>{{\App\CPU\translate('Delivery_charge')}}</th>
                             <th>{{\App\CPU\translate('Total')}}</th>
                             <th>{{\App\CPU\translate('Order')}} {{\App\CPU\translate('Status')}} </th>
+                            @if(Request::is('admin/orders/list/canceled'))
+                            <th>{{\App\CPU\translate('Note')}}</th>
+                            @endif
                             <th>{{\App\CPU\translate('Order')}} {{\App\CPU\translate('Type')}} </th>
                             <th>{{\App\CPU\translate('Action')}}</th>
                         </tr>
@@ -467,6 +472,8 @@
                                 @endif
                             </td>
                             <td> {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($order->order_amount))}}</td>
+                            <td> {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($order->shipping_cost))}}</td>
+                            <td> {{\App\CPU\BackEndHelper::set_symbol(\App\CPU\BackEndHelper::usd_to_currency($order->order_amount+$order->shipping_cost))}}</td>
                             <td class="text-capitalize">
                                 @if($order['order_status']=='pending')
                                     <span class="badge badge-soft-info">
@@ -501,6 +508,11 @@
                                       </span>
                                 @endif
                             </td>
+                            @if(Request::is('admin/orders/list/canceled'))
+                            <td>
+                                {{$order['order_note']}}
+                            </td>
+                            @endif
                             <td class="text-capitalize">
                                 @if($order['order_type']=='default_type')
                                 <span class="badge badge-soft-info">

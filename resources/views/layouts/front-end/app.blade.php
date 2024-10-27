@@ -167,6 +167,7 @@
         </noscript>
         <!-- End Facebook Pixel Code -->
     @endif
+
 </head>
 <!-- Body-->
 
@@ -289,6 +290,7 @@
         <span class="btn-scroll-top-tooltip text-muted font-size-sm mr-2">Top</span><i
             class="btn-scroll-top-icon czi-arrow-up"> </i>
     </a>
+
 
     <!-- Vendor scrits: js libraries and plugins-->
 

@@ -1801,4 +1801,12 @@
   'Slider' => 'Slider',
   'Feature image' => 'Feature image',
   'Feature' => 'Feature',
+  'product Name' => 'Product Name',
+  'Purchase Price' => 'Purchase Price',
+  'DISCOUNT' => 'DISCOUNT',
+  'sell Price' => 'Sell Price',
+  'QUANTITY' => 'QUANTITY',
+  'product AMOUNTS' => 'Product AMOUNTS',
+  'Delivery_charge' => 'Delivery charge',
+  'Note' => 'Note',
 );

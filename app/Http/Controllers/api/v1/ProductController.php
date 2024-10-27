@@ -133,7 +133,7 @@ class ProductController extends Controller
     {
         $categories = Category::where('home_status', true)->priority()->get();
         $categories->map(function ($data) {
-            $data['products'] = Helpers::product_data_formatting(CategoryManager::products($data['id']), true);
+            $data['products'] = Helpers::product_data_formatting(CategoryManager::homeProducts($data['id']), true);
             return $data;
         });
         return response()->json($categories, 200);

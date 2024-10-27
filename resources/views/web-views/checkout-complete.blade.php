@@ -68,13 +68,13 @@
                                             <tr>
                                                 <div class="row mb-2">
                                                     <div class="col-md-12 d-flex">
-                                                        <div class="col-3 for-tab-img">
+                                                        <div class="col-4 for-tab-img">
                                                             <img class="d-block mr-2"
                                                                 onerror="this.src='{{ asset('public/assets/front-end/img/image-place-holder.png') }}'"
                                                                 src="{{ \App\CPU\ProductManager::product_image_path('thumbnail') }}/{{ $product['thumbnail'] }}"
                                                                 alt="VR Collection" width="60">
                                                         </div>
-                                                        <div class="col-9 for-glaxy-name" style="vertical-align:middle;">
+                                                        <div class="col-8 for-glaxy-name" style="vertical-align:middle;">
 
                                                             <a href="{{ route('product', [$product['slug']]) }}">
                                                                 {{ isset($product['name']) ? Str::limit($product['name'], 40) : '' }}
@@ -86,7 +86,6 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
                                             </tr>
                                         @endforeach
                                     </div>
@@ -252,12 +251,12 @@
 
                             <div class="row mt-4">
                                 <div class="col-6">
-                                    <a href="{{ route('home') }}" class="btn btn-primary">
+                                    <a href="{{ route('home') }}" class="btn btn-primary w-100">
                                         {{ \App\CPU\translate('go_to_shopping') }}
                                     </a>
                                 </div>
                                 <div class="col-6">
-                                    <a href="{{ route('account-oder') }}" class="btn btn-secondary pull-right">
+                                    <a href="{{ route('account-oder') }}" class="btn btn-secondary pull-right w-100">
                                         {{ \App\CPU\translate('check_orders') }}
                                     </a>
                                 </div>
