@@ -31,8 +31,8 @@
     <meta property="og:url" content="{{ route('product', [$product->slug]) }}">
 
     @if ($product['meta_description'] != null)
-        <meta property="twitter:description" content="{{strip_tags($product['meta_description']) }}">
-        <meta property="og:description" content="{{strip_tags($product['meta_description']) }}">
+        <meta property="twitter:description" content="{{ strip_tags($product['meta_description']) }}">
+        <meta property="og:description" content="{{ strip_tags($product['meta_description']) }}">
     @else
         <meta property="og:description"
             content="@foreach (explode(' ', $product['name']) as $keyword) {{ $keyword . ' , ' }} @endforeach">
@@ -81,9 +81,10 @@
         .owl-carousel .owl-nav button.owl-next {
             outline: none;
         }
+
         .owl-carousel .owl-item img {
-    height: 80px;
-}
+            height: 80px;
+        }
 
         .card-header {
             padding: 6px 0px;
@@ -183,10 +184,10 @@
                         @if ($product->video_shopping == 1)
                             <div class="row">
                                 <div class="col-md-11">
-                                        <iframe src="{{ $embedUrl }}" width="100%" height="700"
-                                            style="border:none;overflow:hidden" scrolling="no" frameborder="0"
-                                            allowfullscreen="true"
-                                            allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
+                                    <iframe src="{{ $embedUrl }}" width="100%" height="700"
+                                        style="border:none;overflow:hidden" scrolling="no" frameborder="0"
+                                        allowfullscreen="true"
+                                        allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
                                 </div>
                             </div>
                         @else
@@ -196,7 +197,7 @@
                                         <img id="main-image"
                                             src="{{ \App\CPU\ProductManager::product_image_path('thumbnail') }}/{{ $product['thumbnail'] }}"
                                             xoriginal="{{ \App\CPU\ProductManager::product_image_path('thumbnail') }}/{{ $product['thumbnail'] }}"
-                                            class="img-fluid xzoom" alt="Product Image">
+                                            class="img-fluid xzoom" alt="{{ $product->name }}">
                                     </div>
                                 </div>
                             </div>
@@ -206,10 +207,11 @@
                                         @if ($product->images != null)
                                             @foreach (json_decode($product->images) as $key => $photo)
                                                 <div class="item">
-                                                    <a href="{{ asset("storage/app/public/product/$photo") }}">
+                                                    <a href="{{ asset("storage/app/public/product/$photo") }}"
+                                                        title="{{ $product->name }}">
                                                         <img src="{{ asset("storage/app/public/product/$photo") }}"
                                                             data-image="{{ asset("storage/app/public/product/$photo") }}"
-                                                            class="xzoom-gallery" alt="product image">
+                                                            class="xzoom-gallery" alt="{{ $product->name }}">
                                                     </a>
                                                 </div>
                                             @endforeach
@@ -351,37 +353,38 @@
                                         </button>
                                     </div>
                                     <div class="col-md-12 mb-3">
-                                        @if ($product['size_chart']!=NULL && $product['size_chart']!=='def.png')
-                                        <div class="accordion mb-3" id="accordionExample">
-                                            <div class="card">
-                                                <div class="card-header d-flex justify-content-between align-items-center"
-                                                    id="productSizeChart">
-                                                    <h5 class="mb-0">
-                                                        <button class="btn btn-link" type="button"
-                                                            data-toggle="collapse" data-target="#sizeChart"
-                                                            aria-expanded="true" aria-controls="sizeChart">
-                                                            Size Chart
-                                                        </button>
-                                                    </h5>
-                                                    <span class="toggle-icon" data-toggle="collapse"
-                                                        data-target="#sizeChart" aria-expanded="true"
-                                                        aria-controls="sizeChart"><i class="fa fa-plus"></i></span>
-                                                </div>
+                                        @if ($product['size_chart'] != null && $product['size_chart'] !== 'def.png')
+                                            <div class="accordion mb-3" id="accordionExample">
+                                                <div class="card">
+                                                    <div class="card-header d-flex justify-content-between align-items-center"
+                                                        id="productSizeChart">
+                                                        <h5 class="mb-0">
+                                                            <button class="btn btn-link" type="button"
+                                                                data-toggle="collapse" data-target="#sizeChart"
+                                                                aria-expanded="true" aria-controls="sizeChart">
+                                                                Size Chart
+                                                            </button>
+                                                        </h5>
+                                                        <span class="toggle-icon" data-toggle="collapse"
+                                                            data-target="#sizeChart" aria-expanded="true"
+                                                            aria-controls="sizeChart"><i class="fa fa-plus"></i></span>
+                                                    </div>
 
-                                                <div id="sizeChart" class="collapse show"
-                                                    aria-labelledby="productSizeChart" data-parent="#accordionExample">
-                                                    <div class="card-body">
-                                                        <div class="size-img-box">
+                                                    <div id="sizeChart" class="collapse show"
+                                                        aria-labelledby="productSizeChart"
+                                                        data-parent="#accordionExample">
+                                                        <div class="card-body">
+                                                            <div class="size-img-box">
 
                                                                 <img src="{{ \App\CPU\ProductManager::product_image_path('thumbnail') }}/{{ $product['size_chart'] }}"
                                                                     class="img-fluid" alt="Product size chart image">
 
 
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
                                         @endif
                                         <div class="accordion mb-3" id="accordionExample">
                                             <div class="card">
@@ -762,9 +765,9 @@
                                     @endif
                                     <a href="{{ route('product', $product->slug) }}">
                                         <img class="pic-1"
-                                            src="{{ \App\CPU\ProductManager::product_image_path('thumbnail') }}/{{ $product['thumbnail'] }}">
+                                            src="{{ \App\CPU\ProductManager::product_image_path('thumbnail') }}/{{ $product['thumbnail'] }}" alt="{{ $product->name }}">
                                         <img class="pic-2"
-                                            src="{{ \App\CPU\ProductManager::product_image_path('thumbnail') }}/{{ $product['thumbnail'] }}">
+                                            src="{{ \App\CPU\ProductManager::product_image_path('thumbnail') }}/{{ $product['thumbnail'] }}" alt="{{ $product->name }}">
                                     </a>
                                     <ul class="social">
                                         <li><a href="{{ route('product', $product->slug) }}" data-tip="Quick View"><i
@@ -826,7 +829,7 @@
                                             <div class="product-modal-box d-flex align-items-center mb-3">
                                                 <div class="img mr-3">
                                                     <img src="{{ \App\CPU\ProductManager::product_image_path('thumbnail') }}/{{ $product['thumbnail'] }}"
-                                                        alt="" style="width: 80px;">
+                                                        alt="{{ $product->name }}" style="width: 80px;">
                                                 </div>
                                                 <div class="p-name">
                                                     <h5 class="title">{{ Str::limit($product['name'], 23) }}</h5>
@@ -993,7 +996,7 @@
                             CloseButton: true,
                             ProgressBar: true
                         });
-                        console.log('iff');
+                        // console.log('iff');
                     }
                 }
             });
