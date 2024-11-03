@@ -854,20 +854,39 @@ th {
         Swal.fire({
             title: '{{\App\CPU\translate('Order is already delivered, and transaction amount has been disbursed, changing status can be the reason of miscalculation')}}!',
             text: "{{\App\CPU\translate('Think before you proceed')}}.",
+            html: '<br /> <form class="form-horizontal" action="{{route('admin.orders.status')}}" method="post"><input type="hidden" name="order_status" value="'+status+'"> <input type="hidden" name="id" value="{{$order['id']}}"> <input required class="form-control wedding-input-text wizard-input-pad" type="text" name="note" id="note" placeholder="For delivered note"> </form>',
             showCancelButton: true,
             confirmButtonColor: '#377dff',
             cancelButtonColor: 'secondary',
             confirmButtonText: '{{\App\CPU\translate('Yes, Change it')}}!'
         }).then((result) => {
             if (result.value) {
-                updateOrderStatus(status);
-            }
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                        }
+                    });
+                    $.ajax({
+                        url: "{{route('admin.orders.status')}}",
+                        method: 'POST',
+                        data:$("form").serialize(),
+                        success: function (data) {
+                            console.log(data.payment_status);
+                          toastr.success('Status Change successfully');
+                            // location.reload();
+                        }
+                        ,
+                        error: function(data){
+                        toastr.warning('Should Write Canceled Reason !');
+                                             }
+                    });
+                }
         });
     } else if (status === 'canceled') {
         Swal.fire({
             title: 'Are you sure Change this?',
                 text: "You won't be able to revert this!",
-                    html: '<br /> <form class="form-horizontal" action="{{route('admin.orders.status')}}" method="post"><input type="hidden" name="order_status" value="canceled"> <input type="hidden" name="id" value="{{$order['id']}}"> <input required class="form-control wedding-input-text wizard-input-pad" type="text" name="note" id="note" placeholder="For Cancel Note"> </form>',
+                    html: '<br /> <form class="form-horizontal" action="{{route('admin.orders.status')}}" method="post"><input type="hidden" name="order_status" value="canceled"> <input type="hidden" name="id" value="{{$order['id']}}"> <input required class="form-control wedding-input-text wizard-input-pad" type="text" name="note" id="note" placeholder="For cancel note"> </form>',
             showCancelButton: true,
             confirmButtonColor: '#377dff',
             cancelButtonColor: 'secondary',
@@ -898,15 +917,34 @@ th {
     } else {
         Swal.fire({
             title: '{{\App\CPU\translate('Are you sure Change this')}}?',
-            text: "{{\App\CPU\translate('You will not be able to revert this')}}!",
+            text: "You won't be able to revert this!",
+                    html: '<br /> <form class="form-horizontal" action="{{route('admin.orders.status')}}" method="post"><input type="hidden" name="order_status" value="'+status+'"> <input type="hidden" name="id" value="{{$order['id']}}"> <input required class="form-control wedding-input-text wizard-input-pad" type="text" name="note" id="note" placeholder="For '+status+' note"> </form>',
             showCancelButton: true,
             confirmButtonColor: '#377dff',
             cancelButtonColor: 'secondary',
             confirmButtonText: '{{\App\CPU\translate('Yes, Change it')}}!'
         }).then((result) => {
             if (result.value) {
-                updateOrderStatus(status);
-            }
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                        }
+                    });
+                    $.ajax({
+                        url: "{{route('admin.orders.status')}}",
+                        method: 'POST',
+                        data:$("form").serialize(),
+                        success: function (data) {
+                            console.log(data,'ok');
+                          toastr.success('Status Change successfully');
+                            // location.reload();
+                        }
+                        ,
+                        error: function(data){
+                        toastr.warning('Should Write Canceled Reason !');
+                                             }
+                    });
+                }
         });
     }
 }

@@ -306,6 +306,7 @@ class OrderController extends Controller
 
     public function status(Request $request)
     {
+        $request->dd();
          $order = Order::with('customer')->where(['id' => $request->id])->first();
 
         //  return response()->json(['customer'=>$order],200);

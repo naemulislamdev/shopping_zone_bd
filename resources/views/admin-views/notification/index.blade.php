@@ -59,6 +59,16 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="input-label"
+                                               for="exampleFormControlInput1">{{\App\CPU\translate('URL')}} </label>
+                                        <input type="text" name="url" class="form-control" placeholder="{{\App\CPU\translate('Enter url')}}"
+                                               required>
+                                    </div>
+                                </div>
+                            </div>
 
                             <button type="submit" class="btn btn-primary float-right">{{\App\CPU\translate('Send')}}  {{\App\CPU\translate('Notification')}}  </button>
                         </form>

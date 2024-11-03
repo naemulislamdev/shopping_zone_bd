@@ -1809,4 +1809,7 @@
   'product AMOUNTS' => 'Product AMOUNTS',
   'Delivery_charge' => 'Delivery charge',
   'Note' => 'Note',
+  'URL' => 'URL',
+  'Enter url' => 'Enter url',
+  'processing' => 'Processing',
 );
