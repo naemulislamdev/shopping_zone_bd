@@ -727,7 +727,7 @@
 
         function cartQuantityInitialize() {
             $('.btn-number').click(function(e) {
-                console.log("Ok");
+                // console.log("Ok");
                 e.preventDefault();
 
                 fieldName = $(this).attr('data-field');
@@ -829,7 +829,7 @@
                 key: key,
                 quantity: quantity
             }, function(data) {
-                console.log(data);
+                // console.log(data);
                 if (data['data'] == 0) {
                     toastr.error('Sorry, stock limit exceeded.', {
                         CloseButton: true,
@@ -1010,7 +1010,7 @@
                             'query': query
                         },
                         success: function(data) {
-                            console.log(data);
+                            // console.log(data);
                             if (data.products) {
 
                                 $('#searchResultProducts').html(data
