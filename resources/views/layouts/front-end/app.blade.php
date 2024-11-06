@@ -216,6 +216,8 @@
                                     </div>
                                 </li>
 
+                                <li class="nav-item"><a href="{{ route('customer.complain') }}">
+                                        {{ \App\CPU\translate('Complain') }}</a></li>
                                 <li class="nav-item"><a href="{{ route('track-order.index') }}">
                                         {{ \App\CPU\translate('Order Track') }}</a></li>
                                 @if (auth('customer')->check())

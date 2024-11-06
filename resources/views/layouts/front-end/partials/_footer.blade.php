@@ -40,6 +40,7 @@
                         <li><a href="{{ route('privacy-policy')}}">{{\App\CPU\translate('Privacy Policy')}}</a></li>
                         <li><a href="{{ route('outlets') }}">{{\App\CPU\translate('Our Outlets')}}</a></li>
                         <li><a href="{{ route('contacts')}}">{{\App\CPU\translate('Contact Us')}}</a></li>
+                        <li><a href="{{ route('customer.complain')}}">{{\App\CPU\translate('Complain')}}</a></li>
                     </ul>
                 </div>
             </div>
