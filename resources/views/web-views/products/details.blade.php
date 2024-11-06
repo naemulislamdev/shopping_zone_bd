@@ -988,7 +988,7 @@
                     offset: load_review_count
                 },
                 success: function(data) {
-                    console.log(data);
+                    // console.log(data);
 
                     $('#product-review-list').append(data.productReview)
                     if (data.not_empty == 0 && load_review_count > 2) {
@@ -1032,7 +1032,7 @@
                     url: '{{ route('messages_store') }}',
                     data: data,
                     success: function(respons) {
-                        console.log('send successfully');
+                        // console.log('send successfully');
                     }
                 });
                 $('#chatInputBox').val('');
@@ -1043,7 +1043,7 @@
                 });
                 $('#go_to_chatbox').css('display', 'block');
             } else {
-                console.log('say something');
+                // console.log('say something');
             }
         });
         $('#cancelBtn').on('click', function(e) {

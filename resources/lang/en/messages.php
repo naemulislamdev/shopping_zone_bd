@@ -1812,4 +1812,6 @@
   'URL' => 'URL',
   'Enter url' => 'Enter url',
   'processing' => 'Processing',
+  'Images' => 'Images',
+  'Copy URL' => 'Copy URL',
 );

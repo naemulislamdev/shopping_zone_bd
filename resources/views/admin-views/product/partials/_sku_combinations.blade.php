@@ -5,6 +5,7 @@
 				<td class="text-center">
 					<label for="" class="control-label">{{\App\CPU\translate('Variant')}}</label>
 				</td>
+
 				<td class="text-center">
 					<label for="" class="control-label">{{\App\CPU\translate('Variant Price')}}</label>
 				</td>
@@ -50,6 +51,7 @@
 				<td>
 					<label for="" class="control-label">{{ $str }}</label>
 				</td>
+
 				<td>
 					<input type="number" name="price_{{ $str }}" value="{{ $unit_price }}" min="0" step="0.01" class="form-control" required>
 				</td>
@@ -64,6 +66,8 @@
 @endforeach
 	</tbody>
 </table>
+
+
 
 <script>
 	update_qty();

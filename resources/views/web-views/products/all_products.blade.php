@@ -1,5 +1,5 @@
 @extends('layouts.front-end.app')
-@section('title', 'Shop')
+@section('title', 'ShoppingZoneBDShop')
 @section('content')
     <section class="py-3">
         <div class="container">
@@ -71,7 +71,7 @@
                 <div class="col-md-12">
                     <div class="big-banner">
                         <img src="{{ asset('public/frontend') }}/assets/images/product-banner/main-banner3.jpg"
-                            alt="">
+                            alt="Banner Image">
                     </div>
                 </div>
             </div>

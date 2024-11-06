@@ -475,20 +475,27 @@
                                     <div class="p-2 border border-dashed" style="max-width:430px;">
                                         <div class="row" id="coba">
                                             @foreach (json_decode($product->images) as $key => $photo)
-                                                <div class="col-6">
-                                                    <div class="card">
-                                                        <div class="card-body">
-                                                            <img style="width: 100%" height="auto"
-                                                                 onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
-                                                                 src="{{asset("storage/app/public/product/$photo")}}"
-                                                                 alt="Product image">
-                                                            <a href="{{route('admin.product.remove-image',['id'=>$product['id'],'name'=>$photo])}}"
-                                                               class="btn btn-danger btn-block">{{\App\CPU\translate('Remove')}}</a>
+                                            <div class="col-6">
+                                                <div class="card">
+                                                    <div class="card-body">
 
+                                                        <img style="width: 100%" height="auto"
+                                                             onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
+                                                             src="{{asset("storage/app/public/product/$photo")}}"
+                                                             alt="Product image">
+                                                             <input type="text" value="{{asset("storage/app/public/product/$photo")}}" id="image-{{$key}}">
+
+                                                        <div class="d-flex">
+                                                            <a href="{{route('admin.product.remove-image',['id'=>$product['id'],'name'=>$photo])}}"
+                                                               class="btn btn-danger btn-xs m-1">{{\App\CPU\translate('Remove')}}</a>
+
+                                                            <a class="btn btn-info btn-xs m-1" onclick="myFunction({{$key}});">Copy URL</a>
                                                         </div>
+
                                                     </div>
                                                 </div>
-                                            @endforeach
+                                            </div>
+                                        @endforeach
                                         </div>
                                     </div>
 
@@ -904,6 +911,25 @@
                 $(".rest-part").addClass('d-none');
             }
         })
+    </script>
+    <script>
+    $(document).ready(function() {
+        function myFunction(id) {
+            console.log(id);
+  // Get the text field
+  var copyText = document.getElementById("image-"+id);
+
+  // Select the text field
+  copyText.select();
+  copyText.setSelectionRange(0, 99999); // For mobile devices
+
+   // Copy the text inside the text field
+  navigator.clipboard.writeText(copyText.value);
+
+  // Alert the copied text
+  alert("Copied the text: " + copyText.value);
+}
+});
     </script>
 
      <!-- include summernote css/js -->

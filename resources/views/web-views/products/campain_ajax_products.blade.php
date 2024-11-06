@@ -16,9 +16,9 @@
                 @endif
                 <a href="{{ route('product', $product->slug) }}">
                     <img class="pic-1"
-                        src="{{ \App\CPU\ProductManager::product_image_path('thumbnail') }}/{{ $product['thumbnail'] }}">
+                        src="{{ \App\CPU\ProductManager::product_image_path('thumbnail') }}/{{ $product['thumbnail'] }}" alt="{{$product['name']}}">
                     <img class="pic-2"
-                        src="{{ \App\CPU\ProductManager::product_image_path('thumbnail') }}/{{ $product['thumbnail'] }}">
+                        src="{{ \App\CPU\ProductManager::product_image_path('thumbnail') }}/{{ $product['thumbnail'] }}" alt="{{$product['name']}}">
                 </a>
                 <form id="add-to-cart-form" class="mb-2">
                     @csrf
@@ -101,7 +101,7 @@
                         <div class="product-modal-box d-flex align-items-center mb-3">
                             <div class="img mr-3">
                                 <img src="{{ \App\CPU\ProductManager::product_image_path('thumbnail') }}/{{ $product['thumbnail'] }}"
-                                    alt="" style="width: 80px;">
+                                    alt="{{$product['name']}}" style="width: 80px;">
                             </div>
                             <div class="p-name">
                                 <h5 class="title">{{ Str::limit($product['name'], 23) }}</h5>
