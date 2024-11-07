@@ -1814,4 +1814,8 @@
   'processing' => 'Processing',
   'Images' => 'Images',
   'Copy URL' => 'Copy URL',
+  'Image URL' => 'Image URL',
+  'Search by Subject' => 'Search by Subject',
+  'Customer Complain' => 'Customer Complain',
+  'Reason' => 'Reason',
 );

@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Mail;
 Route::get('maintenance-mode', 'Web\WebController@maintenance_mode')->name('maintenance-mode');
 
 Route::get('/complain', 'ComplainController@customerComplain')->name('customer.complain');
+
 Route::post('/complain/store', 'ComplainController@customerComplainStore')->name('customer.complain.store');
 
 Route::group(['namespace' => 'Web', 'middleware' => ['maintenance_mode']], function () {

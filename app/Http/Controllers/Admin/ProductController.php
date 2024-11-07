@@ -667,6 +667,7 @@ class ProductController extends BaseController
                 }
                 $item = [];
                 $item['type'] = $str;
+                $item['image'] = $request['image_' . str_replace('.', '_', $str)];
                 $item['price'] = BackEndHelper::currency_to_usd(abs($request['price_' . str_replace('.', '_', $str)]));
                 $item['sku'] = $request['sku_' . str_replace('.', '_', $str)];
                 $item['qty'] = abs($request['qty_' . str_replace('.', '_', $str)]);

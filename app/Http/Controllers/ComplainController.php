@@ -47,4 +47,8 @@ class ComplainController extends Controller
         Toastr::success("Your complaint has been send!");
         return back();
     }
+
+    public function showComplain(){
+        echo "hello";
+    }
 }

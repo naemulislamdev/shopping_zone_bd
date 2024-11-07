@@ -19,6 +19,9 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.'], fu
     /*authenticated*/
     Route::group(['middleware' => ['admin']], function () {
 
+        Route::get('/complain/list', 'ComplainAdminController@list')->name('complain.list');
+        Route::get('view/{id}', 'ComplainAdminController@view')->name('complain.view');
+
         //dashboard routes
         Route::get('/', 'DashboardController@dashboard')->name('dashboard');//previous dashboard route
         Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.'], function () {

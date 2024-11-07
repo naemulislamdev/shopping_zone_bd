@@ -6,6 +6,9 @@
             <label for="" class="control-label">{{\App\CPU\translate('Variant')}}</label>
         </td>
         <td class="text-center">
+            <label for="" class="control-label">{{\App\CPU\translate('Image URL')}}</label>
+        </td>
+        <td class="text-center">
             <label for="" class="control-label">{{\App\CPU\translate('Variant Price')}}</label>
         </td>
         <td class="text-center">
@@ -23,6 +26,9 @@
             <td>
                 <label for="" class="control-label">{{ $combination['type'] }}</label>
                 <input value="{{ $combination['type'] }}" name="type[]" style="display: none">
+            </td>
+            <td>
+                <input type="text" name="image_{{ @$combination['type'] }}"  value="{{$combination['image'] ?? 'default-image.jpg'}}" class="form-control" required>
             </td>
             <td>
                 <input type="number" name="price_{{ $combination['type'] }}"
