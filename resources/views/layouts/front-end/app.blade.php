@@ -98,6 +98,37 @@
     left: 50%;
     transform: translate(-50%, -50%);
 }
+
+.cs_header_number_wrap {
+    position: relative;
+    padding-left: 50px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    color: #f26d21;
+}
+.cs_header_number_wrap svg {
+    position: absolute;
+    left: 0;
+    width: 40px;
+    height: 40px;
+    top: 3px;
+}
+.cs_header_number_wrap .cs_header_number {
+    font-weight: 600;
+    font-family: var(--primary-font);
+    font-size: 26px;
+    line-height: 1.1em;
+}
+.cs_header_number_wrap .cs_header_number_text {
+    font-size: 12px;
+    line-height: 1.5em;
+    color: #636363;
+}
     </style>
     @php
         $request = request()->route()->getName();
@@ -175,15 +206,26 @@
     <section class="topbar-section">
         <div class="container">
             <div class="row">
-                <div class="col-md-6 text-right">
-                    <div>
+                <div class="col-md-6">
+                    <a href="tel:{{ \App\CPU\Helpers::get_business_settings('company_hotline') }}" class="cs_header_number_wrap float-right">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round"
+                            stroke-linejoin="round" class="lucide lucide-headset">
+                            <path
+                                d="M3 11h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-5Zm0 0a9 9 0 1 1 18 0m0 0v5a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3Z" />
+                            <path d="M21 16v2a4 4 0 0 1-4 4h-5"/>
+                        </svg>
+                        <span class="cs_accent_color cs_fs_24 cs_header_number">{{ \App\CPU\Helpers::get_business_settings('company_hotline') }}</span>
+                        <span class="cs_header_number_text">24/7 Support Center</span>
+                    </a>
+                    {{-- <div>
                         <span class="topbar-contact">{{ \App\CPU\translate('Hotline') }}: <a
                                 href="tel:{{ \App\CPU\Helpers::get_business_settings('company_hotline') }}">{{ \App\CPU\Helpers::get_business_settings('company_hotline') }}</a></span>
-                    </div>
+                    </div> --}}
                 </div>
                 <div class="col-md-6">
                     <div class="topbar-left">
-                        <div class="topbar-box">
+                        <div class="topbar-box mt-2">
                             <ul>
                                 <!-- Dropdown -->
                                 <li class="nav-item dropdown">
