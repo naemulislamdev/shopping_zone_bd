@@ -1818,4 +1818,5 @@
   'Search by Subject' => 'Search by Subject',
   'Customer Complain' => 'Customer Complain',
   'Reason' => 'Reason',
+  'Product code already exist!' => 'Product code already exist!',
 );

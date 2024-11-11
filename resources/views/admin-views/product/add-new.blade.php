@@ -6,6 +6,75 @@
     <link href="{{ asset('public/assets/back-end/css/tags-input.min.css') }}" rel="stylesheet">
     <link href="{{ asset('public/assets/select2/css/select2.min.css') }}" rel="stylesheet">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <style>
+        .upload-container {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .custom-file-input {
+            display: none; /* Hide the actual file input */
+        }
+
+        .custom-file-label {
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .custom-file-label:hover {
+            background-color: #0056b3;
+        }
+
+        .image-preview-container {
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .preview-item {
+            position: relative;
+            margin: 10px;
+            width: 120px;
+            height: 120px;
+        }
+
+        .preview-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .remove-icon {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(255, 0, 0, 0.8);
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            font-size: 14px;
+            line-height: 22px;
+            text-align: center;
+            transition: background 0.3s ease;
+        }
+
+        .remove-icon:hover {
+            background: rgba(255, 0, 0, 1);
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -54,7 +123,8 @@
                                     <div class="form-group">
                                         <label class="input-label"
                                             for="{{ $lang }}_name">{{ \App\CPU\translate('name') }}
-                                            ({{ strtoupper($lang) }}) <span class="text-danger">*</span>
+                                            ({{ strtoupper($lang) }})
+                                            <span class="text-danger">*</span>
                                         </label>
                                         <input type="text" {{ $lang == $default_lang ? 'required' : '' }} name="name[]"
                                             id="{{ $lang }}_name" class="form-control" placeholder="New Product">
@@ -85,7 +155,8 @@
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <label for="name">{{ \App\CPU\translate('Category') }} <span class="text-danger">*</span></label>
+                                        <label for="name">{{ \App\CPU\translate('Category') }} <span
+                                                class="text-danger">*</span></label>
                                         <select class="js-example-basic-multiple form-control" name="category_id"
                                             onchange="getRequest('{{ url('/') }}/admin/product/get-categories?parent_id='+this.value,'sub-category-select','select')">
                                             <option value="{{ old('category_id') }}" selected disabled>---Select---
@@ -98,7 +169,7 @@
                                             @endforeach
                                         </select>
                                         @error('category_id')
-                                        <span class="text-danger">{{$message}}</span>
+                                            <span class="text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
                                     <div class="col-md-4">
@@ -131,14 +202,16 @@
                                             <input type="text" minlength="6" id="generate_number" name="code"
                                                 class="form-control" value="{{ old('code') }}"
                                                 placeholder="{{ \App\CPU\translate('code') }}">
-                                                @error('code')
-                                        <span class="text-danger">{{$message}}</span>
-                                        @enderror
+                                            @error('code')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
                                         </div>
                                     </div>
 
                                     <div class="col-md-4">
-                                        <label for="name">{{ \App\CPU\translate('Brand') }} <span class="text-danger">*</span></label> <a href="{{route('admin.brand.add-new')}}" target="_blank">add new</a>
+                                        <label for="name">{{ \App\CPU\translate('Brand') }} <span
+                                                class="text-danger">*</span></label> <a
+                                            href="{{ route('admin.brand.add-new') }}" target="_blank">add new</a>
                                         <select
                                             class="js-example-basic-multiple js-states js-example-responsive form-control"
                                             name="brand_id">
@@ -149,20 +222,22 @@
                                             @endforeach
                                         </select>
                                         @error('brand_id')
-                                        <span class="text-danger">{{$message}}</span>
+                                            <span class="text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
 
                                     <div class="col-md-4">
-                                        <label for="name">{{ \App\CPU\translate('Unit') }} <span class="text-danger">*</span></label>
+                                        <label for="name">{{ \App\CPU\translate('Unit') }} <span
+                                                class="text-danger">*</span></label>
                                         <select class="js-example-basic-multiple form-control" name="unit">
                                             @foreach (\App\CPU\Helpers::units() as $x)
-                                                <option value="{{ $x }}" {{ old('unit') == $x ? 'selected' : '' }}>
+                                                <option value="{{ $x }}"
+                                                    {{ old('unit') == $x ? 'selected' : '' }}>
                                                     {{ $x }}</option>
                                             @endforeach
                                         </select>
                                         @error('unit')
-                                        <span class="text-danger">{{$message}}</span>
+                                            <span class="text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
                                 </div>
@@ -234,8 +309,8 @@
                                         <input type="number" min="0" step="0.01"
                                             placeholder="{{ \App\CPU\translate('Unit price') }}" name="unit_price"
                                             value="{{ old('unit_price') }}" class="form-control">
-                                            @error('unit_price')
-                                        <span class="text-danger">{{$message}}</span>
+                                        @error('unit_price')
+                                            <span class="text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
                                     <div class="col-md-6">
@@ -245,32 +320,33 @@
                                             placeholder="{{ \App\CPU\translate('Purchase price') }}"
                                             value="{{ old('purchase_price') }}" name="purchase_price"
                                             class="form-control">
-                                            @error('purchase_price')
-                                        <span class="text-danger">{{$message}}</span>
+                                        @error('purchase_price')
+                                            <span class="text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
                                 </div>
                                 <div class="row pt-4">
                                     <div class="col-md-4">
-                                        <label class="control-label">{{ \App\CPU\translate('Tax') }} <span class="text-danger">*</span></label>
+                                        <label class="control-label">{{ \App\CPU\translate('Tax') }} <span
+                                                class="text-danger">*</span></label>
                                         <label class="badge badge-info">{{ \App\CPU\translate('Percent') }} ( % )</label>
                                         <input type="number" min="0" value="0" step="0.01"
                                             placeholder="{{ \App\CPU\translate('Tax') }}" name="tax"
                                             value="{{ old('tax') }}" class="form-control">
                                         <input name="tax_type" value="percent" style="display: none">
                                         @error('tax')
-                                        <span class="text-danger">{{$message}}</span>
+                                            <span class="text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
 
                                     <div class="col-md-4">
                                         <label class="control-label">{{ \App\CPU\translate('Discount') }}</label>
                                         <span class="text-danger">*</span>
-                                        <input type="number" min="0"
-                                            step="0.01" placeholder="{{ \App\CPU\translate('Discount') }}"
-                                            name="discount" class="form-control" value="0">
-                                            @error('discount')
-                                        <span class="text-danger">{{$message}}</span>
+                                        <input type="number" min="0" step="0.01"
+                                            placeholder="{{ \App\CPU\translate('Discount') }}" name="discount"
+                                            class="form-control" value="0">
+                                        @error('discount')
+                                            <span class="text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
                                     <div class="col-md-4" style="padding-top: 30px;">
@@ -287,23 +363,24 @@
                                     <div class="col-md-3" id="quantity">
                                         <label class="control-label">{{ \App\CPU\translate('total') }}
                                             {{ \App\CPU\translate('Quantity') }}</label>
-                                            <span class="text-danger">*</span>
+                                        <span class="text-danger">*</span>
                                         <input type="number" min="0" value="0" step="1"
-                                               placeholder="{{ \App\CPU\translate('Quantity') }}" name="current_stock"
-                                               class="form-control">
-                                               @error('current_stock')
-                                        <span class="text-danger">{{$message}}</span>
+                                            placeholder="{{ \App\CPU\translate('Quantity') }}" name="current_stock"
+                                            class="form-control">
+                                        @error('current_stock')
+                                            <span class="text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
                                     <div class="col-md-3" id="minimum_order_qty">
                                         <label class="control-label">
-                                            {{ \App\CPU\translate('minimum_order_quantity') }} <span class="text-danger">*</span></label>
+                                            {{ \App\CPU\translate('minimum_order_quantity') }} <span
+                                                class="text-danger">*</span></label>
                                         <input type="number" min="1" value="1" step="1"
-                                            placeholder="{{ \App\CPU\translate('minimum_order_quantity') }}" name="minimum_order_qty"
-                                            class="form-control">
-                                            @error('minimum_order_qty')
-                                            <span class="text-danger">{{$message}}</span>
-                                            @enderror
+                                            placeholder="{{ \App\CPU\translate('minimum_order_quantity') }}"
+                                            name="minimum_order_qty" class="form-control">
+                                        @error('minimum_order_qty')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
                                     </div>
                                     <div class="col-md-3" id="shipping_cost">
                                         <label class="control-label">{{ \App\CPU\translate('shipping_cost') }} </label>
@@ -330,40 +407,40 @@
                         </div>
                     </div>
 
-                      <div class="card mt-2 rest-part">
+                    <div class="card mt-2 rest-part">
                         <div class="card-header">
                             <h4>Product campaign Discount</h4>
                         </div>
                         <div class="card-body">
                             <div class="set-form">
-                              <table id="myTable" class="table table-bordered">
-                                <tr>
-                                  <th>Start Day</th>
-                                  <th>End Day</th>
-                                  <th>Discount(%)</th>
-                                  <th>Action</th>
-                                </tr>
-                                <tr>
-                                  <td>
-                                   <input type="date"
-                                            placeholder="start day" name="start_day[]"
-                                            value="" class="form-control">
-                                  </td>
-                                  <td>
-                                    <input class="form-control" type="date" placeholder="end day" name="end_day[]" value="">
-                                  </td>
-                                  <td>
-                                    <input type="number"
-                                            placeholder="Discount" name="discountCam[]"
-                                            value="" class="form-control">
-                                  </td>
-                                </tr>
-                              </table>
-                              <div class="set-form">
-                                <input type="button" id="more_fields" onclick="add_fields();" value="Add More" class="btn btn-info" />
-                              </div>
+                                <table id="myTable" class="table table-bordered">
+                                    <tr>
+                                        <th>Start Day</th>
+                                        <th>End Day</th>
+                                        <th>Discount(%)</th>
+                                        <th>Action</th>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input type="date" placeholder="start day" name="start_day[]"
+                                                value="" class="form-control">
+                                        </td>
+                                        <td>
+                                            <input class="form-control" type="date" placeholder="end day"
+                                                name="end_day[]" value="">
+                                        </td>
+                                        <td>
+                                            <input type="number" placeholder="Discount" name="discountCam[]"
+                                                value="" class="form-control">
+                                        </td>
+                                    </tr>
+                                </table>
+                                <div class="set-form">
+                                    <input type="button" id="more_fields" onclick="add_fields();" value="Add More"
+                                        class="btn btn-info" />
+                                </div>
+                            </div>
                         </div>
-                    </div>
                     </div>
 
                     <div class="card mt-2 mb-2 rest-part">
@@ -376,8 +453,8 @@
                                     <label class="control-label">{{ \App\CPU\translate('Meta Title') }}</label>
                                     <input type="text" name="meta_title" placeholder="" class="form-control">
                                     @error('meta_title')
-                                            <span class="text-danger">{{$message}}</span>
-                                            @enderror
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
                                 </div>
 
 
@@ -385,8 +462,8 @@
                                     <label class="control-label">{{ \App\CPU\translate('Meta Description') }}</label>
                                     <textarea rows="10" type="text" id="summernote2" name="meta_description" class="form-control"></textarea>
                                     @error('meta_description')
-                                            <span class="text-danger">{{$message}}</span>
-                                            @enderror
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
                                 </div>
 
                                 <div class="col-md-4">
@@ -412,14 +489,13 @@
                                     <input type="text" name="video_link"
                                         placeholder="{{ \App\CPU\translate('EX') }} : https://www.youtube.com/embed/5R06LRdUCSE"
                                         class="form-control">
-                                        @error('video_link')
-                                            <span class="text-danger">{{$message}}</span>
-                                            @enderror
+                                    @error('video_link')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
                                 </div>
                                 <div class="col-md-4">
                                     <div>
-                                        <label
-                                            class="control-label">{{ \App\CPU\translate('Video shopping') }}
+                                        <label class="control-label">{{ \App\CPU\translate('Video shopping') }}
                                         </label>
                                     </div>
                                     <label class="switch">
@@ -434,21 +510,21 @@
                                         <label>{{ \App\CPU\translate('Upload product images') }}</label><small
                                             style="color: red">* ( {{ \App\CPU\translate('ratio') }} 1:1 )</small>
                                     </div>
-                                    <div class="p-2 border border-dashed" style="max-width:430px;">
-                                        <div class="row" id="coba"></div>
+                                    <div class="upload-container">
+                                        <input type="file" id="image-upload" name="images[]" multiple accept="image/*" class="custom-file-input">
+                                        <label for="image-upload" class="custom-file-label">Select Product Images</label>
+                                        <div id="image-preview" class="image-preview-container"></div>
                                     </div>
 
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label>Size Chart</label><small
-                                            style="color: red"> ( Optional )</small>
+                                        <label>Size Chart</label><small style="color: red"> ( Optional )</small>
                                     </div>
                                     <div style="max-width:200px;">
                                         <div class="row" id="size_chart"></div>
                                     </div>
                                 </div>
-
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="name">{{ \App\CPU\translate('Upload thumbnail') }}</label><small
@@ -480,90 +556,52 @@
     <script src="{{ asset('public/assets/back-end') }}/js/tags-input.min.js"></script>
     <script src="{{ asset('public/assets/back-end/js/spartan-multi-image-picker.js') }}"></script>
     <script>
-        // function check() {
-        //     Swal.fire({
-        //         title: '{{ \App\CPU\translate('Are you sure') }}?',
-        //         text: '',
-        //         type: 'warning',
-        //         showCancelButton: true,
-        //         cancelButtonColor: 'default',
-        //         confirmButtonColor: '#377dff',
-        //         cancelButtonText: 'No',
-        //         confirmButtonText: 'Yes',
-        //         reverseButtons: true
-        //     }).then((result) => {
+       $(document).ready(function() {
+            const previewContainer = $("#image-preview");
+            $("#image-upload").on("change", function(event) {
+                previewContainer.empty(); // Clear existing previews
+                const files = event.target.files;
 
-        //         var formData = new FormData(document.getElementById('product_form'));
-        //         $.ajaxSetup({
-        //             headers: {
-        //                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        //             }
-        //         });
-        //         $.post({
-        //             url: '{{ route('admin.product.store') }}',
-        //             data: formData,
-        //             contentType: false,
-        //             processData: false,
-        //             success: function(data) {
-        //                 console.log(data);
-        //                 // return false;
-        //                 if (data.errors) {
-        //                     for (var i = 0; i < data.errors.length; i++) {
-        //                         toastr.error(data.errors[i].message, {
-        //                             CloseButton: true,
-        //                             ProgressBar: true
-        //                         });
-        //                     }
-        //                 } else {
-        //                     toastr.success(
-        //                     '{{ \App\CPU\translate('product added successfully') }}!', {
-        //                         CloseButton: true,
-        //                         ProgressBar: true
-        //                     });
-        //                     $('#product_form').submit();
-        //                 }
-        //             }
-        //         });
-        //     })
-        // };
-    </script>
-    <script>
-        $(function() {
-            $("#coba").spartanMultiImagePicker({
-                fieldName: 'images[]',
-                maxCount: 10,
-                rowHeight: 'auto',
-                groupClassName: 'col-6',
-                maxFileSize: '',
-                placeholderImage: {
-                    image: '{{ asset('public/assets/back-end/img/400x400/img2.jpg') }}',
-                    width: '100%',
-                },
-                dropFileLabel: "Drop Here",
-                onAddRow: function(index, file) {
-
-                },
-                onRenderedPreview: function(index) {
-
-                },
-                onRemoveRow: function(index) {
-
-                },
-                onExtensionErr: function(index, file) {
-                    toastr.error(
-                    '{{ \App\CPU\translate('Please only input png or jpg type file') }}', {
-                        CloseButton: true,
-                        ProgressBar: true
-                    });
-                },
-                onSizeErr: function(index, file) {
-                    toastr.error('{{ \App\CPU\translate('File size too big') }}', {
-                        CloseButton: true,
-                        ProgressBar: true
+                if (files) {
+                    $.each(files, function(index, file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            const previewItem = $(`
+                                <div class="preview-item">
+                                    <img src="${e.target.result}" class="preview-image">
+                                    <button type="button" class="remove-icon" data-index="${index}">&#10005;</button>
+                                </div>
+                            `);
+                            previewContainer.append(previewItem);
+                        };
+                        reader.readAsDataURL(file);
                     });
                 }
             });
 
+            // Handle image removal
+            previewContainer.on("click", ".remove-icon", function() {
+                const indexToRemove = $(this).data("index");
+                $(this).parent().remove();
+                // Remove the corresponding file from the input (file list cannot be modified directly, so create a new list)
+                const input = document.getElementById("image-upload");
+                const dataTransfer = new DataTransfer();
+                const files = input.files;
+
+                // Add all files except the one to be removed
+                for (let i = 0; i < files.length; i++) {
+                    if (i !== indexToRemove) {
+                        dataTransfer.items.add(files[i]);
+                    }
+                }
+
+                // Update the input files
+                input.files = dataTransfer.files;
+            });
+        });
+    </script>
+    <script>
+        $(function() {
             $("#size_chart").spartanMultiImagePicker({
                 fieldName: 'size_chart',
                 maxCount: 1,
@@ -586,10 +624,10 @@
                 },
                 onExtensionErr: function(index, file) {
                     toastr.error(
-                    '{{ \App\CPU\translate('Please only input png or jpg type file') }}', {
-                        CloseButton: true,
-                        ProgressBar: true
-                    });
+                        '{{ \App\CPU\translate('Please only input png or jpg type file') }}', {
+                            CloseButton: true,
+                            ProgressBar: true
+                        });
                 },
                 onSizeErr: function(index, file) {
                     toastr.error('{{ \App\CPU\translate('File size too big') }}', {
@@ -621,10 +659,10 @@
                 },
                 onExtensionErr: function(index, file) {
                     toastr.error(
-                    '{{ \App\CPU\translate('Please only input png or jpg type file') }}', {
-                        CloseButton: true,
-                        ProgressBar: true
-                    });
+                        '{{ \App\CPU\translate('Please only input png or jpg type file') }}', {
+                            CloseButton: true,
+                            ProgressBar: true
+                        });
                 },
                 onSizeErr: function(index, file) {
                     toastr.error('{{ \App\CPU\translate('File size too big') }}', {
@@ -656,10 +694,10 @@
                 },
                 onExtensionErr: function(index, file) {
                     toastr.error(
-                    '{{ \App\CPU\translate('Please only input png or jpg type file') }}', {
-                        CloseButton: true,
-                        ProgressBar: true
-                    });
+                        '{{ \App\CPU\translate('Please only input png or jpg type file') }}', {
+                            CloseButton: true,
+                            ProgressBar: true
+                        });
                 },
                 onSizeErr: function(index, file) {
                     toastr.error('{{ \App\CPU\translate('File size too big') }}', {
@@ -736,7 +774,7 @@
                 '" placeholder="{{ trans('Choice Title') }}" readonly></div><div class="col-lg-9"><input type="text" class="form-control" name="choice_options_' +
                 i +
                 '[]" placeholder="{{ trans('Enter choice values') }}" data-role="tagsinput" onchange="update_sku()"></div></div>'
-                );
+            );
 
             $("input[data-role=tagsinput], select[multiple][data-role=tagsinput]").tagsinput();
         }
@@ -810,23 +848,20 @@
         })
 
         function add_fields() {
-          document.getElementById("myTable").insertRow(-1).innerHTML = '<tr><td><input type="date"  placeholder="start day" name="start_day[]" value="" class="form-control"></td><td><input type="date"  placeholder="end day" name="end_day[]" value="" class="form-control"></td><td><input type="nubmer" placeholder="Discount" name="discountCam[]" value="" class="form-control"> </td> </tr>';
+            document.getElementById("myTable").insertRow(-1).innerHTML =
+                '<tr><td><input type="date"  placeholder="start day" name="start_day[]" value="" class="form-control"></td><td><input type="date"  placeholder="end day" name="end_day[]" value="" class="form-control"></td><td><input type="nubmer" placeholder="Discount" name="discountCam[]" value="" class="form-control"> </td> </tr>';
         }
-
     </script>
 
-  <!-- include summernote css/js -->
-<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+    <!-- include summernote css/js -->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 
     <script>
-      $(document).ready(function() {
-  $('#summernote').summernote();
-  $('#summernote1').summernote();
-  $('#summernote2').summernote();
-});
+        $(document).ready(function() {
+            $('#summernote').summernote();
+            $('#summernote1').summernote();
+            $('#summernote2').summernote();
+        });
     </script>
-
 @endpush
-
-

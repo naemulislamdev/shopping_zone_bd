@@ -38,6 +38,9 @@ Route::group(['namespace' => 'api\v1', 'prefix' => 'v1', 'middleware' => ['api_l
     Route::group(['prefix' => 'config'], function () {
         Route::get('/', 'ConfigController@configuration');
     });
+    Route::group(['prefix' => 'complain'], function () {
+        Route::post('/store', 'ComplaintController@complainStore');
+    });
 
     Route::group(['prefix' => 'shipping-method','middleware'=>'auth:api'], function () {
         Route::get('detail/{id}', 'ShippingMethodController@get_shipping_method_info');

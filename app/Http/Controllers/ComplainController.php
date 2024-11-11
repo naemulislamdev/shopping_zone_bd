@@ -34,9 +34,6 @@ class ComplainController extends Controller
         ]);
 
         $imagePath = ImageManager::upload('complaints/', 'png', $request->file('image'));
-        if ($imagePath == 'def.png') {
-            $imagePath = null;
-        }
         $complain = Complaint::create([
             'name' => $request->name,
             'phone' => $request->phone,
